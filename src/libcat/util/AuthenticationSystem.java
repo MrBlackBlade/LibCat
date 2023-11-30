@@ -2,6 +2,8 @@ package libcat.util;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AuthenticationSystem extends FileSystemManager{
     public static boolean credentialsMatch(String usr, String pswd) {
@@ -28,11 +30,8 @@ public class AuthenticationSystem extends FileSystemManager{
         boolean userExists = false;
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + usersFile, "rw");
-            for (int i = 0; i < countLines(usersFile); i++) {
-                String record = raf.readLine();
-                String[] recordFields = record.split(",");
-                String forUser = recordFields[1];
-                if (usr.equals(forUser)) {
+            for (String[] rowFields: querey(usersFile)) {
+                if (usr.equals(rowFields[1])) {
                     userExists = true;
                     break;
                 }
@@ -42,15 +41,17 @@ public class AuthenticationSystem extends FileSystemManager{
         }
         return userExists;
     }
-    public static void insertNewRegister(String[] row) {
-        insertRow(usersFile, row);
-    }
     public static boolean registerNewUser(String[] row) {
+        String[] userid = {getLastID(usersFile)};
+        row = mergeStringArrays(userid,row);
         if(userExists(row[1])) {
             return false;
         } else {
             insertRow(usersFile, row);
             return true;
         }
+    }
+    public static String getLastID(String file) {
+        return String.valueOf(Integer.parseInt(querey(file).get(querey(file).size()-1)[0])+1);
     }
 }

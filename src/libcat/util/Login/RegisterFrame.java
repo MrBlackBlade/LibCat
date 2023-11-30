@@ -11,9 +11,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 class RegisterFrame extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private RegisterFrame registerFrameReference;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final RegisterFrame registerFrameReference;
     public RegisterFrame(LoginFrame loginFrameReference) {
 
         registerFrameReference = this;

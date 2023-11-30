@@ -4,13 +4,19 @@ import libcat.Main;
 
 import java.io.*;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FileSystemManager {
     static String cwd = new File(Paths.get("").toAbsolutePath().toString()) + "\\resources\\";
     public static String usersFile = "userscreds.txt";
-
+    public static String[] mergeStringArrays(String[] array1, String[] array2){
+        String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
+        System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
+        return mergedArray;
+    }
     public static void initFile(String file) {
         try {
             FileReader fr = new FileReader(cwd + file);
@@ -23,10 +29,26 @@ public class FileSystemManager {
             }
         }
     }
+    public static ArrayList<String[]> querey(String file) {
+        ArrayList rows = new ArrayList<String[]>();
+        try {
+            RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
+            for (int i = 0; i < countLines(file); i++) {
+                String row = raf.readLine();
+                String[] rowFields = row.split(",");
+                rows.add(rowFields);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rows;
+    }
     public static void insertRow(String file, String[] row) {
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
-            for (int i = 0; i < countLines(usersFile); i++) {
+            for (int i = 0; i < countLines(file); i++) {
                 raf.readLine();
             }
             String rowString = "";

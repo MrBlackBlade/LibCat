@@ -9,9 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class LoginFrame extends JFrame {
-    LoginFrame loginFrameReference;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+    private final LoginFrame loginFrameReference;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
     public LoginFrame() {
 
         loginFrameReference = this;
