@@ -5,12 +5,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LoginFrame extends JFrame {
-
-    File f = new File("E:\\LibCat");
+    Path cwd = Paths.get("").toAbsolutePath();
+    File f = new File(cwd.toString());
     int line;
 
     public void readFile() {
