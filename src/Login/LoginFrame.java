@@ -17,11 +17,10 @@ public class LoginFrame extends JFrame {
 
     public void readFile() {
         try {
-            FileReader fr = new FileReader(f + "\\logins.txt");
-            System.out.println("file exists!");
+            FileReader fr = new FileReader(f + "\\resources\\users.txt");
         } catch (FileNotFoundException ex) {
             try {
-                FileWriter fw = new FileWriter(f + "\\logins.txt");
+                FileWriter fw = new FileWriter(f + "\\resources\\users.txt");
                 System.out.println("File created");
             } catch (IOException ex1) {
                 Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex1);
@@ -32,7 +31,7 @@ public class LoginFrame extends JFrame {
 
     public void addData(String user, String password) {
         try {
-            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            RandomAccessFile raf = new RandomAccessFile(f + "\\resources\\users.txt", "rw");
             for (int i = 0; i < line; i++) {
                 raf.readLine();
             }
@@ -50,11 +49,11 @@ public class LoginFrame extends JFrame {
     public void countLines() {
         try {
             line = 0;
-            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            RandomAccessFile raf = new RandomAccessFile(f +"\\resources\\users.txt", "rw");
             for (int i = 0; raf.readLine() != null; i++) {
                 line++;
             }
-            System.out.println("number of lines:" + line);
+            //System.out.println("number of lines:" + line);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -63,33 +62,12 @@ public class LoginFrame extends JFrame {
 
     }
 
-    /*void checkData(String user, String pass) {
-
-        try {
-            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
-            String line = raf.readLine();
-            username = line.substring(9);
-            password = raf.readLine().substring(9);
-            if (user.equals(username) & pass.equals(password)) {
-                JOptionPane.showMessageDialog(null, "Password matched");
-            } else {
-                JOptionPane.showMessageDialog(null, "Wrong user/Password");
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(LoginPage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }*/
     void logic(String usr, String pswd) {
         boolean user_found = false;
-        System.out.println(usr);
-        System.out.println(pswd);
         try {
-            RandomAccessFile raf = new RandomAccessFile(f + "\\logins.txt", "rw");
+            RandomAccessFile raf = new RandomAccessFile(f + "\\resources\\users.txt", "rw");
             for (int i = 0; i < line; i += 2) {
-                System.out.println("count " + i);
+                //System.out.println("count " + i);
 
                 String forUser = raf.readLine();
                 String forPswd = raf.readLine();
@@ -167,7 +145,6 @@ public class LoginFrame extends JFrame {
                 // Perform authentication logic here
                 readFile();
                 countLines();
-                //checkData(username, password);
                 logic(usernameField.getText(), new String(passwordField.getPassword()));
                 System.out.println(password);
             }
