@@ -1,16 +1,25 @@
-package Login;
+package libcat.util.Login;
+
+import libcat.util.FileSystemManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.awt.event.WindowEvent;
 
 class RegisterFrame extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private RegisterFrame registerFrameReference;
 
-    public RegisterFrame() {
+    private FileSystemManager fs;
+
+    public RegisterFrame(LoginFrame loginFrameReference) {
+        fs = new FileSystemManager();
+
+        registerFrameReference = this;
+
         setTitle("Register Form");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setPreferredSize(new Dimension(400, 200));
@@ -52,13 +61,13 @@ class RegisterFrame extends JFrame {
                 String Username = new String(usernameField.getText());
                 String Password = new String(passwordField.getPassword());
                 //Perform registration logic here
-                LoginFrame loginF = new LoginFrame();
-                loginF.readFile();
-                loginF.countLines();
-                loginF.addData(Username, Password);
+                fs.readFile();
+                fs.addData(Username, Password);
 
                 // For simplicity, just display a message for now
                 JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + Username);
+                loginFrameReference.setVisible(true);
+                dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));
             }
         });
 
