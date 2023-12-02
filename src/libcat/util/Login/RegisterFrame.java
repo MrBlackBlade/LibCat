@@ -1,22 +1,20 @@
 package libcat.util.Login;
 
+import libcat.util.AuthenticationSystem;
 import libcat.util.FileSystemManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 class RegisterFrame extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private RegisterFrame registerFrameReference;
-
-    private FileSystemManager fs;
-
     public RegisterFrame(LoginFrame loginFrameReference) {
-        fs = new FileSystemManager();
 
         registerFrameReference = this;
 
@@ -58,19 +56,22 @@ class RegisterFrame extends JFrame {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String Username = new String(usernameField.getText());
-                String Password = new String(passwordField.getPassword());
+                String[] userCredentials = {usernameField.getText(), new String(passwordField.getPassword())};
                 //Perform registration logic here
-                fs.readFile();
-                fs.addData(Username, Password);
-
-                // For simplicity, just display a message for now
-                JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + Username);
-                loginFrameReference.setVisible(true);
-                dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));
+                if(AuthenticationSystem.registerNewUser(userCredentials)) {
+                    JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + userCredentials[0]);
+                    loginFrameReference.setVisible(true);
+                    dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));
+                } else {
+                    JOptionPane.showMessageDialog(RegisterFrame.this, String.format("User %s already exists!", userCredentials[0]));
+                }
             }
         });
-
+        this.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+                loginFrameReference.setVisible(true);
+            }
+        });
         pack();
         setLocationRelativeTo(null);
     }

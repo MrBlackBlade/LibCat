@@ -1,25 +1,17 @@
 package libcat.util.Login;
 
-import libcat.Main;
-import libcat.util.FileSystemManager;
+import libcat.util.AuthenticationSystem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LoginFrame extends JFrame {
     LoginFrame loginFrameReference;
-    private FileSystemManager fs;
     private JTextField usernameField;
     private JPasswordField passwordField;
     public LoginFrame() {
-        fs = new FileSystemManager();
 
         loginFrameReference = this;
 
@@ -64,14 +56,21 @@ public class LoginFrame extends JFrame {
         // Action listeners
         loginButton.addActionListener(new ActionListener() {
 
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
+
 
             public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
                 // Perform authentication logic here
-                fs.readFile();
-                fs.checkForUser(usernameField.getText(), new String(passwordField.getPassword()));
-                System.out.println(password);
+                if(AuthenticationSystem.credentialsMatch(username, password)){
+                    // Main window will be added here
+                    JOptionPane.showMessageDialog(null, "Welcome!");
+                }
+                else {
+                    //delete system32
+                    JOptionPane.showMessageDialog(null, "User not found.");
+                }
+
             }
         });
 
