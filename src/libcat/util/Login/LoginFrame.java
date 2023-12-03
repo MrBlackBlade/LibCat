@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class LoginFrame extends JFrame {
     LoginFrame loginFrameReference;
@@ -15,7 +16,9 @@ public class LoginFrame extends JFrame {
 
         loginFrameReference = this;
 
-        setTitle("libcat.util.Login Form");
+        setTitle("LibCat");
+        ImageIcon icon = new ImageIcon("E:\\LibCat\\resources\\LibCat.png");
+        setIconImage(icon.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(400, 200));
         setLayout(new GridBagLayout());
@@ -55,9 +58,6 @@ public class LoginFrame extends JFrame {
 
         // Action listeners
         loginButton.addActionListener(new ActionListener() {
-
-
-
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
@@ -82,7 +82,6 @@ public class LoginFrame extends JFrame {
                 setVisible(false);
             }
         });
-
         pack();
         setLocationRelativeTo(null);
     }

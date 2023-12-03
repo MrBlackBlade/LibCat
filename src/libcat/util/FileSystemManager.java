@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public class FileSystemManager {
     static String cwd = new File(Paths.get("").toAbsolutePath().toString()) + "\\resources\\";
-    public static String usersFile = "users.txt";
+    public static String usersFile = "userscreds.txt";
 
     public static void initFile(String file) {
         try {

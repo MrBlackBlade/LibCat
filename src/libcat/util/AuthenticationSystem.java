@@ -11,8 +11,8 @@ public class AuthenticationSystem extends FileSystemManager{
             for (int i = 0; i < countLines(usersFile); i++) {
                 String record = raf.readLine();
                 String[] recordFields = record.split(",");
-                String forUser = recordFields[0];
-                String forPswd = recordFields[1];
+                String forUser = recordFields[1];
+                String forPswd = recordFields[2];
 
                 if (usr.equals(forUser) && pswd.equals(forPswd)) {
                     credentialsMatch = true;
@@ -31,7 +31,7 @@ public class AuthenticationSystem extends FileSystemManager{
             for (int i = 0; i < countLines(usersFile); i++) {
                 String record = raf.readLine();
                 String[] recordFields = record.split(",");
-                String forUser = recordFields[0];
+                String forUser = recordFields[1];
                 if (usr.equals(forUser)) {
                     userExists = true;
                     break;
@@ -46,7 +46,7 @@ public class AuthenticationSystem extends FileSystemManager{
         insertRow(usersFile, row);
     }
     public static boolean registerNewUser(String[] row) {
-        if(userExists(row[0])) {
+        if(userExists(row[1])) {
             return false;
         } else {
             insertRow(usersFile, row);
