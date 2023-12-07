@@ -104,16 +104,17 @@ public class MainFrame extends JFrame {
             gbcRightPanel.gridy = 0;
             gbcRightPanel.anchor = GridBagConstraints.WEST; // Align to the left
 
-            JTextArea reviewField = new JTextArea(String.valueOf(new BorderLayout()));
-            reviewField.setFont(new Font("Arial",Font.BOLD,16));
-            reviewField.setPreferredSize(new Dimension(300,350));
-            reviewField.setEditable(false);
+            JTextArea reviewField = new JTextArea();
+            reviewField.setFont(new Font("Arial", Font.BOLD, 16));
+            reviewField.setLineWrap(true);
+            reviewField.setWrapStyleWord(true);
 
-            // Set scroll bar for the reviews
+// Set scroll bar for the reviews
             JScrollPane reviewScroll = new JScrollPane(reviewField);
-            reviewScroll.setLayout(new ScrollPaneLayout());
+            reviewScroll.setPreferredSize(new Dimension(300, 350));
             reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 
             // Read content from a text file and set it in the text field
             // A txt file will have all the filePaths of every review and will loop on that file
