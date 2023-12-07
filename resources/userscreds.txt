@@ -6,7 +6,7 @@
 5,Boldingar,3110
 6,Peter,secure123
 7,Maria,bookReader3000
-8,Ziad,blyatz
+8,Zigo,blyat
 9,Jimmy,password
 10,Makronomic,177013
 11,Corrupted,Monk
