@@ -11,7 +11,10 @@ import java.util.logging.Logger;
 
 public class FileSystemManager {
     public static String cwd = new File(Paths.get("").toAbsolutePath().toString()) + "\\resources\\";
-    public static String usersFile = "userscreds.txt";
+    public static String usersCredsFile = "userscreds.txt";
+    public static String usersDataFile = "usersdata.txt";
+    public static String booksFile = "books.txt";
+
     public static String[] mergeStringArrays(String[] array1, String[] array2){
         String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
         System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
@@ -29,7 +32,7 @@ public class FileSystemManager {
             }
         }
     }
-    public static ArrayList<String[]> querey(String file) {
+    public static ArrayList<String[]> query(String file) {
         ArrayList rows = new ArrayList<String[]>();
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");

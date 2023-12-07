@@ -1,5 +1,4 @@
-package libcat.Book;
-import libcat.util.*;
+package libcat.util;
 import java.time.LocalDate;
 
 public class Transaction {
