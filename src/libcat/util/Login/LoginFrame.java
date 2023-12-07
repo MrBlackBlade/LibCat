@@ -14,7 +14,6 @@ public class LoginFrame extends JFrame {
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     public LoginFrame() {
-
         loginFrameReference = this;
 
         setTitle("LibCat");
