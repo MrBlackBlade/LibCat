@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FileSystemManager {
-    static String cwd = new File(Paths.get("").toAbsolutePath().toString()) + "\\resources\\";
+    public static String cwd = new File(Paths.get("").toAbsolutePath().toString()) + "\\resources\\";
     public static String usersFile = "userscreds.txt";
     public static String[] mergeStringArrays(String[] array1, String[] array2){
         String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
@@ -29,7 +29,7 @@ public class FileSystemManager {
             }
         }
     }
-    public static ArrayList<String[]> querey(String file) {
+    public static ArrayList<String[]> query(String file) {
         ArrayList rows = new ArrayList<String[]>();
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
@@ -56,6 +56,7 @@ public class FileSystemManager {
                 rowString += element;
                 rowString += ",";
             }
+            
             rowString = rowString.substring(0, rowString.length() - 1) + "\n";
             raf.writeBytes(rowString);
         } catch (FileNotFoundException ex) {
@@ -68,9 +69,7 @@ public class FileSystemManager {
         int lines = 0;
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
-            for (int i = 0; raf.readLine() != null; i++) {
-                lines++;
-            }
+            for (; raf.readLine() != null; lines++);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

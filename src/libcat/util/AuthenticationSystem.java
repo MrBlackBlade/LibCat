@@ -2,8 +2,6 @@ package libcat.util;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AuthenticationSystem extends FileSystemManager{
     public static boolean credentialsMatch(String usr, String pswd) {
@@ -30,7 +28,7 @@ public class AuthenticationSystem extends FileSystemManager{
         boolean userExists = false;
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + usersFile, "rw");
-            for (String[] rowFields: querey(usersFile)) {
+            for (String[] rowFields: query(usersFile)) {
                 if (usr.equals(rowFields[1])) {
                     userExists = true;
                     break;
@@ -52,6 +50,6 @@ public class AuthenticationSystem extends FileSystemManager{
         }
     }
     public static String getLastID(String file) {
-        return String.valueOf(Integer.parseInt(querey(file).get(querey(file).size()-1)[0])+1);
+        return String.valueOf(Integer.parseInt(query(file).get(query(file).size()-1)[0])+1);
     }
 }

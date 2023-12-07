@@ -1,5 +1,7 @@
 package libcat.util.Login;
 
+import libcat.util.FileSystemManager;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -14,7 +16,7 @@ public class MainFrame extends JFrame {
     public MainFrame(String username) {
 
         // Window Size, Icon and Name
-        ImageIcon icon = new ImageIcon("E:\\LibCat\\resources\\LibCat.png");
+        ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 900);
@@ -75,7 +77,7 @@ public class MainFrame extends JFrame {
             // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
             // Art of war for now
 
-            ImageIcon bookImage = new ImageIcon("E:\\LibCat\\resources\\ArtOfWar.jpg"); // Specify the path to your image
+            ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
             Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
             ImageIcon scaledBookImage = new ImageIcon(scaledImage);
 
@@ -118,7 +120,7 @@ public class MainFrame extends JFrame {
 
             // Read content from a text file and set it in the text field
             // A txt file will have all the filePaths of every review and will loop on that file
-            String reviewPath = "E:\\LibCat\\resources\\ArtOfWar_reviews.txt";
+            String reviewPath = FileSystemManager.cwd + "ArtOfWar_reviews.txt";
             try (BufferedReader br = new BufferedReader(new FileReader(reviewPath))) {
                 StringBuilder content = new StringBuilder();
                 String line;
