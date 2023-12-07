@@ -64,13 +64,12 @@ public class LoginFrame extends JFrame {
                 // Perform authentication logic here
                 if(AuthenticationSystem.credentialsMatch(username, password)){
                     // Main window will be added here
-                    JOptionPane.showMessageDialog(null, "Welcome!");
+                    MainFrame homepage = new MainFrame(username);
                 }
                 else {
                     //delete system32
                     JOptionPane.showMessageDialog(null, "User not found.");
                 }
-
             }
         });
 

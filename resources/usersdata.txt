@@ -6,6 +6,6 @@
 5,Boldingar,customer
 6,Peter,borrower
 7,Maria,customer
-8,Ziad,customer
+8,Zigo,customer
 9,Jimmy,customer
 10,Makronomic,borrower
