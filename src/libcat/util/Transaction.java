@@ -11,10 +11,12 @@ public class Transaction {
     public static void main (String[] args){
         LocalDate Tdate = LocalDate.now();
         LocalDate Rdate = Tdate.plusDays(14);
-        //bookReturned(Rdate);
+        Book Cbook = null;
+        Borrower borrower = null;
+        bookReturned (Rdate, Cbook, borrower);
     }
 
-    public void bookReturned(LocalDate Rdate){
+    public static void bookReturned(LocalDate Rdate, Book Cbook, Borrower borrower){
         boolean returned = false ;
         //if (Cbook.getStatus())
         // returned or available ^
@@ -22,9 +24,7 @@ public class Transaction {
        if(Cbook.isReturned()) {
            returned = true;
         }
-       else {
-           applyfine(Rdate);
-       }
+       else applyfine(Rdate, Cbook, borrower);
         /*
         borrower w book
         # borrower must have ids of borrowed books
@@ -34,7 +34,7 @@ public class Transaction {
         }
 
 
-    public static int applyfine(LocalDate Rdate){
+    public static void applyfine(LocalDate Rdate, Book Cbook, Borrower borrower){
         /*check local date with rdate -> is it passed or not
         passed => fine
         there should be value to return the fine to in the borrower class
@@ -43,12 +43,15 @@ public class Transaction {
         fine variable then added to the price
         */
         int fine = 0;
+        double Fprice = Cbook.getBookPrice();
         LocalDate Fdate = LocalDate.now();
 
         if(Fdate.isAfter(Rdate)){
-            fine = 15; //*bookprice;
+            Fprice += Cbook.getBookPrice()*(15/100);
+            //borrower.setfine(fine);
+            //NEEDED IN BORROWER CLASS
         }
-        return fine;
+
     }
 
 }
