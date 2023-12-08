@@ -145,7 +145,7 @@ public class Library {
                                 }
                             } else if (queryIndex.getQuery().equals("book_author")) {
                                 if (row[2].equalsIgnoreCase(searchValue)) {
-                                    foundValue.add(row[1]);
+                                    foundValue.add(row[0]);
                                 }
                             } else {
                                 throw new Exception("Unexpected queryName for chosen queryType");

@@ -10,12 +10,17 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
+
+    private enum RadioSelect{
+        ONE,
+        TWO,
+        THREE,
+        RADIO_SELECT_MAX,
+    }
+    static RadioSelect choice = RadioSelect.ONE;
     public MainFrame(String username) {
 
         // Window Size, Icon and Name
@@ -48,17 +53,60 @@ public class MainFrame extends JFrame {
         searchButton.setBackground(new Color(70, 130, 180));
         searchButton.setForeground(Color.WHITE);
 
-        // Add components with GridBagConstraints
+        // Add radio buttons
+        JRadioButton radioButton1 = new JRadioButton("Title");
+        JRadioButton radioButton2 = new JRadioButton("Author");
+        JRadioButton radioButton3 = new JRadioButton("Genre");
+
+        // Group the radio buttons so that only one can be selected at a time
+        ButtonGroup radioButtonGroup = new ButtonGroup();
+        radioButtonGroup.add(radioButton1);
+        radioButtonGroup.add(radioButton2);
+        radioButtonGroup.add(radioButton3);
+
+        // Perform the action based on the selected radio button
+        ActionListener radioListener = new ActionListener() {
+            String searchResult = searchBar.getText();
+            public void actionPerformed(ActionEvent e) {
+
+                if (radioButton1.isSelected()) {
+
+                    choice = RadioSelect.ONE;
+                }
+                else if (radioButton2.isSelected()) {
+                    choice = RadioSelect.TWO;
+                }
+                else if (radioButton3.isSelected()) {
+                    choice = RadioSelect.THREE;
+                }
+            }
+        };
+
+        radioButton1.addActionListener(radioListener);
+        radioButton2.addActionListener(radioListener);
+        radioButton3.addActionListener(radioListener);
+
+        // Components placing
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 10, 0); // Add some space between components
         welcomePanel.add(welcomeLabel, gbc);
 
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        searchPanel.add(searchBar);
+        searchPanel.add(searchButton);
+
         gbc.gridy = 1;
-        welcomePanel.add(searchBar, gbc);
+        welcomePanel.add(searchPanel, gbc);
+
+        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        radioPanel.add(radioButton1);
+        radioPanel.add(radioButton2);
+        radioPanel.add(radioButton3);
 
         gbc.gridy = 2;
-        welcomePanel.add(searchButton, gbc);
+        gbc.gridwidth = 2; // Span two columns
+        welcomePanel.add(radioPanel, gbc);
 
         // Book Panels
         Border border = BorderFactory.createLineBorder(Color.black, 3);
@@ -188,11 +236,14 @@ public class MainFrame extends JFrame {
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 String searchResult = searchBar.getText();
-                ArrayList<String> queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
-                ArrayList<Integer> queryResultInt = new ArrayList();
-                for(String result : queryResult){
-                    queryResultInt.add(Integer.parseInt(result));
+                ArrayList<String> queryResult = new ArrayList<String>();
+
+                switch (choice){
+                    case ONE ->     queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
+                    case TWO ->     queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.AUTHOR, searchResult);
+                    case THREE ->   queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
                 }
 
                 for (JPanel bookPanel : bookList) {
@@ -200,8 +251,9 @@ public class MainFrame extends JFrame {
                 }
 
                 for (Book book : Library.books) {
-                    for (Integer bookID : queryResultInt){
-                        if (bookID.equals(book.getBookID())){
+                    System.out.println(queryResult);
+                    for (String bookID : queryResult){
+                        if (bookID.equals(String.valueOf(book.getBookID()))){
 
                             JPanel bookPanel = new JPanel();
                             bookPanel.setLayout(new GridBagLayout());
@@ -317,7 +369,6 @@ public class MainFrame extends JFrame {
                             bookPanel.add(rightPanel, gbcRightPanel);
                             containerPanel.add(bookPanel);
                             bookList.add(bookPanel);
-
                         }
                     }
                 }
