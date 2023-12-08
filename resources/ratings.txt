@@ -1,0 +1,12 @@
+27,5,true,Thrilling mystery with intricate plot, well-developed characters, and seamless historical integration. A page-turner!
+19,3,false,Captivating storyline with unexpected twists.
+43,8,true,Intriguing characters and a plot that keeps you guessing.
+12,2,false,Fast-paced action and a surprising climax.
+12,3,true,gaming moment walahy.
+36,7,true,A must-read for fans of suspense and mystery.
+8,9,false,Quirky characters and a plot full of surprises.
+25,4,true,Engaging narrative with well-developed protagonists.
+47,6,false,Twists and turns that will leave you breathless.
+14,10,true,Riveting from beginning to end. Couldn't put it down!
+31,1,false,Unexpected plot twists keep the reader hooked.
+6,5,true,A compelling story with characters you'll remember.

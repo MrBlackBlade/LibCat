@@ -5,28 +5,31 @@ import libcat.Admin;
 import java.util.ArrayList;
 
 public class Library {
-    public static ArrayList<Admin> admins;
     public static ArrayList<Book> books;
+    public static ArrayList<Rating> ratings;
+    public static ArrayList<Admin> admins;
     public static ArrayList<Customer> customers;
     public static ArrayList<Borrower> borrowers;
 
-//    public enum QueryType
-//    {
-//        BOOK_TITLE,
-//        BOOK_AUTHOR,
-//
-//        QUERY_TYPE_MAX,
-//    }
+    public enum QueryType
+    {
+        //BOOKID_BY_TITLE,
+        //BOOKID_BY_AUTHOR,
+        RATING_BY_BOOKID,
+        QUERY_TYPE_MAX,
+    }
 
     //public static ArrayList<Customer> customers;
     public static void initialize() {
         FileSystemManager.initFile(FileSystemManager.usersCredsFile);
 
-        admins = new ArrayList<Admin>();
         books = new ArrayList<Book>();
+        ratings = new ArrayList<Rating>();
+        admins = new ArrayList<Admin>();
         customers = new ArrayList<Customer>();
         borrowers = new ArrayList<Borrower>();
 
+        Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeUsers();
         Library.makeBooks();
     }
@@ -46,18 +49,6 @@ public class Library {
                     admins.add(new Admin(Integer.parseInt(userRow[0]), userRow[1]));
             }
         }
-
-        for (Customer customer : customers) {
-            System.out.println(customer);
-        }
-
-        for (Borrower borrower : borrowers) {
-            System.out.println(borrower);
-        }
-
-        for (Admin admin : admins) {
-            System.out.println(admin);
-        }
     }
 
     private static void makeBooks() {
@@ -70,41 +61,54 @@ public class Library {
                     row[2],
                     row[3],
                     row[4],
-                    new float[]{Float.parseFloat(row[5])},
+                    getRatingsByBookID(Integer.parseInt(row[0])),
                     Double.parseDouble(row[6]),
                     Double.parseDouble(row[7]),
                     Boolean.parseBoolean(row[8])
             ));
         }
     }
-}
+    private static void makeRatings() {
+        ArrayList<String[]> ratingList = FileSystemManager.query(FileSystemManager.ratingsFile);
 
-//    public static void getBy(QueryType query){
+        for (String[] row : ratingList) {
+            String review = "";
+            for (int i = 3; i < row.length; i++) {
+                review = review.concat(row[i]);
+            }
+            ratings.add(new Rating(
+                    Integer.parseInt(row[0]),
+                    Integer.parseInt(row[1]),
+                    Boolean.parseBoolean(row[2]),
+                    review
+            ));
+        }
+    }
+    private static ArrayList<Rating> getRatingsByBookID(int bookID){
+        ArrayList<Rating> queryResult = new ArrayList<Rating>();
+        for (Rating rating : ratings) {
+            if (rating.bookID == bookID) {
+                queryResult.add(rating);
+            }
+        }
+        return queryResult;
+    }
+//    public static ArrayList<Object> getBy(QueryType query, Object index){
+//        ArrayList<Object> queryResult = new ArrayList<Object>();
 //        switch (query)
 //        {
-//            case BOOK_ID:
+//            case RATING_BY_BOOKID:
+//                int bookID = (Integer) index;
+//                for (Rating rating : ratings) {
+//                    if (rating.bookID == bookID) {
+//                        queryResult.add(rating);
+//                    }
+//                }
 //                break;
-//            case BOOK_AUTHOR:
-//                break;
-//            case ID:
-//                break;
-//            case ID:
-//                break;
-//            case ID:
-//                break;
-//            case ID:
-//                break;
-//            case ID:
-//                break;
-//            case ID:
-//                break;
-//            case ID:
-//                break;
-//
-//
 //        }
+//        return queryResult;
 //    }
-
+}
 //    public static int updateFiles() {
 //        // number returned at the end of the function
 //        // 0 meaning the files are up-to-date with the arrays
