@@ -13,7 +13,5 @@ public class Main {
             LoginFrame loginFrame = new LoginFrame();
             loginFrame.setVisible(true);
         });
-
-        System.out.println(Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, "pride and prejudice"));
     }
 }
