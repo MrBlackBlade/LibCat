@@ -30,7 +30,7 @@
 30,The Road Less Traveled,M. Scott Peck,Self-Help,1978,-1,13.75,0,Available,ArtOfWar.jpg
 31,The Kite Runner,Khaled Hosseini,Historical Fiction,2003,-1,11.00,0,Available,ArtOfWar.jpg
 32,The Count of Monte Cristo,Alexandre Dumas,Adventure,1844,-1,15.99,0,Available,ArtOfWar.jpg
-33,Jane Eyre,Charlotte Brontë,Romance,1847,-1,10.50,0,Available,ArtOfWar.jpg
+33,Jane Eyre,Charlotte Bronte,Romance,1847,-1,10.50,0,Available,ArtOfWar.jpg
 34,The Art of War,Sun Tzu,Philosophy,5th century BCE,-1,8.50,0,Available,ArtOfWar.jpg
 35,The Bell Jar,Sylvia Plath,Autobiographical Fiction,1963,-1,12.25,0,Available,ArtOfWar.jpg
 36,The Princess Bride,William Goldman,Fantasy,1973,-1,9.99,0,Available,ArtOfWar.jpg

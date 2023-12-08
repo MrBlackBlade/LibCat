@@ -243,7 +243,7 @@ public class MainFrame extends JFrame {
                 switch (choice){
                     case ONE ->     queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
                     case TWO ->     queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.AUTHOR, searchResult);
-                    case THREE ->   queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
+                    case THREE ->   queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.GENRE, searchResult);
                 }
 
                 for (JPanel bookPanel : bookList) {
