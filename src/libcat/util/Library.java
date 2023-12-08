@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.xml.crypto.AlgorithmMethod;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import libcat.util.QueryIndex;
 
@@ -145,16 +146,16 @@ public class Library {
                                         foundValue.add(row[1]);
                                     }
                                 } else if (queryIndex.getQuery().equals("book_title")) {
-                                    if (row[1].equalsIgnoreCase(searchValue)) {
+                                    if ( Pattern.compile(".*" + searchValue + ".*", Pattern.CASE_INSENSITIVE).matcher(row[1]).matches()) {
                                         foundValue.add(row[0]);
                                     }
                                 } else if (queryIndex.getQuery().equals("book_author")) {
-                                    if (row[2].equalsIgnoreCase(searchValue)) {
+                                    if (Pattern.compile(".*" + searchValue + ".*", Pattern.CASE_INSENSITIVE).matcher(row[2]).matches()) {
                                         foundValue.add(row[0]);
                                     }
                                 }
                                 else if (queryIndex.getQuery().equals("book_genre")) {
-                                    if (row[3].equalsIgnoreCase(searchValue)) {
+                                    if (Pattern.compile(".*" + searchValue + ".*", Pattern.CASE_INSENSITIVE).matcher(row[3]).matches()) {
                                         foundValue.add(row[0]);
                                     }
                                 }
