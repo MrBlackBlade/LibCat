@@ -2,24 +2,63 @@ package libcat.util;
 
 import libcat.Admin;
 
+import javax.xml.crypto.AlgorithmMethod;
+import java.io.File;
 import java.util.ArrayList;
 
+import libcat.util.QueryIndex;
+
 public class Library {
+    public static ArrayList<Admin> admins;
     public static ArrayList<Book> books;
     public static ArrayList<Rating> ratings;
-    public static ArrayList<Admin> admins;
     public static ArrayList<Customer> customers;
     public static ArrayList<Borrower> borrowers;
 
-    public enum QueryType
-    {
-        //BOOKID_BY_TITLE,
-        //BOOKID_BY_AUTHOR,
-        RATING_BY_BOOKID,
+    public enum QueryType {
+        BOOK, USER, RATING,
+
         QUERY_TYPE_MAX,
     }
 
-    //public static ArrayList<Customer> customers;
+    public enum BookQueryIndex implements QueryIndex {
+        ID {
+            @Override
+            public String getQuery() {
+                return "book_id";
+            }
+        }, TITLE {
+            @Override
+            public String getQuery() {
+                return "book_title";
+            }
+        }, AUTHOR {
+            @Override
+            public String getQuery() {
+                return "book_author";
+            }
+        }
+    }
+
+    public enum UserQueryIndex implements QueryIndex {
+        ID {
+            @Override
+            public String getQuery() {
+                return "user_id";
+            }
+        }, NAME {
+            @Override
+            public String getQuery() {
+                return "user_name";
+            }
+        }, TYPE {
+            @Override
+            public String getQuery() {
+                return "user_type";
+            }
+        }
+    }
+
     public static void initialize() {
         FileSystemManager.initFile(FileSystemManager.usersCredsFile);
 
@@ -49,6 +88,18 @@ public class Library {
                     admins.add(new Admin(Integer.parseInt(userRow[0]), userRow[1]));
             }
         }
+
+        for (Customer customer : customers) {
+            System.out.println(customer);
+        }
+
+        for (Borrower borrower : borrowers) {
+            System.out.println(borrower);
+        }
+
+        for (Admin admin : admins) {
+            System.out.println(admin);
+        }
     }
 
     private static void makeBooks() {
@@ -68,6 +119,79 @@ public class Library {
             ));
         }
     }
+
+    public static String getBy(QueryType queryType, QueryIndex queryIndex, String searchValue) {
+        System.out.println(queryIndex.getQuery());
+
+        try {
+            ArrayList<String[]> importedData;
+            String foundValue = new String("NOT FOUND");
+
+            switch (queryType) {
+                case BOOK: {
+                    importedData = FileSystemManager.query(FileSystemManager.booksFile);
+
+                    try {
+                        for (String[] row : importedData) {
+                            if (queryIndex.getQuery().equals("book_id")) {
+                                foundValue = row[0].equalsIgnoreCase(searchValue) ? row[1] : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("book_title")) {
+                                foundValue = row[1].equalsIgnoreCase(searchValue) ? row[0] : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("book_author")) {
+                                foundValue = row[2].equalsIgnoreCase(searchValue) ? row[1] : "NOT FOUND";
+                            } else {
+                                throw new Exception("Unexpected queryName for chosen queryType");
+                            }
+
+                            if (!foundValue.equals("NOT FOUND"))
+                                return foundValue;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+
+                    break;
+                }
+
+                case USER: {
+                    importedData = FileSystemManager.query(FileSystemManager.usersDataFile);
+
+                    try {
+                        for (String[] row : importedData) {
+                            if (queryIndex.getQuery().equals("user_id")) {
+                                foundValue = row[0].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("user_name")) {
+                                foundValue = row[1].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("user_type")) {
+                                foundValue = row[2].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                            } else {
+                                throw new Exception("Unexpected queryName for chosen queryType");
+                            }
+
+                            if (!foundValue.equals("NOT FOUND"))
+                                return foundValue;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+
+                    break;
+                }
+
+                // may be redundant if all getBy() calls are hard coded and not user-dependent
+                default:
+                    throw new Exception("Invalid QueryType");
+            }
+
+            return foundValue;
+        } catch (
+                Exception e) {
+            System.out.println("Error: " + e.getMessage());
+
+            return "NOT FOUND";
+        }
+    }
+
     private static void makeRatings() {
         ArrayList<String[]> ratingList = FileSystemManager.query(FileSystemManager.ratingsFile);
 
@@ -84,7 +208,8 @@ public class Library {
             ));
         }
     }
-    private static ArrayList<Rating> getRatingsByBookID(int bookID){
+
+    private static ArrayList<Rating> getRatingsByBookID(int bookID) {
         ArrayList<Rating> queryResult = new ArrayList<Rating>();
         for (Rating rating : ratings) {
             if (rating.bookID == bookID) {
@@ -93,41 +218,4 @@ public class Library {
         }
         return queryResult;
     }
-//    public static ArrayList<Object> getBy(QueryType query, Object index){
-//        ArrayList<Object> queryResult = new ArrayList<Object>();
-//        switch (query)
-//        {
-//            case RATING_BY_BOOKID:
-//                int bookID = (Integer) index;
-//                for (Rating rating : ratings) {
-//                    if (rating.bookID == bookID) {
-//                        queryResult.add(rating);
-//                    }
-//                }
-//                break;
-//        }
-//        return queryResult;
-//    }
 }
-//    public static int updateFiles() {
-//        // number returned at the end of the function
-//        // 0 meaning the files are up-to-date with the arrays
-//        // -1 meaning the files aren't up-to-date with the arrays
-//        int code = 0;
-//
-//        int totalUsersNumber = Library.customers.size() + Library.borrowers.size() + Library.admins.size();
-//
-//        ArrayList<String[]> fileData = FileSystemManager.query(FileSystemManager.usersDataFile);
-//
-//        for (int i = 0; i < Math.max(fileData.size(), totalUsersNumber); i++) {
-//            System.out.println(fileData.get(i)[2]);
-//
-//        }
-//
-//        System.out.println(totalUsersNumber == fileData.size());
-//
-//        if (fileData.size() != (totalUsersNumber))
-//            return -1;
-//
-//        return 0;
-//    }
