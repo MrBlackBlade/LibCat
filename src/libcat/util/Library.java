@@ -105,7 +105,6 @@ public class Library {
         ArrayList<String[]> booksList = FileSystemManager.query(FileSystemManager.booksFile);
 
         for (String[] row : booksList) {
-            books.add(new Book(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4], new float[]{Float.parseFloat(row[5])}, Double.parseDouble(row[6]), Double.parseDouble(row[7]), Boolean.parseBoolean(row[8])));
             books.add(new Book(
                     Integer.parseInt(row[0]),
                     row[1],
@@ -181,7 +180,7 @@ public class Library {
             return "NOT FOUND";
         }
     }
-}
+
     private static void makeRatings() {
         ArrayList<String[]> ratingList = FileSystemManager.query(FileSystemManager.ratingsFile);
 
@@ -198,7 +197,8 @@ public class Library {
             ));
         }
     }
-    private static ArrayList<Rating> getRatingsByBookID(int bookID){
+
+    private static ArrayList<Rating> getRatingsByBookID(int bookID) {
         ArrayList<Rating> queryResult = new ArrayList<Rating>();
         for (Rating rating : ratings) {
             if (rating.bookID == bookID) {
@@ -207,3 +207,4 @@ public class Library {
         }
         return queryResult;
     }
+}
