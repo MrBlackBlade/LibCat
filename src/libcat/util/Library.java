@@ -11,6 +11,7 @@ import libcat.util.QueryIndex;
 public class Library {
     public static ArrayList<Admin> admins;
     public static ArrayList<Book> books;
+    public static ArrayList<Rating> ratings;
     public static ArrayList<Customer> customers;
     public static ArrayList<Borrower> borrowers;
 
@@ -61,11 +62,12 @@ public class Library {
     public static void initialize() {
         FileSystemManager.initFile(FileSystemManager.usersCredsFile);
 
-        admins = new ArrayList<Admin>();
         books = new ArrayList<Book>();
+        ratings = new ArrayList<Rating>();
         customers = new ArrayList<Customer>();
         borrowers = new ArrayList<Borrower>();
 
+        Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeUsers();
         Library.makeBooks();
     }
@@ -104,6 +106,17 @@ public class Library {
 
         for (String[] row : booksList) {
             books.add(new Book(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4], new float[]{Float.parseFloat(row[5])}, Double.parseDouble(row[6]), Double.parseDouble(row[7]), Boolean.parseBoolean(row[8])));
+            books.add(new Book(
+                    Integer.parseInt(row[0]),
+                    row[1],
+                    row[2],
+                    row[3],
+                    row[4],
+                    getRatingsByBookID(Integer.parseInt(row[0])),
+                    Double.parseDouble(row[6]),
+                    Double.parseDouble(row[7]),
+                    Boolean.parseBoolean(row[8])
+            ));
         }
     }
 
@@ -169,3 +182,28 @@ public class Library {
         }
     }
 }
+    private static void makeRatings() {
+        ArrayList<String[]> ratingList = FileSystemManager.query(FileSystemManager.ratingsFile);
+
+        for (String[] row : ratingList) {
+            String review = "";
+            for (int i = 3; i < row.length; i++) {
+                review = review.concat(row[i]);
+            }
+            ratings.add(new Rating(
+                    Integer.parseInt(row[0]),
+                    Integer.parseInt(row[1]),
+                    Boolean.parseBoolean(row[2]),
+                    review
+            ));
+        }
+    }
+    private static ArrayList<Rating> getRatingsByBookID(int bookID){
+        ArrayList<Rating> queryResult = new ArrayList<Rating>();
+        for (Rating rating : ratings) {
+            if (rating.bookID == bookID) {
+                queryResult.add(rating);
+            }
+        }
+        return queryResult;
+    }

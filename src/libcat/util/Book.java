@@ -1,6 +1,8 @@
 package libcat.util;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+
+import static java.lang.Float.isNaN;
 
 public class Book {
 
@@ -12,10 +14,9 @@ public class Book {
     private String year;
     private double bookPrice;
     private double salePercent;
-    private float[] rating;
-    private float finalRating;
-    private String[] reviews;
+    private float rating;
     private boolean returned;
+    private ArrayList<Rating> ratings;
 
     public Book(
             int bookID,
@@ -23,7 +24,7 @@ public class Book {
             String author,
             String genre,
             String year,
-            float[] rating,
+            ArrayList<Rating> ratings,
             double bookPrice,
             double salePercent,
             boolean available
@@ -34,10 +35,12 @@ public class Book {
         this.author         = author;
         this.genre          = genre;
         this.year           = year;
-        this.rating         = rating;
+        this.ratings         = ratings;
         this.bookPrice      = bookPrice;
         this.salePercent    = salePercent;
         this.available      = available;
+
+        this.rating = calculateRating(this.ratings);
     }
 
     public void setBookID(int a) {
@@ -76,16 +79,8 @@ public class Book {
         this.salePercent = g;
     }
 
-    public void setRating(float[] i) {
-        this.rating = i;
-    }
-
-    public void setReviews(String[] h) {
-        this.reviews = h;
-    }
-
     public void setFinalrating() {
-        this.finalRating = calculateRating(this.rating);
+        this.rating = calculateRating(this.ratings);
     }
 
     public int getBookID() {
@@ -116,23 +111,13 @@ public class Book {
         return this.salePercent;
     }
 
-    public float[] getRating() {
-        return this.rating;
-    }
+    public float getRating() { return rating; }
 
-    public String[] getReviews() {
-        return this.reviews;
-    }
-
-    public float calculateRating(float[] r) {
+    public float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;
-
-        for (int i = 0; i < r.length; i++) {
-            sum += r[i];
+        for (Rating rating : ratings) {
+            sum = rating.like ? sum + 1 : sum + 0;
         }
-
-        float Frating = sum / r.length;
-        return Frating;
+        return isNaN((sum/ratings.size())) ? -1F: (sum/ratings.size())*100F;
     }
-
 }

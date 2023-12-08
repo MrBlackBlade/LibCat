@@ -12,4 +12,14 @@ public class Rating {
         this.like = like;
         this.review = review;
     }
+
+    @Override
+    public String toString() {
+        return "Rating{" +
+                "bookID=" + bookID +
+                ", customerID=" + customerID +
+                ", like=" + like +
+                ", review='" + review + '\'' +
+                '}';
+    }
 }

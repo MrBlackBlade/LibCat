@@ -1,6 +1,7 @@
 package libcat.util.Login;
 
 import libcat.util.AuthenticationSystem;
+import libcat.util.FileSystemManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class LoginFrame extends JFrame {
         loginFrameReference = this;
 
         setTitle("LibCat");
-        ImageIcon icon = new ImageIcon("E:\\LibCat\\resources\\LibCat.png");
+        ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setIconImage(icon.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(400, 200));

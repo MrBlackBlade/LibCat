@@ -15,6 +15,7 @@ public class FileSystemManager {
     public static String usersCredsFile = "userscreds.txt";
     public static String usersDataFile = "usersdata.txt";
     public static String booksFile = "books.txt";
+    public static String ratingsFile = "ratings.txt";
 
 
     public static String[] mergeStringArrays(String[] array1, String[] array2){
@@ -61,6 +62,7 @@ public class FileSystemManager {
                 rowString += element;
                 rowString += ",";
             }
+            
             rowString = rowString.substring(0, rowString.length() - 1) + "\n";
             raf.writeBytes(rowString);
         } catch (FileNotFoundException ex) {
@@ -73,9 +75,7 @@ public class FileSystemManager {
         int lines = 0;
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
-            for (int i = 0; raf.readLine() != null; i++) {
-                lines++;
-            }
+            for (; raf.readLine() != null; lines++);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

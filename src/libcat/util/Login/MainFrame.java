@@ -16,7 +16,7 @@ public class MainFrame extends JFrame {
     public MainFrame(String username) {
 
         // Window Size, Icon and Name
-        ImageIcon icon = new ImageIcon("E:\\LibCat\\resources\\LibCat.png");
+        ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 900);
