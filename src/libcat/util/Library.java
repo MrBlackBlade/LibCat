@@ -120,12 +120,12 @@ public class Library {
         }
     }
 
-    public static String getBy(QueryType queryType, QueryIndex queryIndex, String searchValue) {
+    public static ArrayList<String> getBy(QueryType queryType, QueryIndex queryIndex, String searchValue) {
         System.out.println(queryIndex.getQuery());
 
         try {
             ArrayList<String[]> importedData;
-            String foundValue = new String("NOT FOUND");
+            ArrayList<String> foundValue = new ArrayList<String>();
 
             switch (queryType) {
                 case BOOK: {
@@ -134,17 +134,20 @@ public class Library {
                     try {
                         for (String[] row : importedData) {
                             if (queryIndex.getQuery().equals("book_id")) {
-                                foundValue = row[0].equalsIgnoreCase(searchValue) ? row[1] : "NOT FOUND";
+                                if (row[0].equalsIgnoreCase(searchValue)) {
+                                    foundValue.add(row[1]);
+                                }
                             } else if (queryIndex.getQuery().equals("book_title")) {
-                                foundValue = row[1].equalsIgnoreCase(searchValue) ? row[0] : "NOT FOUND";
+                                if (row[1].equalsIgnoreCase(searchValue)) {
+                                    foundValue.add(row[0]);
+                                }
                             } else if (queryIndex.getQuery().equals("book_author")) {
-                                foundValue = row[2].equalsIgnoreCase(searchValue) ? row[1] : "NOT FOUND";
+                                if (row[2].equalsIgnoreCase(searchValue)) {
+                                    foundValue.add(row[1]);
+                                }
                             } else {
                                 throw new Exception("Unexpected queryName for chosen queryType");
                             }
-
-                            if (!foundValue.equals("NOT FOUND"))
-                                return foundValue;
                         }
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
@@ -159,17 +162,20 @@ public class Library {
                     try {
                         for (String[] row : importedData) {
                             if (queryIndex.getQuery().equals("user_id")) {
-                                foundValue = row[0].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                                if (row[0].equalsIgnoreCase(searchValue)) {
+                                    foundValue.add(row[1]);
+                                }
                             } else if (queryIndex.getQuery().equals("user_name")) {
-                                foundValue = row[1].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                                if (row[1].equalsIgnoreCase(searchValue)) {
+                                    foundValue.add(row[0]);
+                                }
                             } else if (queryIndex.getQuery().equals("user_type")) {
-                                foundValue = row[2].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                                if (row[2].equalsIgnoreCase(searchValue)) {
+                                    foundValue.add(row[1]);
+                                }
                             } else {
                                 throw new Exception("Unexpected queryName for chosen queryType");
                             }
-
-                            if (!foundValue.equals("NOT FOUND"))
-                                return foundValue;
                         }
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
@@ -184,11 +190,11 @@ public class Library {
             }
 
             return foundValue;
-        } catch (
-                Exception e) {
+
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 
-            return "NOT FOUND";
+            return new ArrayList<String>();
         }
     }
 
