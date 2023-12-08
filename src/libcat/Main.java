@@ -14,5 +14,6 @@ public class Main {
             loginFrame.setVisible(true);
         });
 
+        System.out.println(Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.AUTHOR, "J.K. Rowling"));
     }
 }
