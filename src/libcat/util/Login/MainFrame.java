@@ -1,6 +1,9 @@
 package libcat.util.Login;
 
+import libcat.util.Book;
 import libcat.util.FileSystemManager;
+import libcat.util.Library;
+import libcat.util.Rating;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -65,14 +68,13 @@ public class MainFrame extends JFrame {
         containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
 
         ArrayList<JPanel> bookList = new ArrayList<>();
-        int booksNumber = 10;
 
-        for (int i = 0; i < booksNumber ; i++) {
-            JPanel book = new JPanel();
-            book.setLayout(new GridBagLayout());
-            book.setBackground(new Color(242, 231, 199));
-            book.setPreferredSize(new Dimension(1280, panelHeight));
-            book.setBorder(border);
+        for (Book book : Library.books) {
+            JPanel bookPanel = new JPanel();
+            bookPanel.setLayout(new GridBagLayout());
+            bookPanel.setBackground(new Color(242, 231, 199));
+            bookPanel.setPreferredSize(new Dimension(1280, panelHeight));
+            bookPanel.setBorder(border);
 
             // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
             // Art of war for now
@@ -82,7 +84,11 @@ public class MainFrame extends JFrame {
             ImageIcon scaledBookImage = new ImageIcon(scaledImage);
 
             JLabel imageLabel = new JLabel(scaledBookImage);
-            imageLabel.setText("<html>Title: Art of War " + (i + 1) + "<br>" + "<br>" + "Author: Sun Tzu" + "<br>" + "<br>" + "Genre: Non-Fiction");
+            imageLabel.setText(String.format("<html>Title: %s  <br><br>Author: %s <br><br> Genre: %s",
+                    book.getBookTitle(),
+                    book.getAuthor(),
+                    book.getGenre()));
+
             imageLabel.setHorizontalTextPosition(JLabel.CENTER);
             imageLabel.setVerticalTextPosition(JLabel.BOTTOM);
             imageLabel.setFont(new Font("Arial", Font.BOLD, 25));
@@ -92,7 +98,7 @@ public class MainFrame extends JFrame {
             gbcImageLabel.gridx = 0;
             gbcImageLabel.gridy = 0;
             gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
-            gbcImageLabel.insets = new Insets(0, 0, 0, 590); // Add space between components
+            gbcImageLabel.insets = new Insets(0, 0, 0, 165); // Add space between components
 
             // Add information about each book by using a txt file that iterates through a specific number of lines for each book ( Book order is very important )
             // just "Art Of War" for now
@@ -111,26 +117,19 @@ public class MainFrame extends JFrame {
             reviewField.setLineWrap(true);
             reviewField.setWrapStyleWord(true);
 
-// Set scroll bar for the reviews
+            // Set scroll bar for the reviews
             JScrollPane reviewScroll = new JScrollPane(reviewField);
             reviewScroll.setPreferredSize(new Dimension(300, 350));
             reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-
             // Read content from a text file and set it in the text field
             // A txt file will have all the filePaths of every review and will loop on that file
-            String reviewPath = FileSystemManager.cwd + "ArtOfWar_reviews.txt";
-            try (BufferedReader br = new BufferedReader(new FileReader(reviewPath))) {
                 StringBuilder content = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    content.append(line).append("\n");
+                for (Rating rating :book.getRatings()) {
+                    content.append(rating.getReview()).append("\n");
                 }
                 reviewField.setText(content.toString().trim());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
             JPanel buttonPanel = new JPanel(new GridLayout(1, 4)); // GridLayout with 1 row and 4 columns for buttons
             JButton buyButton = new JButton("Buy");
@@ -150,21 +149,18 @@ public class MainFrame extends JFrame {
             //Buttons Action
             buyButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    String searchResult = searchBar.getText();
                     // Logic will be here
                     JOptionPane.showMessageDialog(null, "Buy");
                 }
             });
             borrowButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    String searchResult = searchBar.getText();
                     // Logic will be here
                     JOptionPane.showMessageDialog(null, "Borrowed");
                 }
             });
             likeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    String searchResult = searchBar.getText();
                     /// Logic will be here
                     JOptionPane.showMessageDialog(null, "Like");
                 }
@@ -184,25 +180,157 @@ public class MainFrame extends JFrame {
             rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
             rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
 
-            book.add(imageLabel, gbcImageLabel);
-            book.add(rightPanel, gbcRightPanel);
-            containerPanel.add(book);
-            bookList.add(book);
+            bookPanel.add(imageLabel, gbcImageLabel);
+            bookPanel.add(rightPanel, gbcRightPanel);
+            containerPanel.add(bookPanel);
+            bookList.add(bookPanel);
         }
 
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String searchResult = searchBar.getText();
+                ArrayList<String> queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
+                ArrayList<Integer> queryResultInt = new ArrayList();
+                for(String result : queryResult){
+                    queryResultInt.add(Integer.parseInt(result));
+                }
+
+                for (JPanel bookPanel : bookList) {
+                    bookPanel.setVisible(false);
+                }
+
+                for (Book book : Library.books) {
+                    for (Integer bookID : queryResultInt){
+                        if (bookID.equals(book.getBookID())){
+
+                            JPanel bookPanel = new JPanel();
+                            bookPanel.setLayout(new GridBagLayout());
+                            bookPanel.setBackground(new Color(242, 231, 199));
+                            bookPanel.setPreferredSize(new Dimension(1280, panelHeight));
+                            bookPanel.setBorder(border);
+
+                            // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
+                            // Art of war for now
+
+                            ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
+                            Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
+                            ImageIcon scaledBookImage = new ImageIcon(scaledImage);
+
+                            JLabel imageLabel = new JLabel(scaledBookImage);
+                            imageLabel.setText(String.format("<html>Title: %s  <br><br>Author: %s <br><br> Genre: %s",
+                                    book.getBookTitle(),
+                                    book.getAuthor(),
+                                    book.getGenre()));
+
+                            imageLabel.setHorizontalTextPosition(JLabel.CENTER);
+                            imageLabel.setVerticalTextPosition(JLabel.BOTTOM);
+                            imageLabel.setFont(new Font("Arial", Font.BOLD, 25));
+                            imageLabel.setIconTextGap(15);
+
+                            GridBagConstraints gbcImageLabel = new GridBagConstraints();
+                            gbcImageLabel.gridx = 0;
+                            gbcImageLabel.gridy = 0;
+                            gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
+                            gbcImageLabel.insets = new Insets(0, 0, 0, 165); // Add space between components
+
+                            // Add information about each book by using a txt file that iterates through a specific number of lines for each book ( Book order is very important )
+                            // just "Art Of War" for now
+
+                            JPanel rightPanel = new JPanel(new BorderLayout());
+                            rightPanel.setBackground(Color.black);
+                            rightPanel.setPreferredSize(new Dimension(400, panelHeight - 15));
+
+                            GridBagConstraints gbcRightPanel = new GridBagConstraints();
+                            gbcRightPanel.gridx = 1;
+                            gbcRightPanel.gridy = 0;
+                            gbcRightPanel.anchor = GridBagConstraints.WEST; // Align to the left
+
+                            JTextArea reviewField = new JTextArea();
+                            reviewField.setFont(new Font("Arial", Font.BOLD, 16));
+                            reviewField.setLineWrap(true);
+                            reviewField.setWrapStyleWord(true);
+
+                            // Set scroll bar for the reviews
+                            JScrollPane reviewScroll = new JScrollPane(reviewField);
+                            reviewScroll.setPreferredSize(new Dimension(300, 350));
+                            reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                            reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+                            // Read content from a text file and set it in the text field
+                            // A txt file will have all the filePaths of every review and will loop on that file
+                            StringBuilder content = new StringBuilder();
+                            for (Rating rating :book.getRatings()) {
+                                content.append(rating.getReview()).append("\n");
+                            }
+                            reviewField.setText(content.toString().trim());
+
+                            JPanel buttonPanel = new JPanel(new GridLayout(1, 4)); // GridLayout with 1 row and 4 columns for buttons
+                            JButton buyButton = new JButton("Buy");
+                            JButton borrowButton = new JButton("Borrow");
+                            JButton likeButton = new JButton("Like");
+                            JButton dislikeButton = new JButton("Dislike");
+
+                            buyButton.setBackground(new Color(70, 130, 180));
+                            buyButton.setForeground(Color.WHITE);
+                            borrowButton.setBackground(new Color(70, 130, 180));
+                            borrowButton.setForeground(Color.WHITE);
+                            likeButton.setBackground(new Color(70, 130, 180));
+                            likeButton.setForeground(Color.WHITE);
+                            dislikeButton.setBackground(new Color(70, 130, 180));
+                            dislikeButton.setForeground(Color.WHITE);
+
+                            //Buttons Action
+                            buyButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    // Logic will be here
+                                    JOptionPane.showMessageDialog(null, "Buy");
+                                }
+                            });
+                            borrowButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    // Logic will be here
+                                    JOptionPane.showMessageDialog(null, "Borrowed");
+                                }
+                            });
+                            likeButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    /// Logic will be here
+                                    JOptionPane.showMessageDialog(null, "Like");
+                                }
+                            });
+                            dislikeButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    // Logic will be here
+                                    JOptionPane.showMessageDialog(null, "Dislike");
+                                }
+                            });
+
+                            buttonPanel.add(likeButton);
+                            buttonPanel.add(dislikeButton);
+                            buttonPanel.add(buyButton);
+                            buttonPanel.add(borrowButton);
+
+                            rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
+                            rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
+
+                            bookPanel.add(imageLabel, gbcImageLabel);
+                            bookPanel.add(rightPanel, gbcRightPanel);
+                            containerPanel.add(bookPanel);
+                            bookList.add(bookPanel);
+
+                        }
+                    }
+                }
+            }
+        });
         JScrollPane scrollPane = new JScrollPane(containerPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         //Search Button
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String searchResult = searchBar.getText();
-                // Search Logic will be here
-                JOptionPane.showMessageDialog(null, searchResult);
-            }
-        });
 
+        bookList.get(0);
+        System.out.println(bookList.get(0));
         // Add components
         add(welcomePanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);

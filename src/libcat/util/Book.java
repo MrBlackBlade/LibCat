@@ -1,5 +1,6 @@
 package libcat.util;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 import static java.lang.Float.isNaN;
@@ -16,6 +17,11 @@ public class Book {
     private double salePercent;
     private float rating;
     private boolean returned;
+
+    private ImageIcon imageIcon;
+
+
+
     private ArrayList<Rating> ratings;
 
     public Book(
@@ -27,7 +33,8 @@ public class Book {
             ArrayList<Rating> ratings,
             double bookPrice,
             double salePercent,
-            boolean available
+            boolean available,
+            ImageIcon imageIcon
     )
     {
         this.bookID         = bookID;
@@ -35,10 +42,11 @@ public class Book {
         this.author         = author;
         this.genre          = genre;
         this.year           = year;
-        this.ratings         = ratings;
+        this.ratings        = ratings;
         this.bookPrice      = bookPrice;
         this.salePercent    = salePercent;
         this.available      = available;
+        this.imageIcon      = imageIcon;
 
         this.rating = calculateRating(this.ratings);
     }
@@ -112,6 +120,10 @@ public class Book {
     }
 
     public float getRating() { return rating; }
+
+    public ArrayList<Rating> getRatings() {return ratings;}
+
+    public ImageIcon getImageIcon() {return  imageIcon;}
 
     public float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;

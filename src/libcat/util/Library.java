@@ -2,6 +2,7 @@ package libcat.util;
 
 import libcat.Admin;
 
+import javax.swing.*;
 import javax.xml.crypto.AlgorithmMethod;
 import java.io.File;
 import java.util.ArrayList;
@@ -115,7 +116,8 @@ public class Library {
                     getRatingsByBookID(Integer.parseInt(row[0])),
                     Double.parseDouble(row[6]),
                     Double.parseDouble(row[7]),
-                    Boolean.parseBoolean(row[8])
+                    Boolean.parseBoolean(row[8]),
+                    new  ImageIcon(row[9])
             ));
         }
     }

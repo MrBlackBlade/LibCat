@@ -4,6 +4,9 @@ public class Rating {
     int bookID;
     int customerID;
     boolean like;
+
+
+
     String review;
 
     public Rating(int bookID, int customerID, boolean like, String review){
@@ -13,6 +16,7 @@ public class Rating {
         this.review = review;
     }
 
+    public String getReview() {return review;}
     @Override
     public String toString() {
         return "Rating{" +
