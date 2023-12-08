@@ -132,14 +132,19 @@ public class Library {
                     importedData = FileSystemManager.query(FileSystemManager.booksFile);
 
                     try {
-                        if (queryIndex.getQuery().equals("book_id")) {
-                            foundValue = importedData.get(0)[Math.max(0, Algorithm.search(importedData.get(0), searchValue))];
-                        } else if (queryIndex.getQuery().equals("book_title")) {
-                            foundValue = importedData.get(1)[Algorithm.search(importedData.get(1), searchValue)];
-                        } else if (queryIndex.getQuery().equals("book_author")) {
-                            foundValue = importedData.get(2)[Algorithm.search(importedData.get(2), searchValue)];
-                        } else {
-                            throw new Exception("Unexpected queryName for chosen queryType");
+                        for (String[] row : importedData) {
+                            if (queryIndex.getQuery().equals("book_id")) {
+                                foundValue = row[0].equalsIgnoreCase(searchValue) ? row[1] : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("book_title")) {
+                                foundValue = row[1].equalsIgnoreCase(searchValue) ? row[0] : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("book_author")) {
+                                foundValue = row[2].equalsIgnoreCase(searchValue) ? row[1] : "NOT FOUND";
+                            } else {
+                                throw new Exception("Unexpected queryName for chosen queryType");
+                            }
+
+                            if (!foundValue.equals("NOT FOUND"))
+                                return foundValue;
                         }
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
@@ -152,14 +157,19 @@ public class Library {
                     importedData = FileSystemManager.query(FileSystemManager.usersDataFile);
 
                     try {
-                        if (queryIndex.getQuery().equals("user_id")) {
-                            foundValue = importedData.get(0)[Algorithm.search(importedData.get(0), searchValue)];
-                        } else if (queryIndex.getQuery().equals("user_name")) {
-                            foundValue = importedData.get(1)[Algorithm.search(importedData.get(1), searchValue)];
-                        } else if (queryIndex.getQuery().equals("user_type")) {
-                            foundValue = importedData.get(2)[Algorithm.search(importedData.get(2), searchValue)];
-                        } else {
-                            throw new Exception("Unexpected queryName for chosen queryType");
+                        for (String[] row : importedData) {
+                            if (queryIndex.getQuery().equals("user_id")) {
+                                foundValue = row[0].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("user_name")) {
+                                foundValue = row[1].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                            } else if (queryIndex.getQuery().equals("user_type")) {
+                                foundValue = row[2].equalsIgnoreCase(searchValue) ? searchValue : "NOT FOUND";
+                            } else {
+                                throw new Exception("Unexpected queryName for chosen queryType");
+                            }
+
+                            if (!foundValue.equals("NOT FOUND"))
+                                return foundValue;
                         }
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
