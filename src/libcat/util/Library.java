@@ -64,6 +64,7 @@ public class Library {
 
         books = new ArrayList<Book>();
         ratings = new ArrayList<Rating>();
+        admins = new ArrayList<Admin>();
         customers = new ArrayList<Customer>();
         borrowers = new ArrayList<Borrower>();
 
