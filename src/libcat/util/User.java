@@ -3,12 +3,16 @@ package libcat.util;
 import java.util.Arrays;
 import java.util.Optional;
 
-public abstract class User {
+public abstract class User implements UserType {
     int id;
     String name;
     public User(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+    @Override
+    public String getType() {
+        return "how the fuck did you query this";
     }
     public int getID() {
         return id;

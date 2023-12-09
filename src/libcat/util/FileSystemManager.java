@@ -1,5 +1,6 @@
 package libcat.util;
 
+import libcat.Admin;
 import libcat.Main;
 
 import java.io.*;
@@ -18,11 +19,20 @@ public class FileSystemManager {
     public static String ratingsFile = "ratings.txt";
 
 
-    public static String[] mergeStringArrays(String[] array1, String[] array2){
+    public static String[] mergeStringArrays(String[] array1, String[] array2) {
         String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
         System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
         return mergedArray;
     }
+
+    public static ArrayList<User> mergeUsers(ArrayList<Admin> admins, ArrayList<Customer> customers, ArrayList<Borrower> borrowers) {
+        ArrayList<User> merged = (new ArrayList<>(admins));
+        merged.addAll(customers);
+        merged.addAll(borrowers);
+
+        return merged;
+    }
+
     public static void initFile(String file) {
         try {
             FileReader fr = new FileReader(cwd + file);
@@ -35,6 +45,7 @@ public class FileSystemManager {
             }
         }
     }
+
     public static ArrayList<String[]> query(String file) {
         ArrayList rows = new ArrayList<String[]>();
         try {
@@ -51,6 +62,7 @@ public class FileSystemManager {
         }
         return rows;
     }
+
     public static void insertRow(String file, String[] row) {
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
@@ -58,11 +70,11 @@ public class FileSystemManager {
                 raf.readLine();
             }
             String rowString = "";
-            for (String element:row) {
+            for (String element : row) {
                 rowString += element;
                 rowString += ",";
             }
-            
+
             rowString = rowString.substring(0, rowString.length() - 1) + "\n";
             raf.writeBytes(rowString);
         } catch (FileNotFoundException ex) {
@@ -71,11 +83,12 @@ public class FileSystemManager {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public static int countLines(String file) {
         int lines = 0;
         try {
             RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw");
-            for (; raf.readLine() != null; lines++);
+            for (; raf.readLine() != null; lines++) ;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
