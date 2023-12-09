@@ -123,7 +123,7 @@ public class Library {
                         Double.parseDouble(row[6]),
                         Double.parseDouble(row[7]),
                         Boolean.parseBoolean(row[8]),
-                        new ImageIcon(row[9])
+                        new ImageIcon(FileSystemManager.cwd + row[9])
                 ));
             }
         }

@@ -127,7 +127,7 @@ public class MainFrame extends JFrame {
             // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
             // Art of war for now
 
-            ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
+            ImageIcon bookImage = book.getImageIcon();//new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
             Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
             ImageIcon scaledBookImage = new ImageIcon(scaledImage);
 
@@ -266,7 +266,7 @@ public class MainFrame extends JFrame {
                             // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
                             // Art of war for now
 
-                            ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
+                            ImageIcon bookImage = book.getImageIcon();
                             Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
                             ImageIcon scaledBookImage = new ImageIcon(scaledImage);
 
