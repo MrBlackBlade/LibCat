@@ -237,6 +237,8 @@ public class MainFrame extends JFrame {
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
+                boolean bookFound = false;
+
                 String searchResult = searchBar.getText();
                 ArrayList<String> queryResult = new ArrayList<String>();
 
@@ -369,8 +371,24 @@ public class MainFrame extends JFrame {
                             bookPanel.add(rightPanel, gbcRightPanel);
                             containerPanel.add(bookPanel);
                             bookList.add(bookPanel);
+                            bookFound = true;
                         }
                     }
+                }
+                if(!bookFound){
+                    JPanel emptyPanel = new JPanel();
+                    emptyPanel.setLayout(new GridBagLayout());
+                    emptyPanel.setBackground(new Color(242, 231, 199));
+
+                    JLabel emptyLabel = new JLabel("Couldn't find what you are searching for :(");
+                    emptyLabel.setFont(new Font("Arial", Font.BOLD, 30));
+
+                    GridBagConstraints gbcEmptyLabel = new GridBagConstraints();
+                    gbcEmptyLabel.gridx = 0;
+                    gbcEmptyLabel.gridy = 0;
+
+                    emptyPanel.add(emptyLabel, gbcEmptyLabel);
+                    containerPanel.add(emptyPanel);
                 }
             }
         });
