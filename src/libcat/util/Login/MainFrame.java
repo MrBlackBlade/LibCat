@@ -164,6 +164,7 @@ public class MainFrame extends JFrame {
             reviewField.setFont(new Font("Arial", Font.BOLD, 16));
             reviewField.setLineWrap(true);
             reviewField.setWrapStyleWord(true);
+            reviewField.setEditable(false);
 
             // Set scroll bar for the reviews
             JScrollPane reviewScroll = new JScrollPane(reviewField);
@@ -263,9 +264,6 @@ public class MainFrame extends JFrame {
                             bookPanel.setPreferredSize(new Dimension(1280, panelHeight));
                             bookPanel.setBorder(border);
 
-                            // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
-                            // Art of war for now
-
                             ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
                             Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
                             ImageIcon scaledBookImage = new ImageIcon(scaledImage);
@@ -286,9 +284,6 @@ public class MainFrame extends JFrame {
                             gbcImageLabel.gridy = 0;
                             gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
                             gbcImageLabel.insets = new Insets(0, 0, 0, 165); // Add space between components
-
-                            // Add information about each book by using a txt file that iterates through a specific number of lines for each book ( Book order is very important )
-                            // just "Art Of War" for now
 
                             JPanel rightPanel = new JPanel(new BorderLayout());
                             rightPanel.setBackground(Color.black);
@@ -318,7 +313,7 @@ public class MainFrame extends JFrame {
                             }
                             reviewField.setText(content.toString().trim());
 
-                            JPanel buttonPanel = new JPanel(new GridLayout(1, 4)); // GridLayout with 1 row and 4 columns for buttons
+                            JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
                             JButton buyButton = new JButton("Buy");
                             JButton borrowButton = new JButton("Borrow");
                             JButton likeButton = new JButton("Like");
