@@ -14,13 +14,15 @@ import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
-    private enum RadioSelect{
+    private enum RadioSelect {
         ONE,
         TWO,
         THREE,
         RADIO_SELECT_MAX,
     }
+
     static RadioSelect choice = RadioSelect.ONE;
+
     public MainFrame(String username) {
 
         // Window Size, Icon and Name
@@ -67,16 +69,15 @@ public class MainFrame extends JFrame {
         // Perform the action based on the selected radio button
         ActionListener radioListener = new ActionListener() {
             String searchResult = searchBar.getText();
+
             public void actionPerformed(ActionEvent e) {
 
                 if (radioButton1.isSelected()) {
 
                     choice = RadioSelect.ONE;
-                }
-                else if (radioButton2.isSelected()) {
+                } else if (radioButton2.isSelected()) {
                     choice = RadioSelect.TWO;
-                }
-                else if (radioButton3.isSelected()) {
+                } else if (radioButton3.isSelected()) {
                     choice = RadioSelect.THREE;
                 }
             }
@@ -127,7 +128,7 @@ public class MainFrame extends JFrame {
             // Add an image for each book by using a txt file that iterates through lines for every image path for each book ( Book order is very important )
             // Art of war for now
 
-            ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
+            ImageIcon bookImage = book.getImageIcon();//new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
             Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
             ImageIcon scaledBookImage = new ImageIcon(scaledImage);
 
@@ -174,11 +175,11 @@ public class MainFrame extends JFrame {
 
             // Read content from a text file and set it in the text field
             // A txt file will have all the filePaths of every review and will loop on that file
-                StringBuilder content = new StringBuilder();
-                for (Rating rating :book.getRatings()) {
-                    content.append(rating.getReview()).append("\n");
-                }
-                reviewField.setText(content.toString().trim());
+            StringBuilder content = new StringBuilder();
+            for (Rating rating : book.getRatings()) {
+                content.append(rating.getReview()).append("\n");
+            }
+            reviewField.setText(content.toString().trim());
 
             JPanel buttonPanel = new JPanel(new GridLayout(1, 4)); // GridLayout with 1 row and 4 columns for buttons
             JButton buyButton = new JButton("Buy");
@@ -241,77 +242,76 @@ public class MainFrame extends JFrame {
                 boolean bookFound = false;
 
                 String searchResult = searchBar.getText();
-                ArrayList<String> queryResult = new ArrayList<String>();
+                ArrayList<Book> queryResult = new ArrayList<Book>();
 
-                switch (choice){
-                    case ONE ->     queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
-                    case TWO ->     queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.AUTHOR, searchResult);
-                    case THREE ->   queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.GENRE, searchResult);
+                switch (choice) {
+                    case ONE ->
+                            queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
+                    case TWO ->
+                            queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.AUTHOR, searchResult);
+                    case THREE ->
+                            queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.GENRE, searchResult);
                 }
 
                 for (JPanel bookPanel : bookList) {
                     bookPanel.setVisible(false);
                 }
 
-                for (Book book : Library.books) {
-                    System.out.println(queryResult);
-                    for (String bookID : queryResult){
-                        if (bookID.equals(String.valueOf(book.getBookID()))){
+                for (Book book : queryResult) {
+                    JPanel bookPanel = new JPanel();
+                    bookPanel.setLayout(new GridBagLayout());
+                    bookPanel.setBackground(new Color(242, 231, 199));
+                    bookPanel.setPreferredSize(new Dimension(1280, panelHeight));
+                    bookPanel.setBorder(border);
 
-                            JPanel bookPanel = new JPanel();
-                            bookPanel.setLayout(new GridBagLayout());
-                            bookPanel.setBackground(new Color(242, 231, 199));
-                            bookPanel.setPreferredSize(new Dimension(1280, panelHeight));
-                            bookPanel.setBorder(border);
+                    ImageIcon bookImage = book.getImageIcon();
+                    Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
+                    ImageIcon scaledBookImage = new ImageIcon(scaledImage);
 
-                            ImageIcon bookImage = new ImageIcon(FileSystemManager.cwd + "ArtOfWar.jpg"); // Specify the path to your image
-                            Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
-                            ImageIcon scaledBookImage = new ImageIcon(scaledImage);
+                    JLabel imageLabel = new JLabel(scaledBookImage);
+                    imageLabel.setText(String.format("<html>Title: %s  <br><br>Author: %s <br><br> Genre: %s",
+                            book.getBookTitle(),
+                            book.getAuthor(),
+                            book.getGenre()));
 
-                            JLabel imageLabel = new JLabel(scaledBookImage);
-                            imageLabel.setText(String.format("<html>Title: %s  <br><br>Author: %s <br><br> Genre: %s",
-                                    book.getBookTitle(),
-                                    book.getAuthor(),
-                                    book.getGenre()));
+                    imageLabel.setHorizontalTextPosition(JLabel.CENTER);
+                    imageLabel.setVerticalTextPosition(JLabel.BOTTOM);
+                    imageLabel.setFont(new Font("Arial", Font.BOLD, 25));
+                    imageLabel.setIconTextGap(15);
 
-                            imageLabel.setHorizontalTextPosition(JLabel.CENTER);
-                            imageLabel.setVerticalTextPosition(JLabel.BOTTOM);
-                            imageLabel.setFont(new Font("Arial", Font.BOLD, 25));
-                            imageLabel.setIconTextGap(15);
-
-                            GridBagConstraints gbcImageLabel = new GridBagConstraints();
-                            gbcImageLabel.gridx = 0;
-                            gbcImageLabel.gridy = 0;
-                            gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
-                            gbcImageLabel.insets = new Insets(0, 0, 0, 165); // Add space between components
+                    GridBagConstraints gbcImageLabel = new GridBagConstraints();
+                    gbcImageLabel.gridx = 0;
+                    gbcImageLabel.gridy = 0;
+                    gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
+                    gbcImageLabel.insets = new Insets(0, 0, 0, 165); // Add space between components
 
                             JPanel rightPanel = new JPanel(new BorderLayout());
                             rightPanel.setBackground(Color.black);
                             rightPanel.setPreferredSize(new Dimension(400, panelHeight - 15));
 
-                            GridBagConstraints gbcRightPanel = new GridBagConstraints();
-                            gbcRightPanel.gridx = 1;
-                            gbcRightPanel.gridy = 0;
-                            gbcRightPanel.anchor = GridBagConstraints.WEST; // Align to the left
+                    GridBagConstraints gbcRightPanel = new GridBagConstraints();
+                    gbcRightPanel.gridx = 1;
+                    gbcRightPanel.gridy = 0;
+                    gbcRightPanel.anchor = GridBagConstraints.WEST; // Align to the left
 
-                            JTextArea reviewField = new JTextArea();
-                            reviewField.setFont(new Font("Arial", Font.BOLD, 16));
-                            reviewField.setLineWrap(true);
-                            reviewField.setWrapStyleWord(true);
+                    JTextArea reviewField = new JTextArea();
+                    reviewField.setFont(new Font("Arial", Font.BOLD, 16));
+                    reviewField.setLineWrap(true);
+                    reviewField.setWrapStyleWord(true);
 
-                            // Set scroll bar for the reviews
-                            JScrollPane reviewScroll = new JScrollPane(reviewField);
-                            reviewScroll.setPreferredSize(new Dimension(300, 350));
-                            reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                            reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                    // Set scroll bar for the reviews
+                    JScrollPane reviewScroll = new JScrollPane(reviewField);
+                    reviewScroll.setPreferredSize(new Dimension(300, 350));
+                    reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-                            // Read content from a text file and set it in the text field
-                            // A txt file will have all the filePaths of every review and will loop on that file
-                            StringBuilder content = new StringBuilder();
-                            for (Rating rating :book.getRatings()) {
-                                content.append(rating.getReview()).append("\n");
-                            }
-                            reviewField.setText(content.toString().trim());
+                    // Read content from a text file and set it in the text field
+                    // A txt file will have all the filePaths of every review and will loop on that file
+                    StringBuilder content = new StringBuilder();
+                    for (Rating rating : book.getRatings()) {
+                        content.append(rating.getReview()).append("\n");
+                    }
+                    reviewField.setText(content.toString().trim());
 
                             JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
                             JButton buyButton = new JButton("Buy");
@@ -328,49 +328,47 @@ public class MainFrame extends JFrame {
                             dislikeButton.setBackground(new Color(70, 130, 180));
                             dislikeButton.setForeground(Color.WHITE);
 
-                            //Buttons Action
-                            buyButton.addActionListener(new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    // Logic will be here
-                                    JOptionPane.showMessageDialog(null, "Buy");
-                                }
-                            });
-                            borrowButton.addActionListener(new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    // Logic will be here
-                                    JOptionPane.showMessageDialog(null, "Borrowed");
-                                }
-                            });
-                            likeButton.addActionListener(new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    /// Logic will be here
-                                    JOptionPane.showMessageDialog(null, "Like");
-                                }
-                            });
-                            dislikeButton.addActionListener(new ActionListener() {
-                                public void actionPerformed(ActionEvent e) {
-                                    // Logic will be here
-                                    JOptionPane.showMessageDialog(null, "Dislike");
-                                }
-                            });
-
-                            buttonPanel.add(likeButton);
-                            buttonPanel.add(dislikeButton);
-                            buttonPanel.add(buyButton);
-                            buttonPanel.add(borrowButton);
-
-                            rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
-                            rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
-
-                            bookPanel.add(imageLabel, gbcImageLabel);
-                            bookPanel.add(rightPanel, gbcRightPanel);
-                            containerPanel.add(bookPanel);
-                            bookList.add(bookPanel);
-                            bookFound = true;
+                    //Buttons Action
+                    buyButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // Logic will be here
+                            JOptionPane.showMessageDialog(null, "Buy");
                         }
-                    }
+                    });
+                    borrowButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // Logic will be here
+                            JOptionPane.showMessageDialog(null, "Borrowed");
+                        }
+                    });
+                    likeButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            /// Logic will be here
+                            JOptionPane.showMessageDialog(null, "Like");
+                        }
+                    });
+                    dislikeButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // Logic will be here
+                            JOptionPane.showMessageDialog(null, "Dislike");
+                        }
+                    });
+
+                    buttonPanel.add(likeButton);
+                    buttonPanel.add(dislikeButton);
+                    buttonPanel.add(buyButton);
+                    buttonPanel.add(borrowButton);
+
+                    rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
+                    rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
+
+                    bookPanel.add(imageLabel, gbcImageLabel);
+                    bookPanel.add(rightPanel, gbcRightPanel);
+                    containerPanel.add(bookPanel);
+                    bookList.add(bookPanel);
+                    bookFound = true;
                 }
-                if(!bookFound){
+                if (!bookFound) {
                     JPanel emptyPanel = new JPanel();
                     emptyPanel.setLayout(new GridBagLayout());
                     emptyPanel.setBackground(new Color(242, 231, 199));

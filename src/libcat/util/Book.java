@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import static java.lang.Float.isNaN;
 
 public class Book {
-
     private int bookID;
     private String bookTitle;
     private String author;
@@ -19,7 +18,6 @@ public class Book {
     private boolean returned;
 
     private ImageIcon imageIcon;
-
 
 
     private ArrayList<Rating> ratings;
@@ -35,18 +33,17 @@ public class Book {
             double salePercent,
             boolean available,
             ImageIcon imageIcon
-    )
-    {
-        this.bookID         = bookID;
-        this.bookTitle      = bookTitle;
-        this.author         = author;
-        this.genre          = genre;
-        this.year           = year;
-        this.ratings        = ratings;
-        this.bookPrice      = bookPrice;
-        this.salePercent    = salePercent;
-        this.available      = available;
-        this.imageIcon      = imageIcon;
+    ) {
+        this.bookID = bookID;
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.genre = genre;
+        this.year = year;
+        this.ratings = ratings;
+        this.bookPrice = bookPrice;
+        this.salePercent = salePercent;
+        this.available = available;
+        this.imageIcon = imageIcon;
 
         this.rating = calculateRating(this.ratings);
     }
@@ -119,17 +116,23 @@ public class Book {
         return this.salePercent;
     }
 
-    public float getRating() { return rating; }
+    public float getRating() {
+        return rating;
+    }
 
-    public ArrayList<Rating> getRatings() {return ratings;}
+    public ArrayList<Rating> getRatings() {
+        return ratings;
+    }
 
-    public ImageIcon getImageIcon() {return  imageIcon;}
+    public ImageIcon getImageIcon() {
+        return imageIcon;
+    }
 
     public float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;
         for (Rating rating : ratings) {
             sum = rating.like ? sum + 1 : sum + 0;
         }
-        return isNaN((sum/ratings.size())) ? -1F: (sum/ratings.size())*100F;
+        return isNaN((sum / ratings.size())) ? -1F : (sum / ratings.size()) * 100F;
     }
 }
