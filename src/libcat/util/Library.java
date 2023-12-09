@@ -133,34 +133,26 @@ public class Library {
         }
     }
 
-    public static ArrayList<String> getBy(QueryType queryType, QueryIndex queryIndex, String searchValue) {
+    private static boolean isLike(String lhs, String rhs) {
+        return Pattern.compile(".*" + rhs + ".*", Pattern.CASE_INSENSITIVE).matcher(lhs).matches();
+    }
+
+    public static <T> ArrayList<T> getBy(QueryType queryType, QueryIndex queryIndex, String searchValue) {
         System.out.println(queryIndex.getQuery());
 
-        try {
-            ArrayList<String> foundValue = new ArrayList<String>();
+        ArrayList<T> foundValue = new ArrayList<T>();
 
+        try {
             switch (queryType) {
                 case BOOK: {
                     try {
                         for (Book book : Library.books) {
-                            if (queryIndex.getQuery().equals("book_id")) {
-                                if (String.valueOf(book.getBookID()).equalsIgnoreCase(searchValue)) {
-                                    foundValue.add(book.getBookTitle());
-                                }
-                            } else if (queryIndex.getQuery().equals("book_title")) {
-                                if (Pattern.compile(".*" + searchValue + ".*", Pattern.CASE_INSENSITIVE).matcher(book.getBookTitle()).matches()) {
-                                    foundValue.add(String.valueOf(book.getBookID()));
-                                }
-                            } else if (queryIndex.getQuery().equals("book_author")) {
-                                if (Pattern.compile(".*" + searchValue + ".*", Pattern.CASE_INSENSITIVE).matcher(book.getAuthor()).matches()) {
-                                    foundValue.add(String.valueOf(book.getBookID()));
-                                }
-                            } else if (queryIndex.getQuery().equals("book_genre")) {
-                                if (Pattern.compile(".*" + searchValue + ".*", Pattern.CASE_INSENSITIVE).matcher(book.getGenre()).matches()) {
-                                    foundValue.add(String.valueOf(book.getBookID()));
-                                }
-                            } else {
-                                throw new Exception("Unexpected queryName for chosen queryType");
+                            if ((queryIndex.getQuery().equals("book_id") && String.valueOf(book.getBookID()).equalsIgnoreCase(searchValue))
+                                    || (queryIndex.getQuery().equals("book_title") && isLike(book.getBookTitle(), searchValue))
+                                    || (queryIndex.getQuery().equals("book_author") && isLike(book.getAuthor(), searchValue))
+                                    || (queryIndex.getQuery().equals("book_genre") && isLike(book.getGenre(), searchValue))
+                            ) {
+                                foundValue.add((T) book);
                             }
                         }
                     } catch (Exception e) {
@@ -173,18 +165,11 @@ public class Library {
                 case USER: {
                     try {
                         for (User user : Library.users) {
-                            if (queryIndex.getQuery().equals("user_id")) {
-                                if (String.valueOf(user.getID()).equalsIgnoreCase(searchValue)) {
-                                    foundValue.add(user.getName());
-                                }
-                            } else if (queryIndex.getQuery().equals("user_name")) {
-                                if (user.getName().equalsIgnoreCase(searchValue)) {
-                                    foundValue.add(String.valueOf(user.getID()));
-                                }
-                            } else if (queryIndex.getQuery().equals("user_type")) {
-                                if (user.getType().equalsIgnoreCase(searchValue)) {
-                                    foundValue.add(user.getName());
-                                }
+                            if (queryIndex.getQuery().equals("user_id") && String.valueOf(user.getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("user_name") && isLike(user.getName(), searchValue)
+                                    || queryIndex.getQuery().equals("user_type") && user.getType().equalsIgnoreCase(searchValue)
+                            ) {
+                                foundValue.add((T) user);
                             } else {
                                 throw new Exception("Unexpected queryName for chosen queryType");
                             }
@@ -206,7 +191,7 @@ public class Library {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 
-            return new ArrayList<String>();
+            return new ArrayList<T>();
         }
     }
 

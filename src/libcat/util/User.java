@@ -12,7 +12,7 @@ public abstract class User implements UserType {
     }
     @Override
     public String getType() {
-        return "how the fuck did you query this";
+        return "user";
     }
     public int getID() {
         return id;
