@@ -98,20 +98,7 @@ public class Library {
                     admins.add(new Admin(Integer.parseInt(userRow[0]), userRow[1]));
             }
         }
-
         users = FileSystemManager.mergeUsers(Library.admins, Library.customers, Library.borrowers);
-
-        for (Customer customer : customers) {
-            System.out.println(customer);
-        }
-
-        for (Borrower borrower : borrowers) {
-            System.out.println(borrower);
-        }
-
-        for (Admin admin : admins) {
-            System.out.println(admin);
-        }
     }
 
     private static void makeBooks() {
@@ -138,7 +125,6 @@ public class Library {
     }
 
     public static <T> ArrayList<T> getBy(QueryType queryType, QueryIndex queryIndex, String searchValue) {
-        System.out.println(queryIndex.getQuery());
 
         ArrayList<T> foundValue = new ArrayList<T>();
 
