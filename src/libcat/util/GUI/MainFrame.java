@@ -213,6 +213,7 @@ public class MainFrame extends JFrame {
                     reviewField.setFont(new Font("Arial", Font.BOLD, 16));
                     reviewField.setLineWrap(true);
                     reviewField.setWrapStyleWord(true);
+                    reviewField.setMargin(new Insets(4,4,4,4));
 
                     // Set scroll bar for the reviews
                     JScrollPane reviewScroll = new JScrollPane(reviewField);
@@ -222,11 +223,12 @@ public class MainFrame extends JFrame {
 
                     // Read content from a text file and set it in the text field
                     // A txt file will have all the filePaths of every review and will loop on that file
-                    StringBuilder content = new StringBuilder();
+                    StringBuilder reviews = new StringBuilder();
                     for (Rating rating : book.getRatings()) {
-                        content.append(rating.getReview()).append("\n");
+                        String isLike = rating.isLike() ? " likes:\n" : " dislikes:\n";
+                        reviews.append(rating.getUsername()).append(isLike).append(rating.getReview()).append("\n\n");
                     }
-                    reviewField.setText(content.toString().trim());
+                    reviewField.setText(reviews.toString().trim());
 
                     JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
                     JButton buyButton = new JButton("Buy");

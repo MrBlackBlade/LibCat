@@ -170,8 +170,6 @@ public class Library {
                                     || queryIndex.getQuery().equals("user_type") && user.getType().equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) user);
-                            } else {
-                                throw new Exception("Unexpected queryName for chosen queryType");
                             }
                         }
                     } catch (Exception e) {
