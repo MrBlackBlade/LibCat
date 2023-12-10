@@ -1,4 +1,4 @@
-package libcat.util.Login;
+package libcat.util.GUI;
 
 import libcat.util.Book;
 import libcat.util.FileSystemManager;
@@ -138,41 +138,76 @@ public class MainFrame extends JFrame {
 
                 for (Book book : queryResult) {
 
-                    JPanel bookPanel = new JPanel();
-                    bookPanel.setLayout(new GridBagLayout());
-                    bookPanel.setBackground(new Color(242, 231, 199));
-                    bookPanel.setPreferredSize(new Dimension(1280, panelHeight));
-                    bookPanel.setBorder(border);
+                    //Main Panel
+                    JPanel ListItemPanel = new JPanel();
+                    ListItemPanel.setLayout(new GridBagLayout());
+                    ListItemPanel.setBackground(new Color(242, 231, 199));
+                    ListItemPanel.setPreferredSize(new Dimension(1280, panelHeight));
+                    ListItemPanel.setBorder(border);
 
+                    //Book Image
                     ImageIcon bookImage = book.getImageIcon();
                     Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
                     ImageIcon scaledBookImage = new ImageIcon(scaledImage);
-
                     JLabel imageLabel = new JLabel(scaledBookImage);
-                    imageLabel.setText(String.format("<html>Title: %s  <br><br>Author: %s <br><br> Genre: %s",
-                            book.getBookTitle(),
-                            book.getAuthor(),
-                            book.getGenre()));
 
-                    imageLabel.setHorizontalTextPosition(JLabel.CENTER);
-                    imageLabel.setVerticalTextPosition(JLabel.BOTTOM);
-                    imageLabel.setFont(new Font("Arial", Font.BOLD, 25));
+                    //Book Properties
+                    imageLabel.setHorizontalTextPosition(JLabel.RIGHT);
+                    imageLabel.setVerticalTextPosition(JLabel.CENTER);
+
+                    //imageLabel.setPreferredSize(new Dimension());
                     imageLabel.setIconTextGap(15);
 
+                    //GBCs
                     GridBagConstraints gbcImageLabel = new GridBagConstraints();
+                    gbcImageLabel.fill = GridBagConstraints.HORIZONTAL;
+                    //gbcImageLabel.weightx = 1.0;
                     gbcImageLabel.gridx = 0;
                     gbcImageLabel.gridy = 0;
                     gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
-                    gbcImageLabel.insets = new Insets(0, 0, 0, 165); // Add space between components
+                    gbcImageLabel.insets = new Insets(0, 48, 0, 0); // Add space between components
+
+                    //Book Text
+                    JTextArea bookLabel = new JTextArea(2, 20);
+                    bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
+                            book.getBookTitle(),
+                            book.getAuthor(),
+                            book.getGenre()));
+                    bookLabel.setFont(new Font("Arial", Font.BOLD, 25));
+                    bookLabel.setWrapStyleWord(true);
+                    bookLabel.setLineWrap(true);
+                    bookLabel.setOpaque(false);
+                    bookLabel.setEditable(false);
+                    bookLabel.setFocusable(false);
+
+                    //GBCs
+                    GridBagConstraints gbcBookLabel = new GridBagConstraints();
+                    gbcBookLabel.fill = GridBagConstraints.HORIZONTAL;
+                    //gbcImageLabel.weightx = 1.0;
+                    gbcBookLabel.gridx = 1;
+                    gbcBookLabel.gridy = 0;
+                    gbcBookLabel.anchor = GridBagConstraints.WEST; // Align to the left
+                    gbcBookLabel.insets = new Insets(0, 16, 0, 0); // Add space between components
+
+                    //Empty Space
+                    JPanel emptyPanel = new JPanel();
+                    emptyPanel.setBackground(new Color(242, 231, 199));
+                    GridBagConstraints gbcEmptyPanel = new GridBagConstraints();
+                    gbcEmptyPanel.fill = GridBagConstraints.HORIZONTAL;
+                    gbcEmptyPanel.weightx = 1.0;
+                    gbcEmptyPanel.gridx = 2;
+                    gbcEmptyPanel.gridy = 0;
 
                     JPanel rightPanel = new JPanel(new BorderLayout());
                     rightPanel.setBackground(Color.black);
                     rightPanel.setPreferredSize(new Dimension(400, panelHeight - 15));
 
                     GridBagConstraints gbcRightPanel = new GridBagConstraints();
-                    gbcRightPanel.gridx = 1;
+                    gbcRightPanel.fill = GridBagConstraints.HORIZONTAL;
+                    gbcRightPanel.gridx = 3;
                     gbcRightPanel.gridy = 0;
-                    gbcRightPanel.anchor = GridBagConstraints.WEST; // Align to the left
+                    gbcRightPanel.anchor = GridBagConstraints.EAST; // Align to the left
+                    gbcRightPanel.insets = new Insets(0, 0, 0, 48);
 
                     JTextArea reviewField = new JTextArea();
                     reviewField.setFont(new Font("Arial", Font.BOLD, 16));
@@ -242,9 +277,11 @@ public class MainFrame extends JFrame {
                     rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
                     rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
 
-                    bookPanel.add(imageLabel, gbcImageLabel);
-                    bookPanel.add(rightPanel, gbcRightPanel);
-                    containerPanel.add(bookPanel);
+                    ListItemPanel.add(imageLabel, gbcImageLabel);
+                    ListItemPanel.add(bookLabel, gbcBookLabel);
+                    ListItemPanel.add(emptyPanel, gbcEmptyPanel);
+                    ListItemPanel.add(rightPanel, gbcRightPanel);
+                    containerPanel.add(ListItemPanel);
                     //bookList.add(bookPanel);
                     bookFound = true;
                 }
@@ -277,8 +314,12 @@ public class MainFrame extends JFrame {
         add(welcomePanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         //add(containerPanel, BorderLayout.WEST);
+
         searchButton.doClick();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            setLocationRelativeTo(null);
+            setVisible(true);
+            scrollPane.getVerticalScrollBar().setValue(0);
+        });
     }
 }

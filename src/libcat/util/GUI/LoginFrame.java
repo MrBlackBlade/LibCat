@@ -1,4 +1,4 @@
-package libcat.util.Login;
+package libcat.util.GUI;
 
 import libcat.util.AuthenticationSystem;
 import libcat.util.FileSystemManager;
@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 public class LoginFrame extends JFrame {
     private final LoginFrame loginFrameReference;

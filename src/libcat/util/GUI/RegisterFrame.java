@@ -1,7 +1,6 @@
-package libcat.util.Login;
+package libcat.util.GUI;
 
 import libcat.util.AuthenticationSystem;
-import libcat.util.FileSystemManager;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,9 @@
 package libcat;
 
 import libcat.util.*;
-import libcat.util.Login.LoginFrame;
+import libcat.util.GUI.LoginFrame;
 
 import javax.swing.*;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,5 +12,9 @@ public class Main {
             LoginFrame loginFrame = new LoginFrame();
             loginFrame.setVisible(true);
         });
+//        SwingUtilities.invokeLater(() -> {
+//            LayoutTest layoutTest = new LayoutTest("user");
+//            layoutTest.setVisible(true);
+//        });
     }
 }
