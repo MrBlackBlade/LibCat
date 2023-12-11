@@ -61,7 +61,7 @@ public class LoginFrame extends JFrame {
                 // Perform authentication logic here
                 if (AuthenticationSystem.credentialsMatch(username, password)) {
                     // Main window will be added here
-                    MainFrame homepage = new MainFrame(username);
+                    new MainFrame(username);
                 } else {
                     //delete system32
                     JOptionPane.showMessageDialog(null, "User not found.");

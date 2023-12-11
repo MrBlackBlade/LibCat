@@ -1,6 +1,7 @@
 package libcat.util.GUI;
 
 import libcat.util.AuthenticationSystem;
+import libcat.util.FileSystemManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,19 +11,22 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 class RegisterFrame extends JFrame {
+    private final RegisterFrame registerFrameReference;
     private final JTextField usernameField;
     private final JPasswordField passwordField;
-    private final RegisterFrame registerFrameReference;
-    public RegisterFrame(LoginFrame loginFrameReference) {
 
+    public RegisterFrame(LoginFrame loginFrameReference) {
         registerFrameReference = this;
 
+        // Title and icon
         setTitle("Register Form");
+        ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
+        setIconImage(icon.getImage());
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         setPreferredSize(new Dimension(400, 200));
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        setLayout(null);
 
         // Components
         JLabel usernameLabel = new JLabel("Username:");
@@ -32,24 +36,20 @@ class RegisterFrame extends JFrame {
         JButton registerButton = new JButton("Register");
 
         // Add components to the frame using GridBagConstraints
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(usernameLabel, gbc);
+        usernameLabel.setBounds(11, 2, 100, 30);
+        add(usernameLabel);
 
-        gbc.gridx = 1;
-        add(usernameField, gbc);
+        passwordLabel.setBounds(11, 39, 100, 30);
+        add(passwordLabel);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(passwordLabel, gbc);
+        usernameField.setBounds(12, 25, 361, 21);
+        add(usernameField);
 
-        gbc.gridx = 1;
-        add(passwordField, gbc);
+        passwordField.setBounds(12, 62, 361, 21);
+        add(passwordField);
 
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(registerButton, gbc);
+        registerButton.setBounds(92, 112, 200, 20);
+        add(registerButton);
 
         // Action listener for the register button
         registerButton.addActionListener(new ActionListener() {
@@ -57,7 +57,7 @@ class RegisterFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] userCredentials = {usernameField.getText(), new String(passwordField.getPassword())};
                 //Perform registration logic here
-                if(AuthenticationSystem.registerNewUser(userCredentials)) {
+                if (AuthenticationSystem.registerNewUser(userCredentials)) {
                     JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + userCredentials[0]);
                     loginFrameReference.setVisible(true);
                     dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));
@@ -66,11 +66,13 @@ class RegisterFrame extends JFrame {
                 }
             }
         });
-        this.addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent e){
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
                 loginFrameReference.setVisible(true);
             }
         });
+
+        setResizable(false);
         pack();
         setLocationRelativeTo(null);
     }

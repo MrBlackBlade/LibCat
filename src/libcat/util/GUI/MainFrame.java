@@ -24,7 +24,6 @@ public class MainFrame extends JFrame {
     static RadioSelect choice = RadioSelect.ONE;
 
     public MainFrame(String username) {
-
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
@@ -288,7 +287,6 @@ public class MainFrame extends JFrame {
                     ListItemPanel.add(emptyPanel, gbcEmptyPanel);
                     ListItemPanel.add(rightPanel, gbcRightPanel);
                     containerPanel.add(ListItemPanel);
-                    //bookList.add(bookPanel);
                     bookFound = true;
                 }
                 if (!bookFound) {
@@ -311,15 +309,9 @@ public class MainFrame extends JFrame {
             }
         });
 
-
-        //Search Button
-
-        //bookList.get(0);
-        //System.out.println(bookList.get(0));
         // Add components
         add(welcomePanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-        //add(containerPanel, BorderLayout.WEST);
 
         searchButton.doClick();
         SwingUtilities.invokeLater(() -> {
