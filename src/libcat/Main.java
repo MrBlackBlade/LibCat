@@ -12,9 +12,5 @@ public class Main {
             LoginFrame loginFrame = new LoginFrame();
             loginFrame.setVisible(true);
         });
-//        SwingUtilities.invokeLater(() -> {
-//            LayoutTest layoutTest = new LayoutTest("user");
-//            layoutTest.setVisible(true);
-//        });
     }
 }

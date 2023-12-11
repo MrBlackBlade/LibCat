@@ -46,8 +46,10 @@ public class AuthenticationSystem extends FileSystemManager{
             return false;
         } else {
             insertRow(usersCredsFile, row);
-            insertRow(usersDataFile, new String[]{row[0], row[1], "customer"});
+
             // another function will be added to update users
+            insertRow(usersDataFile, new String[]{row[0], row[1], "customer"});
+
             Library.initialize();
             return true;
         }

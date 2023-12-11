@@ -66,6 +66,9 @@ public class MainFrame extends JFrame {
         radioButtonGroup.add(radioButton2);
         radioButtonGroup.add(radioButton3);
 
+        // To display the radio button being selected by default
+        radioButton1.setSelected(true);
+
         // Perform the action based on the selected radio button
         ActionListener radioListener = new ActionListener() {
 
@@ -213,7 +216,7 @@ public class MainFrame extends JFrame {
                     reviewField.setFont(new Font("Arial", Font.BOLD, 16));
                     reviewField.setLineWrap(true);
                     reviewField.setWrapStyleWord(true);
-                    reviewField.setMargin(new Insets(4,4,4,4));
+                    reviewField.setMargin(new Insets(4, 4, 4, 4));
                     reviewField.setEditable(false);
 
                     // Set scroll bar for the reviews
