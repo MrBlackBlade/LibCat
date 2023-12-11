@@ -3,10 +3,10 @@ package libcat.util;
 import java.time.LocalDate;
 
 public class Transaction {
-    Book Cbook;
-    Borrower borrower;
-    LocalDate Tdate;
-    LocalDate Rdate;
+    private Book Cbook;
+    private Borrower borrower;
+    private LocalDate Tdate;
+    private LocalDate Rdate;
 
     public static void main(String[] args) {
         LocalDate Tdate = LocalDate.now();
@@ -52,5 +52,4 @@ public class Transaction {
         }
 
     }
-
 }
