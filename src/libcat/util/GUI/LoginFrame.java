@@ -12,18 +12,19 @@ public class LoginFrame extends JFrame {
     private final LoginFrame loginFrameReference;
     private final JTextField usernameField;
     private final JPasswordField passwordField;
-    public LoginFrame() {
 
+    public LoginFrame() {
         loginFrameReference = this;
 
+        // Title and icon
         setTitle("LibCat");
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setIconImage(icon.getImage());
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         setPreferredSize(new Dimension(400, 200));
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        setLayout(null);
 
         // Components
         JLabel usernameLabel = new JLabel("Username:");
@@ -33,28 +34,24 @@ public class LoginFrame extends JFrame {
         JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
 
-        // Add components to the frame using GridBagConstraints
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(usernameLabel, gbc);
+        // Add components to the frame
+        usernameLabel.setBounds(11, 2, 100, 30);
+        add(usernameLabel);
 
-        gbc.gridx = 1;
-        add(usernameField, gbc);
+        passwordLabel.setBounds(11, 39, 100, 30);
+        add(passwordLabel);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(passwordLabel, gbc);
+        usernameField.setBounds(12, 25, 361, 21);
+        add(usernameField);
 
-        gbc.gridx = 1;
-        add(passwordField, gbc);
+        passwordField.setBounds(12, 62, 361, 21);
+        add(passwordField);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        add(registerButton, gbc);
+        registerButton.setBounds(92, 98, 200, 20);
+        add(registerButton);
 
-        gbc.gridx = 1;
-        add(loginButton, gbc);
-
+        loginButton.setBounds(92, 126, 200, 20);
+        add(loginButton);
 
         // Action listeners
         loginButton.addActionListener(new ActionListener() {
@@ -62,11 +59,10 @@ public class LoginFrame extends JFrame {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
                 // Perform authentication logic here
-                if(AuthenticationSystem.credentialsMatch(username, password)){
+                if (AuthenticationSystem.credentialsMatch(username, password)) {
                     // Main window will be added here
                     MainFrame homepage = new MainFrame(username);
-                }
-                else {
+                } else {
                     //delete system32
                     JOptionPane.showMessageDialog(null, "User not found.");
                 }
@@ -81,6 +77,8 @@ public class LoginFrame extends JFrame {
                 setVisible(false);
             }
         });
+
+        setResizable(false);
         pack();
         setLocationRelativeTo(null);
     }
