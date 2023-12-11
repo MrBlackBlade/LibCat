@@ -214,6 +214,7 @@ public class MainFrame extends JFrame {
                     reviewField.setLineWrap(true);
                     reviewField.setWrapStyleWord(true);
                     reviewField.setMargin(new Insets(4,4,4,4));
+                    reviewField.setEditable(false);
 
                     // Set scroll bar for the reviews
                     JScrollPane reviewScroll = new JScrollPane(reviewField);
