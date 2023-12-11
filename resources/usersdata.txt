@@ -2,10 +2,11 @@
 1,TheOne1,customer
 2,PotatoIdentifier,customer
 3,Magicslayer,customer
-4,MrBlackBlade,borrower
 5,Boldingar,customer
-6,Peter,borrower
 7,Maria,customer
 8,Zigo,customer
 9,Jimmy,customer
+11,1,customer
+4,MrBlackBlade,borrower
+6,Peter,borrower
 10,Makronomic,borrower

@@ -1,7 +1,6 @@
-package libcat.util.GUI;
+package libcat;
 
-import libcat.util.AuthenticationSystem;
-import libcat.util.FileSystemManager;
+import libcat.util.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,8 +59,9 @@ public class LoginFrame extends JFrame {
                 String password = new String(passwordField.getPassword());
                 // Perform authentication logic here
                 if (AuthenticationSystem.credentialsMatch(username, password)) {
+                    User user = (User) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.NAME, username).get(0);
                     // Main window will be added here
-                    new MainFrame(username);
+                    new MainFrame(user);
                 } else {
                     //delete system32
                     JOptionPane.showMessageDialog(null, "User not found.");
