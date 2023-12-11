@@ -7,6 +7,7 @@ import libcat.util.Rating;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,8 +57,13 @@ public class MainFrame extends JFrame {
 
         // Add radio buttons
         JRadioButton radioButton1 = new JRadioButton("Title");
+        radioButton1.setBackground(new Color(200, 200, 200));
+
         JRadioButton radioButton2 = new JRadioButton("Author");
+        radioButton2.setBackground(new Color(200, 200, 200));
+
         JRadioButton radioButton3 = new JRadioButton("Genre");
+        radioButton3.setBackground(new Color(200, 200, 200));
 
         // Group the radio buttons so that only one can be selected at a time
         ButtonGroup radioButtonGroup = new ButtonGroup();
@@ -104,6 +110,7 @@ public class MainFrame extends JFrame {
         radioPanel.add(radioButton1);
         radioPanel.add(radioButton2);
         radioPanel.add(radioButton3);
+        radioPanel.setBorder(new LineBorder(new Color(238, 238, 238), 3));
 
         gbc.gridy = 2;
         gbc.gridwidth = 2; // Span two columns
