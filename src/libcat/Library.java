@@ -1,14 +1,10 @@
-package libcat.util;
-
-import libcat.Admin;
+package libcat;
 
 import javax.swing.*;
-import javax.xml.crypto.AlgorithmMethod;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import libcat.util.QueryIndex;
+import libcat.util.*;
 
 public class Library {
     public static ArrayList<Admin> admins;
@@ -16,7 +12,6 @@ public class Library {
     public static ArrayList<Rating> ratings;
     public static ArrayList<Customer> customers;
     public static ArrayList<Borrower> borrowers;
-
     public static ArrayList<User> users;
 
     public enum QueryType {
@@ -76,7 +71,6 @@ public class Library {
         admins = new ArrayList<Admin>();
         customers = new ArrayList<Customer>();
         borrowers = new ArrayList<Borrower>();
-        users = new ArrayList<User>();
 
         Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeUsers();
@@ -98,7 +92,12 @@ public class Library {
                     admins.add(new Admin(Integer.parseInt(userRow[0]), userRow[1]));
             }
         }
-        users = FileSystemManager.mergeUsers(Library.admins, Library.customers, Library.borrowers);
+    }
+    public static ArrayList<User> getUsers() {
+        ArrayList<User> users = (new ArrayList<>(admins));
+        users.addAll(customers);
+        users.addAll(borrowers);
+        return users;
     }
 
     private static void makeBooks() {
@@ -150,9 +149,9 @@ public class Library {
 
                 case USER: {
                     try {
-                        for (User user : Library.users) {
+                        for (User user : Library.getUsers()) {
                             if (queryIndex.getQuery().equals("user_id") && String.valueOf(user.getID()).equalsIgnoreCase(searchValue)
-                                    || queryIndex.getQuery().equals("user_name") && isLike(user.getName(), searchValue)
+                                    || queryIndex.getQuery().equals("user_name") && user.getName().equalsIgnoreCase(searchValue)
                                     || queryIndex.getQuery().equals("user_type") && user.getType().equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) user);
@@ -199,7 +198,7 @@ public class Library {
     private static ArrayList<Rating> getRatingsByBookID(int bookID) {
         ArrayList<Rating> queryResult = new ArrayList<Rating>();
         for (Rating rating : ratings) {
-            if (rating.bookID == bookID) {
+            if (rating.getBookID() == bookID) {
                 queryResult.add(rating);
             }
         }

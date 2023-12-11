@@ -1,11 +1,8 @@
 package libcat.util;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 public abstract class User implements UserType {
-    int id;
-    String name;
+    private int id;
+    private String name;
     public User(int id, String name) {
         this.id = id;
         this.name = name;

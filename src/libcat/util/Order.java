@@ -1,7 +1,5 @@
 package libcat.util;
 
-import java.time.LocalDate;
-
 public class Order {
     private static int counter = 0;
     private int orderID;

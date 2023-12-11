@@ -1,8 +1,5 @@
 package libcat;
 
-import libcat.util.*;
-import libcat.util.GUI.LoginFrame;
-
 import javax.swing.*;
 
 public class Main {

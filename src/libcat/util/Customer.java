@@ -1,7 +1,5 @@
 package libcat.util;
 
-import java.util.ArrayList;
-
 public class Customer extends User implements UserType {
     public Customer(int id, String name) {
         super(id, name);

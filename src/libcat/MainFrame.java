@@ -1,9 +1,8 @@
-package libcat.util.GUI;
+package libcat;
 
 import libcat.util.Book;
-import libcat.util.FileSystemManager;
-import libcat.util.Library;
 import libcat.util.Rating;
+import libcat.util.User;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -24,7 +23,7 @@ public class MainFrame extends JFrame {
 
     static RadioSelect choice = RadioSelect.ONE;
 
-    public MainFrame(String username) {
+    public MainFrame(User user) {
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
@@ -41,7 +40,7 @@ public class MainFrame extends JFrame {
         welcomePanel.setPreferredSize(new Dimension(1280, 150));
         welcomePanel.setBackground(new Color(200, 200, 200));
 
-        JLabel welcomeLabel = new JLabel("Welcome " + username);
+        JLabel welcomeLabel = new JLabel("Welcome " + user.getName());
         welcomeLabel.setHorizontalTextPosition(JLabel.CENTER);
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         welcomeLabel.setVerticalAlignment(JLabel.TOP);
