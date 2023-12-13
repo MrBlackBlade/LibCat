@@ -54,12 +54,27 @@ class RegisterFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] userCredentials = {usernameField.getText(), new String(passwordField.getPassword())};
                 //Perform registration logic here
-                if (AuthenticationSystem.registerNewUser(userCredentials)) {
+                if (AuthenticationSystem.userExists(userCredentials[0])
+                        ||!AuthenticationSystem.usernameValid(userCredentials[0])
+                        ||!AuthenticationSystem.passwordValid(userCredentials[1])
+                ) {
+                    StringBuilder errorMessage = new StringBuilder();
+                    if (AuthenticationSystem.userExists(userCredentials[0])){
+                        errorMessage.append("This User Already Exists\n");
+                    }
+                    if (!AuthenticationSystem.usernameValid(userCredentials[0])){
+                        errorMessage.append("This User is Invalid\n");
+                    }
+                    if (!AuthenticationSystem.passwordValid(userCredentials[1])) {
+                        errorMessage.append("This Password is Invalid\n");
+                    }
+
+                    JOptionPane.showMessageDialog(RegisterFrame.this, String.format("User %s already exists!", userCredentials[0]));
+                }
+                else {
                     JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + userCredentials[0]);
                     loginFrameReference.setVisible(true);
                     dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));
-                } else {
-                    JOptionPane.showMessageDialog(RegisterFrame.this, String.format("User %s already exists!", userCredentials[0]));
                 }
             }
         });

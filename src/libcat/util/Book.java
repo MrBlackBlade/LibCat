@@ -126,7 +126,7 @@ public class Book {
     private float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;
         for (Rating rating : ratings) {
-            sum = rating.isLike() ? sum + 1 : sum + 0;
+            sum = rating.isLike() ? sum + 1 : sum;
         }
         return isNaN((sum / ratings.size())) ? -1F : (sum / ratings.size()) * 100F;
     }
