@@ -119,6 +119,59 @@ public class Library {
         }
     }
 
+    public static ArrayList<Book> sortByRating(BookQueryIndex queryIndex) {
+        ArrayList<Book> sortedBooks = new ArrayList<>(Library.books);
+        ArrayList<Book> positiveList = new ArrayList<>();
+        ArrayList<Book> negativeList = new ArrayList<>();
+        ArrayList<Book> neutralList = new ArrayList<>();
+
+        switch (queryIndex.getQuery()) {
+            case "book_author": {
+                System.out.println("In author");
+                sortedBooks.sort((bookX, bookY) -> bookX.getAuthor().compareToIgnoreCase(bookY.getAuthor()));
+                break;
+            }
+
+            case "book_genre": {
+                System.out.println("In genre");
+                sortedBooks.sort((bookX, bookY) -> bookX.getGenre().compareToIgnoreCase(bookY.getGenre()));
+                break;
+            }
+
+            case "book_title": {
+                System.out.println("In title");
+                sortedBooks.sort((bookX, bookY) -> bookX.getBookTitle().compareToIgnoreCase(bookY.getBookTitle()));
+                break;
+            }
+
+            case "book_id" : {
+                System.out.println("In id");
+                sortedBooks.sort((bookX, bookY) -> Integer.compare(bookX.getBookID(), bookY.getBookID()));
+                break;
+            }
+        }
+
+        for (Book book : sortedBooks) {
+            if (book.getRating() >= 50.F) {
+                positiveList.add(book);
+            } else if (book.getRating() >= 0.F) {
+                negativeList.add(book);
+            } else {
+                neutralList.add(book);
+            }
+        }
+
+        positiveList.sort((bookX, bookY) -> Float.compare(bookY.getRating(), bookX.getRating()));
+        negativeList.sort((bookX, bookY) -> Float.compare(bookY.getRating(), bookX.getRating()));
+
+        sortedBooks.clear();
+        sortedBooks.addAll(positiveList);
+        sortedBooks.addAll(negativeList);
+        sortedBooks.addAll(neutralList);
+
+        return sortedBooks;
+    }
+
     private static boolean isLike(String lhs, String rhs) {
         return Pattern.compile(".*" + rhs + ".*", Pattern.CASE_INSENSITIVE).matcher(lhs).matches();
     }

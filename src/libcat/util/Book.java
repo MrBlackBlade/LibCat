@@ -19,7 +19,6 @@ public class Book {
 
     private ImageIcon imageIcon;
 
-
     private ArrayList<Rating> ratings;
 
     public Book(
@@ -84,10 +83,6 @@ public class Book {
         this.salePercent = g;
     }
 
-    public void setFinalrating() {
-        this.rating = calculateRating(this.ratings);
-    }
-
     public int getBookID() {
         return this.bookID;
     }
@@ -128,7 +123,7 @@ public class Book {
         return imageIcon;
     }
 
-    public float calculateRating(ArrayList<Rating> ratings) {
+    private float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;
         for (Rating rating : ratings) {
             sum = rating.isLike() ? sum + 1 : sum + 0;
