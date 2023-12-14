@@ -123,6 +123,24 @@ public class Book {
         return imageIcon;
     }
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookID=" + bookID +
+                ", bookTitle='" + bookTitle + '\'' +
+                ", author='" + author + '\'' +
+                ", genre='" + genre + '\'' +
+                ", available=" + available +
+                ", year='" + year + '\'' +
+                ", bookPrice=" + bookPrice +
+                ", salePercent=" + salePercent +
+                ", rating=" + rating +
+                ", returned=" + returned +
+                ", imageIcon=" + imageIcon +
+                ", ratings=" + ratings +
+                '}';
+    }
+
     private float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;
         for (Rating rating : ratings) {

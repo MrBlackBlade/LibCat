@@ -1,7 +1,7 @@
 package libcat;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import libcat.util.*;
@@ -93,6 +93,7 @@ public class Library {
             }
         }
     }
+
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = (new ArrayList<>(admins));
         users.addAll(customers);
@@ -119,33 +120,29 @@ public class Library {
         }
     }
 
-    public static ArrayList<Book> sortByRating(BookQueryIndex queryIndex) {
-        ArrayList<Book> sortedBooks = new ArrayList<>(Library.books);
+    public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource ,BookQueryIndex queryIndex) {
+        ArrayList<Book> sortedBooks = new ArrayList<>(bookSource);
         ArrayList<Book> positiveList = new ArrayList<>();
         ArrayList<Book> negativeList = new ArrayList<>();
         ArrayList<Book> neutralList = new ArrayList<>();
 
         switch (queryIndex.getQuery()) {
             case "book_author": {
-                System.out.println("In author");
                 sortedBooks.sort((bookX, bookY) -> bookX.getAuthor().compareToIgnoreCase(bookY.getAuthor()));
                 break;
             }
 
             case "book_genre": {
-                System.out.println("In genre");
                 sortedBooks.sort((bookX, bookY) -> bookX.getGenre().compareToIgnoreCase(bookY.getGenre()));
                 break;
             }
 
             case "book_title": {
-                System.out.println("In title");
                 sortedBooks.sort((bookX, bookY) -> bookX.getBookTitle().compareToIgnoreCase(bookY.getBookTitle()));
                 break;
             }
 
-            case "book_id" : {
-                System.out.println("In id");
+            case "book_id": {
                 sortedBooks.sort((bookX, bookY) -> Integer.compare(bookX.getBookID(), bookY.getBookID()));
                 break;
             }
@@ -170,6 +167,53 @@ public class Library {
         sortedBooks.addAll(neutralList);
 
         return sortedBooks;
+    }
+
+    public static ArrayList<Book> recommendBooks(User user) {
+        ArrayList<Book> recommendedBooks = new ArrayList<>();
+        ArrayList<Book> userOrderHistory = new ArrayList<>(books);
+
+        // all instances of "books" would be replaced later with the user's order history, not "Library.books"
+        try {
+            HashMap<String, Integer> genres = new HashMap<>();
+
+            // count the number of books in each genre in the order history
+            for (Book book : userOrderHistory) {
+                genres.put(book.getGenre(), (genres.get(book.getGenre()) == null ? 1 : genres.get(book.getGenre()) + 1));
+            }
+
+            // import all the entries into a list, and sort them descendingly
+            List<Map.Entry<String, Integer>> genreEntries = new ArrayList<>(genres.entrySet());
+            genreEntries.sort((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue()));
+
+            // re-add the sorted entries back into a linked hashmap to maintain the order
+            LinkedHashMap<String, Integer> sortedGenres = new LinkedHashMap<>();
+            for (Map.Entry<String, Integer> entry : genreEntries) {
+                sortedGenres.put(entry.getKey(), entry.getValue());
+            }
+
+            // create a list of the books not found in the user's order history
+            ArrayList<Book> newBooks = new ArrayList<>();
+            for (Book book : Library.books) {
+                if (!userOrderHistory.contains(book)) {
+                    newBooks.add(book);
+                }
+            }
+
+            // add the books in the same genre that aren't in the order history
+            for (String genre : sortedGenres.keySet()) {
+                for (Book book : sortByRating(newBooks, BookQueryIndex.TITLE)) {
+                    if (book.getGenre().equals(genre)) {
+                        recommendedBooks.add(book);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return recommendedBooks;
     }
 
     private static boolean isLike(String lhs, String rhs) {
