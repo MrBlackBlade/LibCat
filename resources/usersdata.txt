@@ -6,7 +6,7 @@
 7,Maria,customer
 8,Zigo,customer
 9,Jimmy,customer
-11,1,customer
+11,1,admin
 4,MrBlackBlade,borrower
 6,Peter,borrower
 10,Makronomic,borrower

@@ -60,8 +60,12 @@ public class LoginFrame extends JFrame {
                 // Perform authentication logic here
                 if (AuthenticationSystem.credentialsMatch(username, password)) {
                     User user = (User) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.NAME, username).get(0);
-                    // Main window will be added here
-                    new MainFrame(user);
+                    if (user.getType().equalsIgnoreCase("admin")){
+                        new AdminFrame();
+                    }
+                    else {
+                        new MainFrame(user);
+                    }
                 } else {
                     //delete system32
                     JOptionPane.showMessageDialog(null, "User not found.");

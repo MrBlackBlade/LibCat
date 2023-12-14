@@ -1,4 +1,4 @@
-0,Admin,admin
+0,admin,admin
 1,TheOne1,Saitama
 2,PotatoIdentifier,Potato123
 3,Magicslayer,RedHawk
