@@ -15,7 +15,7 @@ public class Library {
     public static ArrayList<User> users;
 
     public enum QueryType {
-        BOOK, USER, RATING,
+        BOOK, USEREQUAL, USERLIKE, RATING,
 
         QUERY_TYPE_MAX,
     }
@@ -147,7 +147,7 @@ public class Library {
                     break;
                 }
 
-                case USER: {
+                case USEREQUAL: {
                     try {
                         for (User user : Library.getUsers()) {
                             if (queryIndex.getQuery().equals("user_id") && String.valueOf(user.getID()).equalsIgnoreCase(searchValue)
@@ -163,7 +163,21 @@ public class Library {
 
                     break;
                 }
+                case USERLIKE: {
+                    try {
+                        for (User user : Library.getUsers()) {
+                            if (queryIndex.getQuery().equals("user_id") && String.valueOf(user.getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("user_name") && isLike(user.getName(),searchValue)
+                            ) {
+                                foundValue.add((T) user);
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
 
+                    break;
+                }
                 // may be redundant if all getBy() calls are hard coded and not user-dependent
                 default:
                     throw new Exception("Invalid QueryType");
