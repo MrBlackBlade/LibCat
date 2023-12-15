@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
 
 class RegisterFrame extends JFrame {
     private final RegisterFrame registerFrameReference;
@@ -54,12 +55,23 @@ class RegisterFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] userCredentials = {usernameField.getText(), new String(passwordField.getPassword())};
                 //Perform registration logic here
-                if (AuthenticationSystem.registerNewUser(userCredentials)) {
+                HashMap<String, Boolean> userValidations = AuthenticationSystem.Validation.getUsernameValidations(userCredentials[0]);
+                HashMap<String, Boolean> passwordValidations = AuthenticationSystem.Validation.getPasswordValidations(userCredentials[1]);
+
+                if (!userValidations.get("AllChecksPass") || !passwordValidations.get("AllChecksPass")) {
+                    StringBuilder errorMessage = new StringBuilder();
+                    for (String key: userValidations.keySet()) {
+                        if (userValidations.get(key) && !key.equals("AllChecksPass")) { errorMessage.append(key).append("\n"); }
+                    }
+                    for (String key: passwordValidations.keySet()) {
+                        if (passwordValidations.get(key) && !key.equals("AllChecksPass")) { errorMessage.append(key).append("\n"); }
+                    }
+                    JOptionPane.showMessageDialog(RegisterFrame.this, errorMessage);
+                }
+                else {
                     JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + userCredentials[0]);
                     loginFrameReference.setVisible(true);
                     dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));
-                } else {
-                    JOptionPane.showMessageDialog(RegisterFrame.this, String.format("User %s already exists!", userCredentials[0]));
                 }
             }
         });

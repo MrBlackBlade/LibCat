@@ -1,7 +1,6 @@
 package libcat.util;
 
 public class Order {
-    private static int counter = 0;
     private int orderID;
     private static Book Cbook;
     private double TotalPrice;
@@ -13,7 +12,6 @@ public class Order {
         this.Cbook = Cbook;
         this.TotalPrice = TotalPrice;
         this.quantity = quantity;
-        counter++;
 
     }
 
