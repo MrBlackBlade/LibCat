@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import libcat.util.User;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class AuthenticationSystem extends FileSystemManager {
     protected static class Validation {
         protected static HashMap<String, Boolean> getUsernameValidations(String username) {
@@ -80,14 +86,14 @@ public class AuthenticationSystem extends FileSystemManager {
     }
 
     protected static void registerNewUser(String[] row) {
-        int userid = Integer.parseInt(getLastID(usersCredsFile));
+        int userid = getMax(Library.getUsers(), (userX, userY) -> Math.max(userX.getID(), userY.getID())).getID() + 1;
         row = mergeStringArrays(new String[]{String.valueOf(userid)},row);
         insertRow(usersCredsFile, row);
         Admin.addCustomer(userid, row[1]);
         updateData(usersDataFile);
     }
 
-    private static String getLastID(String file) {
-        return String.valueOf(Integer.parseInt(query(file).get(query(file).size()-1)[0])+1);
+    private static <T> T getMax(ArrayList<T> array, Comparator<T> comparator) {
+        return Collections.max(array, comparator);
     }
 }

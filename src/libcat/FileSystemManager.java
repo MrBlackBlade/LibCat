@@ -17,6 +17,8 @@ public class FileSystemManager {
     protected static final String usersDataFile = "usersdata.txt";
     protected static final String booksFile = "books.txt";
     protected static final String ratingsFile = "ratings.txt";
+    protected static final String ordersFile = "orders.txt";
+    protected static final String transactionsFile = "transaction.txt";
 
     protected static String[] mergeStringArrays(String[] array1, String[] array2) {
         String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
