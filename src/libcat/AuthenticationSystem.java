@@ -86,14 +86,10 @@ public class AuthenticationSystem extends FileSystemManager {
     }
 
     protected static void registerNewUser(String[] row) {
-        int userid = getMax(Library.getUsers(), (userX, userY) -> Math.max(userX.getID(), userY.getID())).getID() + 1;
+        int userid = Library.getMax(Library.getUsers()).getID() + 1;
         row = mergeStringArrays(new String[]{String.valueOf(userid)},row);
         insertRow(usersCredsFile, row);
         Admin.addCustomer(userid, row[1]);
         updateData(usersDataFile);
-    }
-
-    private static <T> T getMax(ArrayList<T> array, Comparator<T> comparator) {
-        return Collections.max(array, comparator);
     }
 }

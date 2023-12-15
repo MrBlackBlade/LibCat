@@ -24,7 +24,7 @@ public class Rating {
 
     public String getUsername() {
         ArrayList<User> queryResult = new ArrayList<User>();
-        queryResult = Library.getBy(Library.QueryType.USEREQUAL, Library.UserQueryIndex.ID, String.valueOf(this.customerID));
+        queryResult = Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, String.valueOf(this.customerID));
         return queryResult.get(0).getName();
     }
     @Override

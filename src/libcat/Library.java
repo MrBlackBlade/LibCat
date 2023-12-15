@@ -17,7 +17,7 @@ public class Library {
     private static ArrayList<Transaction> transactions;
 
     public enum QueryType {
-        BOOK, USEREQUAL, USERLIKE, RATING,
+        BOOK, USER, RATING,
 
         QUERY_TYPE_MAX,
     }
@@ -52,12 +52,16 @@ public class Library {
             public String getQuery() {
                 return "user_id";
             }
-        }, NAME {
+        }, NAME_EQUAL {
             @Override
             public String getQuery() {
-                return "user_name";
+                return "user_name_equal";
             }
-        }, TYPE {
+        }, NAME_LIKE {
+            @Override
+            public String getQuery() { return "user_name_like"; }
+        } ,
+        TYPE {
             @Override
             public String getQuery() {
                 return "user_type";
@@ -81,6 +85,8 @@ public class Library {
         Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeUsers();
         Library.makeBooks();
+        Library.makeOrders();
+        Library.makeTransactions();
     }
 
     private static void makeUsers() {
@@ -104,7 +110,44 @@ public class Library {
         ArrayList<String[]> booksList = FileSystemManager.query(FileSystemManager.booksFile);
 
         for (String[] row : booksList) {
-            books.add(new Book(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4], getRatingsByBookID(Integer.parseInt(row[0])), Double.parseDouble(row[6]), Double.parseDouble(row[7]), Boolean.parseBoolean(row[8]), new ImageIcon(FileSystemManager.cwd + row[9])));
+            books.add(new Book(
+                    Integer.parseInt(row[0]),
+                    row[1],
+                    row[2],
+                    row[3],
+                    row[4],
+                    getRatingsByBookID(Integer.parseInt(row[0])),
+                    Double.parseDouble(row[6]),
+                    Double.parseDouble(row[7]),
+                    Boolean.parseBoolean(row[8]),
+                    new ImageIcon(FileSystemManager.cwd + row[9])));
+        }
+    }
+
+    private static void makeOrders() {
+        ArrayList<String[]> ordersList = FileSystemManager.query(FileSystemManager.ordersFile);
+
+        for (String[] row : ordersList) {
+            orders.add(new Order(
+                    Integer.parseInt(row[0]),
+                    Integer.parseInt(row[1]),
+                    Integer.parseInt(row[2]),
+                    Integer.parseInt(row[3]),
+                    Double.parseDouble(row[4])
+            ));
+        }
+    }
+
+    private static void makeTransactions() {
+        ArrayList<String[]> transactionsList = FileSystemManager.query(FileSystemManager.transactionsFile);
+
+        for (String[] row : transactionsList) {
+            transactions.add(new Transaction(
+                    Integer.parseInt(row[0]),
+                    Integer.parseInt(row[1]),
+                    Integer.parseInt(row[2]),
+                    row[3]
+            ));
         }
     }
 
@@ -117,6 +160,10 @@ public class Library {
 
     public static ArrayList<Order> getOrders() {
         return Library.orders;
+    }
+
+    public static ArrayList<Transaction> getTransactions() {
+        return Library.transactions;
     }
 
     public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource, BookQueryIndex queryIndex) {
@@ -243,11 +290,12 @@ public class Library {
                     break;
                 }
 
-                case USEREQUAL: {
+                case USER: {
                     try {
                         for (User user : Library.getUsers()) {
                             if (queryIndex.getQuery().equals("user_id") && String.valueOf(user.getID()).equalsIgnoreCase(searchValue)
-                                    || queryIndex.getQuery().equals("user_name") && user.getName().equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("user_name_equal") && user.getName().equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("user_name_like") && isLike(user.getName(), searchValue)
                                     || queryIndex.getQuery().equals("user_type") && user.getType().equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) user);
@@ -259,21 +307,7 @@ public class Library {
 
                     break;
                 }
-                case USERLIKE: {
-                    try {
-                        for (User user : Library.getUsers()) {
-                            if (queryIndex.getQuery().equals("user_id") && String.valueOf(user.getID()).equalsIgnoreCase(searchValue)
-                                    || queryIndex.getQuery().equals("user_name") && isLike(user.getName(),searchValue)
-                            ) {
-                                foundValue.add((T) user);
-                            }
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
 
-                    break;
-                }
                 // may be redundant if all getBy() calls are hard coded and not user-dependent
                 default:
                     throw new Exception("Invalid QueryType");
@@ -313,5 +347,9 @@ public class Library {
             }
         }
         return queryResult;
+    }
+
+    public static <T extends Comparable<T>> T getMax(ArrayList<T> array) {
+        return Collections.max(array);
     }
 }

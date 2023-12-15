@@ -2,9 +2,8 @@ package libcat;
 
 import libcat.util.Customer;
 import libcat.util.User;
-import libcat.util.UserType;
 
-public class Admin extends User implements UserType {
+public class Admin extends User {
     public Admin(int id, String name) {
         super(id, name);
     }
