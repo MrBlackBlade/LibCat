@@ -130,4 +130,10 @@ public class Book {
         }
         return isNaN((sum / ratings.size())) ? -1F : (sum / ratings.size()) * 100F;
     }
+
+    public void setYear(String newYear) {
+    }
+
+    public void setAvailable(boolean newAvailability) {
+    }
 }
