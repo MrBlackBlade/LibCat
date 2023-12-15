@@ -13,6 +13,8 @@ public class Library {
     public static ArrayList<Customer> customers;
     public static ArrayList<Borrower> borrowers;
     public static ArrayList<User> users;
+    private static ArrayList<Order> orders;
+    private static ArrayList<Transaction> transactions;
 
     public enum QueryType {
         BOOK, USER, RATING,
@@ -65,12 +67,16 @@ public class Library {
 
     public static void initialize() {
         FileSystemManager.initFile(FileSystemManager.usersCredsFile);
+        FileSystemManager.initFile(FileSystemManager.ordersFile);
+        FileSystemManager.initFile(FileSystemManager.transactionsFile);
 
         books = new ArrayList<Book>();
         ratings = new ArrayList<Rating>();
         admins = new ArrayList<Admin>();
         customers = new ArrayList<Customer>();
         borrowers = new ArrayList<Borrower>();
+        orders = new ArrayList<Order>();
+        transactions = new ArrayList<Transaction>();
 
         Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeUsers();
@@ -94,6 +100,14 @@ public class Library {
         }
     }
 
+    private static void makeBooks() {
+        ArrayList<String[]> booksList = FileSystemManager.query(FileSystemManager.booksFile);
+
+        for (String[] row : booksList) {
+            books.add(new Book(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4], getRatingsByBookID(Integer.parseInt(row[0])), Double.parseDouble(row[6]), Double.parseDouble(row[7]), Boolean.parseBoolean(row[8]), new ImageIcon(FileSystemManager.cwd + row[9])));
+        }
+    }
+
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = (new ArrayList<>(admins));
         users.addAll(customers);
@@ -101,26 +115,11 @@ public class Library {
         return users;
     }
 
-    private static void makeBooks() {
-        ArrayList<String[]> booksList = FileSystemManager.query(FileSystemManager.booksFile);
-
-        for (String[] row : booksList) {
-            books.add(new Book(
-                    Integer.parseInt(row[0]),
-                    row[1],
-                    row[2],
-                    row[3],
-                    row[4],
-                    getRatingsByBookID(Integer.parseInt(row[0])),
-                    Double.parseDouble(row[6]),
-                    Double.parseDouble(row[7]),
-                    Boolean.parseBoolean(row[8]),
-                    new ImageIcon(FileSystemManager.cwd + row[9])
-            ));
-        }
+    public static ArrayList<Order> getOrders() {
+        return Library.orders;
     }
 
-    public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource ,BookQueryIndex queryIndex) {
+    public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource, BookQueryIndex queryIndex) {
         ArrayList<Book> sortedBooks = new ArrayList<>(bookSource);
         ArrayList<Book> positiveList = new ArrayList<>();
         ArrayList<Book> negativeList = new ArrayList<>();

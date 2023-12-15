@@ -1,5 +1,11 @@
 package libcat;
 
+import libcat.util.User;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class AuthenticationSystem extends FileSystemManager {
     protected static boolean credentialsMatch(String usr, String pswd) {
         boolean credentialsMatch = false;
@@ -24,7 +30,8 @@ public class AuthenticationSystem extends FileSystemManager {
     }
 
     protected static boolean registerNewUser(String[] row) {
-        int userid = Integer.parseInt(getLastID(usersCredsFile));
+        int userid = getMax(Library.getUsers(), (userX, userY) -> Math.max(userX.getID(), userY.getID())).getID() + 1;
+
         row = mergeStringArrays(new String[]{String.valueOf(userid)},row);
         if(userExists(row[1])) {
             return false;
@@ -36,7 +43,7 @@ public class AuthenticationSystem extends FileSystemManager {
         }
     }
 
-    private static String getLastID(String file) {
-        return String.valueOf(Integer.parseInt(query(file).get(query(file).size()-1)[0])+1);
+    private static <T> T getMax(ArrayList<T> array, Comparator<T> comparator) {
+        return Collections.max(array, comparator);
     }
 }
