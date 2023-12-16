@@ -15,7 +15,6 @@ public class Book {
     private double bookPrice;
     private double salePercent;
     private float rating;
-    private boolean returned;
 
     private ImageIcon imageIcon;
 
@@ -65,14 +64,6 @@ public class Book {
 
     public void setStatus(boolean e) {
         this.available = e;
-    }
-
-    public void setReturned(boolean returned) {
-        this.returned = returned;
-    }
-
-    public boolean isReturned() {
-        return this.returned;
     }
 
     public void setBookPrice(double f) {
@@ -135,7 +126,6 @@ public class Book {
                 ", bookPrice=" + bookPrice +
                 ", salePercent=" + salePercent +
                 ", rating=" + rating +
-                ", returned=" + returned +
                 ", imageIcon=" + imageIcon +
                 ", ratings=" + ratings +
                 '}';

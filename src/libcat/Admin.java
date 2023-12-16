@@ -2,19 +2,19 @@ package libcat;
 
 import libcat.util.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
-public class Admin extends User implements UserType {
+import java.util.Iterator;
+import libcat.util.Customer;
+import libcat.util.User;
+
+public class Admin extends User{
     public Admin(int id, String name) {
         super(id, name);
     }
-
     @Override
     public String getType() {
         return "admin";
     }
-
     public String toString() {
         return String.format("Admin ID: %d, Admin Username: %s", getID(), getName());
     }

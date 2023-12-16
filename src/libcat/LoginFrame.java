@@ -59,7 +59,7 @@ public class LoginFrame extends JFrame {
                 String password = new String(passwordField.getPassword());
                 // Perform authentication logic here
                 if (AuthenticationSystem.credentialsMatch(username, password)) {
-                    User user = (User) Library.getBy(Library.QueryType.USEREQUAL, Library.UserQueryIndex.NAME, username).get(0);
+                    User user = (User) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.NAME_EQUAL, username).get(0);
                     if (user.getType().equalsIgnoreCase("admin")){
                         new AdminFrame();
                     }
