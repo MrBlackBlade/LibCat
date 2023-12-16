@@ -62,5 +62,52 @@ public class Admin extends User implements UserType {
             }
         }
     }
-}
 
+    protected static void addBorrower(
+            int ID,
+            String name
+    ) {
+        Borrower newBorrower = new Borrower(ID, name);
+        Library.borrowers.add(newBorrower);
+    }
+
+    // Overload: Adds a Borrower to the borrowers list using ID, and removes the corresponding Customer with the same ID
+    protected static void addBorrower(Customer customer) {
+
+        Library.borrowers.add(new Borrower(customer.getID(), customer.getName()));
+
+        Iterator<Customer> iterator = Library.customers.iterator();
+        while (iterator.hasNext()) {
+            Customer customerIterator = iterator.next();
+            if (customerIterator.getID() == customer.getID()) {
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
+
+    protected static void updateBorrower(
+            int borrowerID,
+            String borrowerName
+    ) {
+        for (Borrower borrower : Library.borrowers) {
+            if (borrower.getID() == borrowerID) {
+                borrower.setName(borrowerName);
+                break;
+            }
+        }
+    }
+
+    protected static void deleteBorrower(int borrowerID) {
+        Iterator<Borrower> iterator = Library.borrowers.iterator();
+
+        while (iterator.hasNext()) {
+            Borrower borrower = iterator.next();
+            if (borrower.getID() == borrowerID) {
+                iterator.remove();
+                break;
+            }
+        }
+    }
+}

@@ -11,4 +11,7 @@ public class Customer extends User implements UserType {
     public String toString() {
         return String.format("Customer ID: %d, Customer Username: %s", getID(), getName());
     }
+    public void setName(String name) {
+        super.setName(name);
+    }
 }

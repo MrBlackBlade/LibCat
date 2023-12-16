@@ -20,4 +20,7 @@ public abstract class User implements UserType {
     public String toString() {
         return String.format("User ID: %d, User Username: %s", id, name);
     }
+    public void setName(String name) {
+        this.name = name;
+    }
 }

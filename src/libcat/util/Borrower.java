@@ -11,4 +11,8 @@ public class Borrower extends Customer implements UserType {
     public String toString() {
         return String.format("Borrower ID: %d, Borrower Username: %s", getID(), getName());
     }
+
+    public void setName(String name) {
+        super.setName(name);
+    }
 }
