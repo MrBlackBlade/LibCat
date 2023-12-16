@@ -1,8 +1,6 @@
 package libcat;
 
-import libcat.util.Borrower;
-import libcat.util.Customer;
-import libcat.util.User;
+import libcat.util.*;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -27,8 +25,10 @@ public class FileSystemManager {
     }
 
     protected static void initFile(String file) {
-        try (FileReader fr = new FileReader(cwd + file)){;} catch (IOException ex) {
-            try (FileWriter fw = new FileWriter(cwd + file)){
+        try (FileReader fr = new FileReader(cwd + file)) {
+            ;
+        } catch (IOException ex) {
+            try (FileWriter fw = new FileWriter(cwd + file)) {
                 System.out.println("File created");
             } catch (IOException ex1) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex1);
@@ -38,7 +38,7 @@ public class FileSystemManager {
 
     protected static ArrayList<String[]> query(String file) {
         ArrayList rows = new ArrayList<String[]>();
-        try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")){
+        try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
             for (int i = 0; i < countLines(file); i++) {
                 String row = raf.readLine();
                 String[] rowFields = row.split(",");
@@ -53,7 +53,7 @@ public class FileSystemManager {
     }
 
     protected static void insertRow(String file, String[] row) {
-        try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")){
+        try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
             for (int i = 0; i < countLines(file); i++) {
                 raf.readLine();
             }
@@ -74,7 +74,7 @@ public class FileSystemManager {
 
     private static int countLines(String file) {
         int lines = 0;
-        try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")){
+        try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
             for (; raf.readLine() != null; lines++) ;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,10 +83,11 @@ public class FileSystemManager {
         }
         return lines;
     }
+
     protected static void updateData(String file) {
         switch (file) {
-            case usersDataFile:
-                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")){
+            case usersDataFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
                     raf.setLength(0);
                     raf.seek(0);
                 } catch (FileNotFoundException ex) {
@@ -94,22 +95,20 @@ public class FileSystemManager {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                for (User user: Library.getUsers()) {
+                for (User user : Library.getUsers()) {
                     if (user.getType().equalsIgnoreCase("admin")) {
                         insertRow(usersDataFile, new String[]{
                                 String.valueOf(user.getID()),
                                 user.getName(),
                                 "admin"
                         });
-                    }
-                    else if (user.getType().equalsIgnoreCase("borrower")) {
+                    } else if (user.getType().equalsIgnoreCase("borrower")) {
                         insertRow(usersDataFile, new String[]{
                                 String.valueOf(user.getID()),
                                 user.getName(),
                                 "borrower"
                         });
-                    }
-                    else if (user.getType().equalsIgnoreCase("customer")) {
+                    } else if (user.getType().equalsIgnoreCase("customer")) {
                         insertRow(usersDataFile, new String[]{
                                 String.valueOf(user.getID()),
                                 user.getName(),
@@ -117,7 +116,51 @@ public class FileSystemManager {
                         });
                     }
                 }
+
                 break;
+            }
+
+            case ordersFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
+                    raf.setLength(0);
+                    raf.seek(0);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Order order : Library.getOrders()) {
+                    insertRow(ordersFile, new String[]{
+                            String.valueOf(order.getID()),
+                            String.valueOf(order.getUser().getID()),
+                            String.valueOf(order.getBook().getBookID()),
+                            String.valueOf(order.getQuantity()),
+                            String.valueOf(order.getTotalPrice())
+                    });
+                }
+
+                break;
+            }
+            case transactionsFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
+                    raf.setLength(0);
+                    raf.seek(0);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Transaction transaction : Library.getTransactions()) {
+                    insertRow(transactionsFile, new String[]{
+                            String.valueOf(transaction.getID()),
+                            String.valueOf(transaction.getUser().getID()),
+                            String.valueOf(transaction.getBook().getBookID()),
+                            transaction.getBorrowDate().toString()
+                    });
+                }
+
+                break;
+            }
         }
     }
 }

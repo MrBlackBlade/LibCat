@@ -1,6 +1,8 @@
 package libcat;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.RandomAccessFile;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -17,7 +19,7 @@ public class Library {
     private static ArrayList<Transaction> transactions;
 
     public enum QueryType {
-        BOOK, USER, RATING,
+        BOOK, USER, ORDER, TRANSACTION, RATING,
 
         QUERY_TYPE_MAX,
     }
@@ -43,7 +45,12 @@ public class Library {
             public String getQuery() {
                 return "book_genre";
             }
-        }
+        }, BOOK_QUERY_INDEX_MAX {
+            @Override
+            public String getQuery() {
+                return null;
+            }
+        },
     }
 
     public enum UserQueryIndex implements QueryIndex {
@@ -59,14 +66,68 @@ public class Library {
             }
         }, NAME_LIKE {
             @Override
-            public String getQuery() { return "user_name_like"; }
-        } ,
-        TYPE {
+            public String getQuery() {
+                return "user_name_like";
+            }
+        }, TYPE {
             @Override
             public String getQuery() {
                 return "user_type";
             }
-        }
+        }, USER_QUERY_INDEX_MAX {
+            @Override
+            public String getQuery() {
+                return null;
+            }
+        },
+    }
+
+    public enum OrderQueryIndex implements QueryIndex {
+        ORDER_ID {
+            @Override
+            public String getQuery() {
+                return "order_id";
+            }
+        }, USER_ID {
+            @Override
+            public String getQuery() {
+                return "user_id";
+            }
+        }, BOOK_ID {
+            @Override
+            public String getQuery() {
+                return "book_id";
+            }
+        }, ORDER_QUERY_INDEX_MAX {
+            @Override
+            public String getQuery() {
+                return null;
+            }
+        },
+    }
+
+    public enum TransactionQueryIndex implements QueryIndex {
+        TRANSACTION_ID {
+            @Override
+            public String getQuery() {
+                return "transaction_id";
+            }
+        }, USER_ID {
+            @Override
+            public String getQuery() {
+                return "user_id";
+            }
+        }, BOOK_ID {
+            @Override
+            public String getQuery() {
+                return "book_id";
+            }
+        }, TRANSACTION_QUERY_INDEX_MAX {
+            @Override
+            public String getQuery() {
+                return null;
+            }
+        },
     }
 
     public static void initialize() {
@@ -151,6 +212,18 @@ public class Library {
         }
     }
 
+    public static void createOrder(Order order) {
+        orders.add(order);
+
+        FileSystemManager.updateData(FileSystemManager.ordersFile);
+    }
+
+    public static void createTransaction(Transaction transaction) {
+        transactions.add(transaction);
+
+        FileSystemManager.updateData(FileSystemManager.transactionsFile);
+    }
+
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = (new ArrayList<>(admins));
         users.addAll(customers);
@@ -164,6 +237,14 @@ public class Library {
 
     public static ArrayList<Transaction> getTransactions() {
         return Library.transactions;
+    }
+
+    public static ArrayList<Order> getOrderHistory(Customer customer) {
+        return getBy(QueryType.ORDER, OrderQueryIndex.USER_ID, String.valueOf(customer.getID()));
+    }
+
+    public static ArrayList<Transaction> getBorrowHistory(Borrower borrower) {
+        return getBy(QueryType.TRANSACTION, OrderQueryIndex.USER_ID, String.valueOf(borrower.getID()));
     }
 
     public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource, BookQueryIndex queryIndex) {
@@ -217,15 +298,14 @@ public class Library {
 
     public static ArrayList<Book> recommendBooks(User user) {
         ArrayList<Book> recommendedBooks = new ArrayList<>();
-        ArrayList<Book> userOrderHistory = new ArrayList<>(books);
+        ArrayList<Order> userOrderHistory = getOrderHistory((Customer) user);
 
-        // all instances of "books" would be replaced later with the user's order history, not "Library.books"
         try {
             HashMap<String, Integer> genres = new HashMap<>();
 
             // count the number of books in each genre in the order history
-            for (Book book : userOrderHistory) {
-                genres.put(book.getGenre(), (genres.get(book.getGenre()) == null ? 1 : genres.get(book.getGenre()) + 1));
+            for (Order order : userOrderHistory) {
+                genres.put(order.getBook().getGenre(), (genres.get(order.getBook().getGenre()) == null ? 1 : genres.get(order.getBook().getGenre()) + 1));
             }
 
             // import all the entries into a list, and sort them descendingly
@@ -306,6 +386,39 @@ public class Library {
                     }
 
                     break;
+                }
+
+                case ORDER: {
+                    for (Order order : Library.getOrders()) {
+                        try {
+                            if (queryIndex.getQuery().equals("order_id") && String.valueOf(order.getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("user_id") && String.valueOf(order.getUser().getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("book_id") && String.valueOf(order.getBook().getBookID()).equalsIgnoreCase(searchValue)
+                            ) {
+                                foundValue.add((T) order);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+
+                    }
+                    break;
+                }
+
+                case TRANSACTION: {
+                    for (Transaction transaction : Library.getTransactions()) {
+                        try {
+                            if (queryIndex.getQuery().equals("transaction_id") && String.valueOf(transaction.getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("user_id") && String.valueOf(transaction.getUser().getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex.getQuery().equals("book_id") && String.valueOf(transaction.getBook().getBookID()).equalsIgnoreCase(searchValue)
+                            ) {
+                                foundValue.add((T) transaction);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                        break;
+                    }
                 }
 
                 // may be redundant if all getBy() calls are hard coded and not user-dependent

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class Transaction implements Comparable<Transaction> {
     private int transactionID;
-    private Borrower borrower;
+    private User user;
     private Book book;
     private double totalPrice;
     private double fine;
@@ -15,7 +15,7 @@ public class Transaction implements Comparable<Transaction> {
 
     public Transaction(int transactionID, int borrowerID, int bookID, String borrowDate) {
         this.transactionID = transactionID;
-        this.borrower = (Borrower) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, String.valueOf(borrowerID)).get(0);
+        this.user = (User) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, String.valueOf(borrowerID)).get(0);
         this.book = (Book) Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.ID, String.valueOf(bookID)).get(0);
 
         String[] borrowDateArray = borrowDate.split("-");
@@ -55,24 +55,30 @@ public class Transaction implements Comparable<Transaction> {
         return hasFine;
     }
 
-
     public void applyFine() {
-        /*check local date with rdate -> is it passed or not
-        passed => fine
-        there should be value to return the fine to in the borrower class
-        original price for the book;
-        return the fine to the borrower class in :
-        fine variable then added to the price
-        */
          this.totalPrice = this.book.getBookPrice() * this.getFine();
     }
 
     public int getID() {
         return transactionID;
     }
+
+    public LocalDate getBorrowDate() {
+        return borrowDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
     public double getFine() {
         return fine;
     }
+
     @Override
     public int compareTo(Transaction o) {
         return Math.max(this.getID(), o.getID());
