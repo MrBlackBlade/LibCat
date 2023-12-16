@@ -3,6 +3,7 @@ package libcat.util;
 import libcat.Library;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 public class Transaction implements Comparable<Transaction> {
     private int transactionID;
@@ -27,12 +28,10 @@ public class Transaction implements Comparable<Transaction> {
 
     public Transaction(Borrower borrower, Book book) {
         this(
-            Library.getMax(Library.getTransactions()).getID() + 1,
+                Collections.max(Library.getTransactions()).getID() + 1,
                 borrower.getID(),
                 book.getBookID(),
-                //
                 LocalDate.now().toString()
-                //
         );
     }
 

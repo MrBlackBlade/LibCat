@@ -86,7 +86,7 @@ public class AuthenticationSystem extends FileSystemManager {
     }
 
     protected static void registerNewUser(String[] row) {
-        int userid = Library.getMax(Library.getUsers()).getID() + 1;
+        int userid = Collections.max(Library.getUsers()).getID() + 1;
         row = mergeStringArrays(new String[]{String.valueOf(userid)},row);
         insertRow(usersCredsFile, row);
         Admin.addCustomer(userid, row[1]);

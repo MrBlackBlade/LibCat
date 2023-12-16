@@ -2,6 +2,7 @@ package libcat.util;
 
 import libcat.Library;
 
+import java.util.Collections;
 import java.util.Comparator;
 
 public class Order implements Comparable<Order> {
@@ -21,7 +22,7 @@ public class Order implements Comparable<Order> {
 
     public Order(Customer customer, Book book, int quantity) {
         this(
-                Library.getMax(Library.getOrders()).getID() + 1,
+                Collections.max(Library.getOrders()).getID() + 1,
                 customer.getID(),
                 book.getBookID(),
                 quantity,
