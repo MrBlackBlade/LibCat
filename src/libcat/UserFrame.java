@@ -11,8 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-public class MainFrame extends JFrame implements FrameEnvironment{
+public class UserFrame extends JFrame implements FrameEnvironment{
 
     private enum RadioSelect {
         ONE,
@@ -23,7 +22,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
 
     static RadioSelect choice = RadioSelect.ONE;
 
-    public MainFrame(User user) {
+    public UserFrame(User user) {
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
@@ -223,7 +222,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     //Book Text
                     JTextArea bookLabel = new JTextArea(2, 20);
                     bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
-                            book.getTitle(),
+                            book.getBookTitle(),
                             book.getAuthor(),
                             book.getGenre()));
                     bookLabel.setFont(new Font("Arial", Font.BOLD, 25));

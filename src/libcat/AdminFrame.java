@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class AdminFrame extends JFrame {
+public class AdminFrame extends JFrame implements FrameEnvironment{
 
     private enum RadioSelect {
         ONE,
@@ -47,7 +47,7 @@ public class AdminFrame extends JFrame {
             //Main Panel
             JPanel ListItemPanel = new JPanel();
             ListItemPanel.setLayout(new GridBagLayout());
-            ListItemPanel.setBackground(new Color(242, 231, 199));
+            ListItemPanel.setBackground(C_ListBG);
             ListItemPanel.setPreferredSize(new Dimension(1280, panelHeight));
             ListItemPanel.setBorder(border);
 
@@ -97,7 +97,7 @@ public class AdminFrame extends JFrame {
 
             //Empty Space
             JPanel emptyPanel = new JPanel();
-            emptyPanel.setBackground(new Color(242, 231, 199));
+            emptyPanel.setBackground(C_ListBG);
             GridBagConstraints gbcEmptyPanel = new GridBagConstraints();
             gbcEmptyPanel.fill = GridBagConstraints.HORIZONTAL;
             gbcEmptyPanel.weightx = 1.0;
@@ -143,13 +143,13 @@ public class AdminFrame extends JFrame {
             JButton likeButton = new JButton("Like");
             JButton dislikeButton = new JButton("Dislike");
 
-            buyButton.setBackground(new Color(70, 130, 180));
+            buyButton.setBackground(C_ButtonBG);
             buyButton.setForeground(Color.WHITE);
-            borrowButton.setBackground(new Color(70, 130, 180));
+            borrowButton.setBackground(C_ButtonBG);
             borrowButton.setForeground(Color.WHITE);
-            likeButton.setBackground(new Color(70, 130, 180));
+            likeButton.setBackground(C_ButtonBG);
             likeButton.setForeground(Color.WHITE);
-            dislikeButton.setBackground(new Color(70, 130, 180));
+            dislikeButton.setBackground(C_ButtonBG);
             dislikeButton.setForeground(Color.WHITE);
 
             //Buttons Action
@@ -196,7 +196,7 @@ public class AdminFrame extends JFrame {
         if (!bookFound) {
             JPanel emptyPanel = new JPanel();
             emptyPanel.setLayout(new GridBagLayout());
-            emptyPanel.setBackground(new Color(242, 231, 199));
+            emptyPanel.setBackground(C_ListBG);
 
             JLabel emptyLabel = new JLabel("Couldn't find what you are searching for :(");
             emptyLabel.setFont(new Font("Arial", Font.BOLD, 30));
@@ -226,7 +226,7 @@ public class AdminFrame extends JFrame {
             //Main Panel
             JPanel ListItemPanel = new JPanel();
             ListItemPanel.setLayout(new GridBagLayout());
-            ListItemPanel.setBackground(new Color(242, 231, 199));
+            ListItemPanel.setBackground(C_ListBG);
             ListItemPanel.setPreferredSize(new Dimension(1280, panelHeight));
             ListItemPanel.setBorder(border);
 
@@ -276,7 +276,7 @@ public class AdminFrame extends JFrame {
 
             //Empty Space
             JPanel emptyPanel = new JPanel();
-            emptyPanel.setBackground(new Color(242, 231, 199));
+            emptyPanel.setBackground(C_ListBG);
             GridBagConstraints gbcEmptyPanel = new GridBagConstraints();
             gbcEmptyPanel.fill = GridBagConstraints.HORIZONTAL;
             gbcEmptyPanel.weightx = 1.0;
@@ -293,7 +293,7 @@ public class AdminFrame extends JFrame {
         if (!usersFound) {
             JPanel emptyPanel = new JPanel();
             emptyPanel.setLayout(new GridBagLayout());
-            emptyPanel.setBackground(new Color(242, 231, 199));
+            emptyPanel.setBackground(C_ListBG);
 
             JLabel emptyLabel = new JLabel("Couldn't find what you are searching for :(");
             emptyLabel.setFont(new Font("Arial", Font.BOLD, 30));
@@ -318,7 +318,7 @@ public class AdminFrame extends JFrame {
         setResizable(false);
         setTitle("LibCat");
         setIconImage(icon.getImage());
-        getContentPane().setBackground(new Color(242, 231, 199));
+        getContentPane().setBackground(C_ListBG);
 
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(1280, 175));
@@ -326,15 +326,15 @@ public class AdminFrame extends JFrame {
         // Panel on top and to the left of welcomePanel
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
         topPanel.setPreferredSize(new Dimension(200, 150)); // Set your preferred size
-        topPanel.setBackground(new Color(200, 200, 200)); // Set your desired background color
+        topPanel.setBackground(C_WelcomeBG); // Set your desired background color
         topPanel.setBounds(0, 140, 1280, 40);
 
         JButton booksSwitch = new JButton("Books");
-        booksSwitch.setBackground(new Color(70, 130, 180));
+        booksSwitch.setBackground(C_ButtonBG);
         booksSwitch.setForeground(Color.WHITE);
 
         JButton usersSwitch = new JButton("Users");
-        usersSwitch.setBackground(new Color(70, 130, 180));
+        usersSwitch.setBackground(C_ButtonBG);
         usersSwitch.setForeground(Color.WHITE);
 
         topPanel.add(booksSwitch);
@@ -346,7 +346,7 @@ public class AdminFrame extends JFrame {
         JPanel welcomePanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         // welcomePanel.setPreferredSize(new Dimension(1280, 150));
-        welcomePanel.setBackground(new Color(200, 200, 200));
+        welcomePanel.setBackground(C_WelcomeBG);
         welcomePanel.setBounds(0,0,1280,150);
 
         JLabel welcomeLabel = new JLabel("Welcome Admin");
@@ -360,24 +360,24 @@ public class AdminFrame extends JFrame {
         searchBar.setFont(new Font("Arial", Font.PLAIN, 25));
 
         JButton searchButton = new JButton("Search");
-        searchButton.setBackground(new Color(70, 130, 180));
+        searchButton.setBackground(C_ButtonBG);
         searchButton.setForeground(Color.WHITE);
 
         // Add radio buttons
         JRadioButton radioButton1 = new JRadioButton("Title");
-        radioButton1.setBackground(new Color(200, 200, 200));
+        radioButton1.setBackground(C_WelcomeBG);
 
         JRadioButton radioButton2 = new JRadioButton("Author");
-        radioButton2.setBackground(new Color(200, 200, 200));
+        radioButton2.setBackground(C_WelcomeBG);
 
         JRadioButton radioButton3 = new JRadioButton("Genre");
-        radioButton3.setBackground(new Color(200, 200, 200));
+        radioButton3.setBackground(C_WelcomeBG);
 
         JRadioButton radioButton4 = new JRadioButton("Username");
-        radioButton4.setBackground(new Color(200, 200, 200));
+        radioButton4.setBackground(C_WelcomeBG);
 
         JRadioButton radioButton5 = new JRadioButton("ID");
-        radioButton5.setBackground(new Color(200, 200, 200));
+        radioButton5.setBackground(C_WelcomeBG);
 
         // Group the radio buttons so that only one can be selected at a time
         ButtonGroup radioButtonGroup = new ButtonGroup();
@@ -428,7 +428,7 @@ public class AdminFrame extends JFrame {
         welcomePanel.add(searchPanel, gbc);
 
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        radioPanel.setBorder(new LineBorder(new Color(238, 238, 238), 3));
+        radioPanel.setBorder(new LineBorder(Color.WHITE, 3));
         gbc.gridy = 2;
         gbc.gridwidth = 2; // Span two columns
 
