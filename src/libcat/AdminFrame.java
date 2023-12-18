@@ -76,7 +76,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             //Book Text
             JTextArea bookLabel = new JTextArea(2, 20);
             bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
-                    book.getBookTitle(),
+                    book.getTitle(),
                     book.getAuthor(),
                     book.getGenre()));
             bookLabel.setFont(new Font("Arial", Font.BOLD, 25));
@@ -216,9 +216,9 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
 
         switch (choice) {
             case FOUR ->
-                    queryResult = Library.getBy(Library.QueryType.USERLIKE, Library.UserQueryIndex.NAME, searchParameter);
+                    queryResult = Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.NAME_LIKE, searchParameter);
             case FIVE ->
-                    queryResult = Library.getBy(Library.QueryType.USERLIKE, Library.UserQueryIndex.ID, searchParameter);
+                    queryResult = Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, searchParameter);
 
         }
 

@@ -1,6 +1,6 @@
 package libcat.util;
 
-public class Borrower extends Customer implements UserType {
+public class Borrower extends Customer{
     public Borrower(int id, String name) {
         super(id, name);
     }
