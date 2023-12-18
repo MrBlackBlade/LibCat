@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,7 +96,7 @@ public class FileSystemManager {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                for (User user : Library.getUsers()) {
+                for (User user : Library.getSortedList(Library.getUsers())) {
                     if (user.getType().equalsIgnoreCase("admin")) {
                         insertRow(usersDataFile, new String[]{
                                 String.valueOf(user.getID()),
