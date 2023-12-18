@@ -1,14 +1,10 @@
 package libcat;
 
-import java.util.HashMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import libcat.util.User;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class AuthenticationSystem extends FileSystemManager {
     protected static class Validation {
@@ -86,10 +82,9 @@ public class AuthenticationSystem extends FileSystemManager {
     }
 
     protected static void registerNewUser(String[] row) {
-        int userid = Collections.max(Library.getUsers()).getID() + 1;
+        int userid = Library.getMax(Library.getUsers()).getID() + 1;
         row = mergeStringArrays(new String[]{String.valueOf(userid)},row);
         insertRow(usersCredsFile, row);
         Admin.addCustomer(userid, row[1]);
-        updateData(usersDataFile);
     }
 }

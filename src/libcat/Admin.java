@@ -17,5 +17,6 @@ public class Admin extends User {
 
     protected static void addCustomer(int id, String name) {
         Library.customers.add(new Customer(id, name));
+        FileSystemManager.updateData(FileSystemManager.usersDataFile);
     }
 }

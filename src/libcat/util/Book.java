@@ -15,7 +15,7 @@ public class Book implements Comparable<Book>{
     private String title;
     private String author;
     private String genre;
-    private HashMap<Availablity, Boolean> status;
+    private HashMap<Availablity, Boolean> status = new HashMap<Availablity, Boolean>();
     private String year;
     private double price;
     private double salePercent;

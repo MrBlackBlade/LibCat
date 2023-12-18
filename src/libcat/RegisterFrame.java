@@ -69,6 +69,7 @@ class RegisterFrame extends JFrame {
                     JOptionPane.showMessageDialog(RegisterFrame.this, errorMessage);
                 }
                 else {
+                    AuthenticationSystem.registerNewUser(userCredentials);
                     JOptionPane.showMessageDialog(RegisterFrame.this, "Registration successful!\nUsername: " + userCredentials[0]);
                     loginFrameReference.setVisible(true);
                     dispatchEvent(new WindowEvent(registerFrameReference, WindowEvent.WINDOW_CLOSING));

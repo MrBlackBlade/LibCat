@@ -371,4 +371,14 @@ public class Library {
         }
         return queryResult;
     }
+
+    public static <T extends Comparable<? super T>> ArrayList<T> getSortedList(ArrayList<T> array) {
+        ArrayList<T> sortedList = new ArrayList<>(array);
+        sortedList.sort(Comparator.naturalOrder());
+        return sortedList;
+    }
+    public static <T extends Comparable<? super T>> T getMax(ArrayList<T> array) {
+        return Collections.max(getSortedList(array));
+    }
+
 }
