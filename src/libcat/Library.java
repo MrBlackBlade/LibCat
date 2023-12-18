@@ -1,8 +1,6 @@
 package libcat;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.RandomAccessFile;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -89,7 +87,8 @@ public class Library {
                     Double.parseDouble(row[6]),
                     Double.parseDouble(row[7]),
                     Boolean.parseBoolean(row[8]),
-                    new ImageIcon(FileSystemManager.cwd + row[9])));
+                    Boolean.parseBoolean(row[9]),
+                    new ImageIcon(FileSystemManager.cwd + row[10])));
         }
     }
 
@@ -173,12 +172,12 @@ public class Library {
             }
 
             case TITLE: {
-                sortedBooks.sort((bookX, bookY) -> bookX.getBookTitle().compareToIgnoreCase(bookY.getBookTitle()));
+                sortedBooks.sort((bookX, bookY) -> bookX.getTitle().compareToIgnoreCase(bookY.getTitle()));
                 break;
             }
 
             case ID: {
-                sortedBooks.sort((bookX, bookY) -> Integer.compare(bookX.getBookID(), bookY.getBookID()));
+                sortedBooks.sort((bookX, bookY) -> Integer.compare(bookX.getID(), bookY.getID()));
                 break;
             }
         }
@@ -263,8 +262,8 @@ public class Library {
                 case BOOK: {
                     try {
                         for (Book book : Library.books) {
-                            if ((queryIndex == BookQueryIndex.ID && String.valueOf(book.getBookID()).equalsIgnoreCase(searchValue))
-                                    || (queryIndex == BookQueryIndex.TITLE && isLike(book.getBookTitle(), searchValue))
+                            if ((queryIndex == BookQueryIndex.ID && String.valueOf(book.getID()).equalsIgnoreCase(searchValue))
+                                    || (queryIndex == BookQueryIndex.TITLE && isLike(book.getTitle(), searchValue))
                                     || (queryIndex == BookQueryIndex.AUTHOR && isLike(book.getAuthor(), searchValue))
                                     || (queryIndex == BookQueryIndex.GENRE && isLike(book.getGenre(), searchValue))
                             ) {
@@ -301,7 +300,7 @@ public class Library {
                         try {
                             if (queryIndex == OrderQueryIndex.ORDER_ID && String.valueOf(order.getID()).equalsIgnoreCase(searchValue)
                                     || queryIndex == OrderQueryIndex.USER_ID && String.valueOf(order.getUser().getID()).equalsIgnoreCase(searchValue)
-                                    || queryIndex == OrderQueryIndex.BOOK_ID && String.valueOf(order.getBook().getBookID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex == OrderQueryIndex.BOOK_ID && String.valueOf(order.getBook().getID()).equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) order);
                             }
@@ -318,7 +317,7 @@ public class Library {
                         try {
                             if (queryIndex == TransactionQueryIndex.TRANSACTION_ID && String.valueOf(transaction.getID()).equalsIgnoreCase(searchValue)
                                     || queryIndex == TransactionQueryIndex.USER_ID && String.valueOf(transaction.getUser().getID()).equalsIgnoreCase(searchValue)
-                                    || queryIndex == TransactionQueryIndex.BOOK_ID && String.valueOf(transaction.getBook().getBookID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex == TransactionQueryIndex.BOOK_ID && String.valueOf(transaction.getBook().getID()).equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) transaction);
                             }

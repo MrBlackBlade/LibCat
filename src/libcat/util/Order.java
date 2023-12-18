@@ -3,7 +3,6 @@ package libcat.util;
 import libcat.Library;
 
 import java.util.Collections;
-import java.util.Comparator;
 
 public class Order implements Comparable<Order> {
     private int orderID;
@@ -24,7 +23,7 @@ public class Order implements Comparable<Order> {
         this(
                 Collections.max(Library.getOrders()).getID() + 1,
                 customer.getID(),
-                book.getBookID(),
+                book.getID(),
                 quantity,
                 calculateTotalPrice(quantity, book)
         );
@@ -51,7 +50,7 @@ public class Order implements Comparable<Order> {
     }
 
     private static double calculateTotalPrice(double quantity, Book book) {
-        return quantity * (book.getBookPrice() * (1 - book.getSalePercent()));
+        return quantity * (book.getPrice() * (1 - book.getSalePercent()));
     }
 
     @Override

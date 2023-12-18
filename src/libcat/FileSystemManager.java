@@ -133,7 +133,7 @@ public class FileSystemManager {
                     insertRow(ordersFile, new String[]{
                             String.valueOf(order.getID()),
                             String.valueOf(order.getUser().getID()),
-                            String.valueOf(order.getBook().getBookID()),
+                            String.valueOf(order.getBook().getID()),
                             String.valueOf(order.getQuantity()),
                             String.valueOf(order.getTotalPrice())
                     });
@@ -154,7 +154,7 @@ public class FileSystemManager {
                     insertRow(transactionsFile, new String[]{
                             String.valueOf(transaction.getID()),
                             String.valueOf(transaction.getUser().getID()),
-                            String.valueOf(transaction.getBook().getBookID()),
+                            String.valueOf(transaction.getBook().getID()),
                             transaction.getBorrowDate().toString()
                     });
                 }

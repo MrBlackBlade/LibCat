@@ -2,84 +2,93 @@ package libcat.util;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.Float.isNaN;
 
-public class Book {
-    private int bookID;
-    private String bookTitle;
+public class Book implements Comparable<Book>{
+
+    public enum Availablity {
+        PURCHASABLE, BORROWABLE, AVAILABLITY_MAX,
+    }
+    private int id;
+    private String title;
     private String author;
     private String genre;
-    private boolean available; //status
+    private HashMap<Availablity, Boolean> status;
     private String year;
-    private double bookPrice;
+    private double price;
     private double salePercent;
     private float rating;
 
-    private ImageIcon imageIcon;
+    private final ImageIcon imageIcon;
 
     private ArrayList<Rating> ratings;
 
     public Book(
-            int bookID,
-            String bookTitle,
+            int id,
+            String title,
             String author,
             String genre,
             String year,
             ArrayList<Rating> ratings,
-            double bookPrice,
+            double price,
             double salePercent,
-            boolean available,
+            boolean purchasable,
+            boolean borrowable,
             ImageIcon imageIcon
     ) {
-        this.bookID = bookID;
-        this.bookTitle = bookTitle;
+        this.id = id;
+        this.title = title;
         this.author = author;
         this.genre = genre;
         this.year = year;
         this.ratings = ratings;
-        this.bookPrice = bookPrice;
+        this.price = price;
         this.salePercent = salePercent;
-        this.available = available;
+        status.put(Availablity.PURCHASABLE, purchasable);
+        status.put(Availablity.BORROWABLE, borrowable);
         this.imageIcon = imageIcon;
 
         this.rating = calculateRating(this.ratings);
     }
 
-    public void setBookID(int a) {
-        this.bookID = a;
+    public void setID(int id) {
+        this.id = id;
     }
 
-    public void setBookTitle(String b) {
-        this.bookTitle = b;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setAuthor(String c) {
-        this.author = c;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public void setGenre(String d) {
         this.genre = d;
     }
 
-    public void setStatus(boolean e) {
-        this.available = e;
+
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public void setBookPrice(double f) {
-        this.bookPrice = f;
+    public void setSalePercent(double salePercent) {
+        this.salePercent = salePercent;
     }
 
-    public void setSalePercent(double g) {
-        this.salePercent = g;
+    public HashMap<Availablity, Boolean> getPurchaseStatus() {
+        return status;
     }
 
-    public int getBookID() {
-        return this.bookID;
+    public int getID() {
+        return this.id;
     }
 
-    public String getBookTitle() {
-        return this.bookTitle;
+    public String getTitle() {
+        return this.title;
     }
 
     public String getAuthor() {
@@ -90,12 +99,8 @@ public class Book {
         return this.genre;
     }
 
-    public boolean getStatus() {
-        return this.available;
-    }
-
-    public double getBookPrice() {
-        return this.bookPrice;
+    public double getPrice() {
+        return this.price;
     }
 
     public double getSalePercent() {
@@ -114,28 +119,16 @@ public class Book {
         return imageIcon;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "bookID=" + bookID +
-                ", bookTitle='" + bookTitle + '\'' +
-                ", author='" + author + '\'' +
-                ", genre='" + genre + '\'' +
-                ", available=" + available +
-                ", year='" + year + '\'' +
-                ", bookPrice=" + bookPrice +
-                ", salePercent=" + salePercent +
-                ", rating=" + rating +
-                ", imageIcon=" + imageIcon +
-                ", ratings=" + ratings +
-                '}';
-    }
-
     private float calculateRating(ArrayList<Rating> ratings) {
         float sum = 0;
         for (Rating rating : ratings) {
             sum = rating.isLike() ? sum + 1 : sum;
         }
         return isNaN((sum / ratings.size())) ? -1F : (sum / ratings.size()) * 100F;
+    }
+
+    @Override
+    public int compareTo(Book o) {
+        return Math.max(this.getID(), o.getID());
     }
 }
