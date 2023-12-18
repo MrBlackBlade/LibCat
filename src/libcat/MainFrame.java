@@ -1,6 +1,7 @@
 package libcat;
 
 import libcat.util.Book;
+import libcat.util.Customer;
 import libcat.util.Rating;
 import libcat.util.User;
 
@@ -287,46 +288,60 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
                     JButton buyButton = new JButton("Buy");
                     JButton borrowButton = new JButton("Borrow");
-                    JButton likeButton = new JButton("Like");
-                    JButton dislikeButton = new JButton("Dislike");
+                    JButton Rate = new JButton("Rate");
 
                     buyButton.setBackground(C_ButtonBG);
                     buyButton.setForeground(Color.WHITE);
                     borrowButton.setBackground(C_ButtonBG);
                     borrowButton.setForeground(Color.WHITE);
-                    likeButton.setBackground(C_ButtonBG);
-                    likeButton.setForeground(Color.WHITE);
-                    dislikeButton.setBackground(C_ButtonBG);
-                    dislikeButton.setForeground(Color.WHITE);
+                    Rate.setBackground(C_ButtonBG);
+                    Rate.setForeground(Color.WHITE);
 
                     //Buttons Action
                     buyButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             // Logic will be here
-                            JOptionPane.showMessageDialog(null, "Buy");
+                            if(((Customer)user).getCart().addPurchase(book,1)){
+
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment");
+                            }
                         }
                     });
                     borrowButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             // Logic will be here
-                            JOptionPane.showMessageDialog(null, "Borrowed");
+                            if(((Customer)user).getCart().addBorrow(book)){
+
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null, "Book is not available for borrow at the moment");
+                            }
                         }
                     });
-                    likeButton.addActionListener(new ActionListener() {
+                    Rate.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            /// Logic will be here
-                            JOptionPane.showMessageDialog(null, "Like");
-                        }
-                    });
-                    dislikeButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            // Logic will be here
-                            JOptionPane.showMessageDialog(null, "Dislike");
+
+                            boolean alreadyRated = false;
+
+                            for(Rating rate : book.getRatings()){
+                                if(user.getName().equalsIgnoreCase(rate.getUsername())){
+                                    alreadyRated = true;
+                                }
+                            }
+                            if(alreadyRated){
+                                JOptionPane.showMessageDialog(null, "kys now");
+                            }
+                            else{
+                                System.out.println("ba3basny");
+                            }
+
                         }
                     });
 
-                    buttonPanel.add(likeButton);
-                    buttonPanel.add(dislikeButton);
+
+                    buttonPanel.add(Rate);
                     buttonPanel.add(buyButton);
                     buttonPanel.add(borrowButton);
 
