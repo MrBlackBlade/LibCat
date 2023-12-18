@@ -222,7 +222,7 @@ public class UserFrame extends JFrame implements FrameEnvironment{
                     //Book Text
                     JTextArea bookLabel = new JTextArea(2, 20);
                     bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
-                            book.getBookTitle(),
+                            book.getTitle(),
                             book.getAuthor(),
                             book.getGenre()));
                     bookLabel.setFont(new Font("Arial", Font.BOLD, 25));

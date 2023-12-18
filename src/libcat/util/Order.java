@@ -57,5 +57,16 @@ public class Order implements Comparable<Order> {
     public int compareTo(Order o) {
         return Math.max(this.getID(), o.getID());
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderID=" + orderID +
+                ", user=" + user +
+                ", book=" + book +
+                ", totalPrice=" + totalPrice +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
 

@@ -23,7 +23,7 @@ public class Cart {
     }
     public boolean addBorrow(Book book) {
         if (book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
-            pendingTransactions.add(new Transaction((Borrower) customer, book));
+            pendingTransactions.add(new Transaction( customer, book));
             return true;
         } else {
             return false;
@@ -38,4 +38,38 @@ public class Cart {
                 ", pendingTransactions=" + pendingTransactions +
                 '}';
     }
-}
+    public boolean deletePurchase(Book book){
+        Order orderToRemove=null;
+        for (Order order : pendingOrders){
+            if ((order.getBook().equals(book))){
+                orderToRemove=order;
+                break;
+            }
+        }
+        if (orderToRemove != null){
+            pendingOrders.remove(orderToRemove);
+            return true;
+        }
+        else {
+            return false;
+        }
+
+        }
+    public boolean deleteBorrow(Book book){
+        Transaction transactionToRemove = null;
+        for(Transaction transaction : pendingTransactions){
+            if (transaction.getBook().equals(book)){
+                transactionToRemove=transaction;
+                break;
+            }
+        }
+        if (transactionToRemove !=null) {
+            pendingTransactions.remove(transactionToRemove);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    }
+

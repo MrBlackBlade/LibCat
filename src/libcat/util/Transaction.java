@@ -26,10 +26,10 @@ public class Transaction implements Comparable<Transaction> {
         this.applyFine();
     }
 
-    public Transaction(Borrower borrower, Book book) {
+    public Transaction(Customer customer, Book book) {
         this(
                 Collections.max(Library.getTransactions()).getID() + 1,
-                borrower.getID(),
+                customer.getID(),
                 book.getID(),
                 LocalDate.now().toString()
         );
@@ -84,5 +84,18 @@ public class Transaction implements Comparable<Transaction> {
     @Override
     public int compareTo(Transaction o) {
         return Math.max(this.getID(), o.getID());
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionID=" + transactionID +
+                ", user=" + user +
+                ", book=" + book +
+                ", totalPrice=" + totalPrice +
+                ", fine=" + fine +
+                ", borrowDate=" + borrowDate +
+                ", isReturned=" + isReturned +
+                '}';
     }
 }
