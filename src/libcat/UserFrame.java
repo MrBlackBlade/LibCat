@@ -1,7 +1,6 @@
 package libcat;
 
 import libcat.util.Book;
-import libcat.util.Customer;
 import libcat.util.Rating;
 import libcat.util.User;
 
@@ -12,8 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-public class MainFrame extends JFrame implements FrameEnvironment{
+public class UserFrame extends JFrame implements FrameEnvironment{
 
     private enum RadioSelect {
         ONE,
@@ -24,7 +22,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
 
     static RadioSelect choice = RadioSelect.ONE;
 
-    public MainFrame(User user) {
+    public UserFrame(User user) {
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
@@ -288,60 +286,46 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
                     JButton buyButton = new JButton("Buy");
                     JButton borrowButton = new JButton("Borrow");
-                    JButton Rate = new JButton("Rate");
+                    JButton likeButton = new JButton("Like");
+                    JButton dislikeButton = new JButton("Dislike");
 
                     buyButton.setBackground(C_ButtonBG);
                     buyButton.setForeground(Color.WHITE);
                     borrowButton.setBackground(C_ButtonBG);
                     borrowButton.setForeground(Color.WHITE);
-                    Rate.setBackground(C_ButtonBG);
-                    Rate.setForeground(Color.WHITE);
+                    likeButton.setBackground(C_ButtonBG);
+                    likeButton.setForeground(Color.WHITE);
+                    dislikeButton.setBackground(C_ButtonBG);
+                    dislikeButton.setForeground(Color.WHITE);
 
                     //Buttons Action
                     buyButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             // Logic will be here
-                            if(((Customer)user).getCart().addPurchase(book,1)){
-
-                            }
-                            else{
-                                JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment");
-                            }
+                            JOptionPane.showMessageDialog(null, "Buy");
                         }
                     });
                     borrowButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             // Logic will be here
-                            if(((Customer)user).getCart().addBorrow(book)){
-
-                            }
-                            else{
-                                JOptionPane.showMessageDialog(null, "Book is not available for borrow at the moment");
-                            }
+                            JOptionPane.showMessageDialog(null, "Borrowed");
                         }
                     });
-                    Rate.addActionListener(new ActionListener() {
+                    likeButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-
-                            boolean alreadyRated = false;
-
-                            for(Rating rate : book.getRatings()){
-                                if(user.getName().equalsIgnoreCase(rate.getUsername())){
-                                    alreadyRated = true;
-                                }
-                            }
-                            if(alreadyRated){
-                                JOptionPane.showMessageDialog(null, "kys now");
-                            }
-                            else{
-                                System.out.println("ba3basny");
-                            }
-
+                            /// Logic will be here
+                            JOptionPane.showMessageDialog(null, "Like");
+                        }
+                    });
+                    dislikeButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // Logic will be here
+                            JOptionPane.showMessageDialog(null, "Dislike");
                         }
                     });
 
-
-                    buttonPanel.add(Rate);
+                    buttonPanel.add(likeButton);
+                    buttonPanel.add(dislikeButton);
                     buttonPanel.add(buyButton);
                     buttonPanel.add(borrowButton);
 

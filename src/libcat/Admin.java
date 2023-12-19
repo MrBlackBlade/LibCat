@@ -21,6 +21,7 @@ public class Admin extends User{
 
     protected static void addCustomer(int id, String name) {
         Library.customers.add(new Customer(id, name));
+        FileSystemManager.updateData(FileSystemManager.usersDataFile);
     }
 
     protected static void addBook(Book newBook) {
@@ -38,12 +39,12 @@ public class Admin extends User{
             boolean newAvailability
     ) {
         for (Book book : Library.books) {
-            if (book.getBookID() == bookID) {
-                book.setBookTitle(newTitle);
+            if (book.getID() == bookID) {
+                book.setTitle(newTitle);
                 book.setAuthor(newAuthor);
                 book.setGenre(newGenre);
                 book.setYear(newYear);
-                book.setBookPrice(newPrice);
+                book.setPrice(newPrice);
                 book.setSalePercent(newSalePercent);
                 book.setAvailable(newAvailability);
                 break;
@@ -56,7 +57,7 @@ public class Admin extends User{
 
         while (iterator.hasNext()) {
             Book book = iterator.next();
-            if (book.getBookID() == bookID) {
+            if (book.getID() == bookID) {
                 iterator.remove();
                 break;
             }

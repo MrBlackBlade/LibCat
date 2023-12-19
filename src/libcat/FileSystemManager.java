@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,7 +96,7 @@ public class FileSystemManager {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                for (User user : Library.getUsers()) {
+                for (User user : Library.getSortedList(Library.getUsers())) {
                     if (user.getType().equalsIgnoreCase("admin")) {
                         insertRow(usersDataFile, new String[]{
                                 String.valueOf(user.getID()),
@@ -133,7 +134,7 @@ public class FileSystemManager {
                     insertRow(ordersFile, new String[]{
                             String.valueOf(order.getID()),
                             String.valueOf(order.getUser().getID()),
-                            String.valueOf(order.getBook().getBookID()),
+                            String.valueOf(order.getBook().getID()),
                             String.valueOf(order.getQuantity()),
                             String.valueOf(order.getTotalPrice())
                     });
@@ -154,7 +155,7 @@ public class FileSystemManager {
                     insertRow(transactionsFile, new String[]{
                             String.valueOf(transaction.getID()),
                             String.valueOf(transaction.getUser().getID()),
-                            String.valueOf(transaction.getBook().getBookID()),
+                            String.valueOf(transaction.getBook().getID()),
                             transaction.getBorrowDate().toString()
                     });
                 }

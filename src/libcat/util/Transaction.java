@@ -26,11 +26,11 @@ public class Transaction implements Comparable<Transaction> {
         this.applyFine();
     }
 
-    public Transaction(Borrower borrower, Book book) {
+    public Transaction(Customer customer, Book book) {
         this(
                 Collections.max(Library.getTransactions()).getID() + 1,
-                borrower.getID(),
-                book.getBookID(),
+                customer.getID(),
+                book.getID(),
                 LocalDate.now().toString()
         );
     }
@@ -55,7 +55,7 @@ public class Transaction implements Comparable<Transaction> {
     }
 
     public void applyFine() {
-         this.totalPrice = this.book.getBookPrice() * this.getFine();
+         this.totalPrice = this.book.getPrice() * this.getFine();
     }
 
     public int getID() {
@@ -64,6 +64,9 @@ public class Transaction implements Comparable<Transaction> {
 
     public LocalDate getBorrowDate() {
         return borrowDate;
+    }
+    public LocalDate getReturnDate() {
+        return borrowDate.plusWeeks(3);
     }
 
     public User getUser() {
@@ -81,5 +84,18 @@ public class Transaction implements Comparable<Transaction> {
     @Override
     public int compareTo(Transaction o) {
         return Math.max(this.getID(), o.getID());
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionID=" + transactionID +
+                ", user=" + user +
+                ", book=" + book +
+                ", totalPrice=" + totalPrice +
+                ", fine=" + fine +
+                ", borrowDate=" + borrowDate +
+                ", isReturned=" + isReturned +
+                '}';
     }
 }
