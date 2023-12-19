@@ -75,6 +75,15 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         cartButton.setForeground(Color.WHITE);
         cartButton.setPreferredSize(new Dimension(80,80));
 
+        cartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                new CartFrame(user);
+
+            }
+        });
+
         topPanel.add(profileButton);
         topPanel.add(cartButton);
 
@@ -336,6 +345,9 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                         public void actionPerformed(ActionEvent e) {
                             // Logic will be here
                             if(((Customer)user).getCart().addPurchase(book,1)){
+
+                                System.out.println(((Customer) user).getCart());
+                                System.out.println(((Customer) user).getCart().getTotalPrice());
 
                             }
                             else{

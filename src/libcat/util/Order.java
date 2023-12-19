@@ -9,7 +9,10 @@ public class Order implements Comparable<Order> {
     private int orderID;
     private User user;
     private Book book;
+
     private double totalPrice;
+
+
     private int quantity;
 
     public Order(int orderID, int customerID, int bookID, int quantity, double price) {
@@ -64,6 +67,13 @@ public class Order implements Comparable<Order> {
     private static double calculateTotalPrice(double quantity, Book book) {
         return quantity * (book.getPrice() * (1 - book.getSalePercent()));
     }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
 
     @Override
     public int compareTo(Order o) {

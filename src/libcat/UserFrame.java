@@ -26,7 +26,7 @@ public class UserFrame extends JFrame implements FrameEnvironment{
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setSize(1280, 900);
         setResizable(false);
         setTitle("LibCat");

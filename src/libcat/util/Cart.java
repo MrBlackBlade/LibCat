@@ -17,6 +17,7 @@ public class Cart {
     public boolean addPurchase(Book book, int quantity) {
         if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
             pendingOrders.add(new Order(customer, book, quantity, pendingOrders));
+            totalPrice += book.getPrice();
             return true;
         } else {
             return false;
