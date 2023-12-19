@@ -2,6 +2,7 @@ package libcat.util;
 
 import libcat.FileSystemManager;
 import libcat.Library;
+import libcat.StringArrayRepresentation;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 
 import static java.lang.Float.isNaN;
 
-public class Book implements Comparable<Book>{
+public class Book implements StringArrayRepresentation, Comparable<Book>{
 
     public enum Availablity {
         PURCHASABLE, BORROWABLE, AVAILABLITY_MAX,
@@ -150,5 +151,22 @@ public class Book implements Comparable<Book>{
         this.ratings = Library.getBy(Library.QueryType.RATING, Library.RatingQueryIndex.BOOK_ID, String.valueOf(this.getID()));
 
         this.rating = calculateRating();
+    }
+
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+                String.valueOf(getID()),
+                String.valueOf(getTitle()),
+                String.valueOf(getAuthor()),
+                String.valueOf(getGenre()),
+                String.valueOf(getYear()),
+                String.valueOf(getRating()),
+                String.valueOf(getPrice()),
+                String.valueOf(getSalePercent()),
+                String.valueOf(getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                String.valueOf(getPurchaseStatus().get(Book.Availablity.BORROWABLE)),
+                String.valueOf(getImagePath())
+        };
     }
 }

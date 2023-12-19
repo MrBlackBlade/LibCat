@@ -1,12 +1,13 @@
 package libcat.util;
 
 import libcat.Library;
+import libcat.StringArrayRepresentation;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.ArrayList;
 
-public class Transaction implements Comparable<Transaction> {
+public class Transaction implements StringArrayRepresentation, Comparable<Transaction> {
     private int transactionID;
     private User user;
     private Book book;
@@ -92,5 +93,15 @@ public class Transaction implements Comparable<Transaction> {
                 ", borrowDate=" + borrowDate +
                 ", isReturned=" + isReturned +
                 '}';
+    }
+
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+                String.valueOf(getID()),
+                String.valueOf(getUser().getID()),
+                String.valueOf(getBook().getID()),
+                getBorrowDate().toString()
+        };
     }
 }
