@@ -4,12 +4,12 @@ import libcat.Library;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.ArrayList;
 
 public class Transaction implements Comparable<Transaction> {
     private int transactionID;
     private User user;
     private Book book;
-    private double totalPrice;
     private double fine;
     private LocalDate borrowDate;
     private boolean isReturned;
@@ -35,27 +35,22 @@ public class Transaction implements Comparable<Transaction> {
         );
     }
 
+    public Transaction(Customer customer, Book book, ArrayList<Transaction> pendingTransactions) {
+        this(
+                Collections.max(Library.mergeArrays(Library.getTransactions(), pendingTransactions)).getID() + 1,
+                customer.getID(),
+                book.getID(),
+                LocalDate.now().toString()
+        );
+    }
+
     private boolean overDue() {
-        return !LocalDate.now().isAfter(this.borrowDate.plusWeeks(3));
+        return LocalDate.now().isAfter(this.borrowDate.plusWeeks(3));
     }
 
     // automatically called when the user logs in to check if there's a fine or not
-    public boolean checkFine() {
-        boolean hasFine;
-
-        if (this.overDue()) {
-            this.fine = 0.0;
-            hasFine = false;
-        } else {
-            this.fine = 0.15;
-            hasFine = true;
-        }
-
-        return hasFine;
-    }
-
     public void applyFine() {
-         this.totalPrice = this.book.getPrice() * this.getFine();
+        fine = book.getPrice() * (overDue() ? 0.15 : 0.0);
     }
 
     public int getID() {
@@ -65,6 +60,7 @@ public class Transaction implements Comparable<Transaction> {
     public LocalDate getBorrowDate() {
         return borrowDate;
     }
+
     public LocalDate getReturnDate() {
         return borrowDate.plusWeeks(3);
     }
@@ -92,7 +88,6 @@ public class Transaction implements Comparable<Transaction> {
                 "transactionID=" + transactionID +
                 ", user=" + user +
                 ", book=" + book +
-                ", totalPrice=" + totalPrice +
                 ", fine=" + fine +
                 ", borrowDate=" + borrowDate +
                 ", isReturned=" + isReturned +

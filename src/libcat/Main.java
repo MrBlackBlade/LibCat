@@ -9,6 +9,7 @@ public class Main {
             LoginFrame loginFrame = new LoginFrame();
             loginFrame.setVisible(true);
         });
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Exiting application... Cleaning up");
             FileSystemManager.updateData();

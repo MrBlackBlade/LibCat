@@ -23,12 +23,6 @@ public class FileSystemManager {
         return (cwd + "\\images\\");
     }
 
-    protected static String[] mergeStringArrays(String[] array1, String[] array2) {
-        String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
-        System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
-        return mergedArray;
-    }
-
     protected static void initFile(String file) {
         try (FileReader fr = new FileReader(cwd + file)) {
             ;

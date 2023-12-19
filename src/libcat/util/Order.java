@@ -3,6 +3,7 @@ package libcat.util;
 import libcat.Library;
 
 import java.util.Collections;
+import java.util.ArrayList;
 
 public class Order implements Comparable<Order> {
     private int orderID;
@@ -28,6 +29,17 @@ public class Order implements Comparable<Order> {
                 calculateTotalPrice(quantity, book)
         );
     }
+
+    public Order(Customer customer, Book book, int quantity, ArrayList<Order> pendingOrders) {
+        this(
+                Collections.max(Library.mergeArrays(Library.getOrders(), pendingOrders)).getID() + 1,
+                customer.getID(),
+                book.getID(),
+                quantity,
+                calculateTotalPrice(quantity, book)
+        );
+    }
+
 
     public int getID() {
         return orderID;

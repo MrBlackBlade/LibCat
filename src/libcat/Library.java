@@ -130,6 +130,18 @@ public class Library {
         transactions.add(transaction);
     }
 
+    protected static String[] mergeStringArrays(String[] array1, String[] array2) {
+        String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
+        System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
+        return mergedArray;
+    }
+
+    public static <T> ArrayList<T> mergeArrays(ArrayList<T> array1, ArrayList<T> array2) {
+        ArrayList<T> mergedArray = new ArrayList<T>(array1);
+        mergedArray.addAll(array2);
+        return mergedArray;
+    }
+
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = (new ArrayList<>(admins));
         users.addAll(customers);
@@ -239,7 +251,7 @@ public class Library {
             // create a list of the books not found in the user's order history
             ArrayList<Book> newBooks = new ArrayList<>();
             for (Book book : Library.books) {
-                if (!userOrderHistory.contains(book)) {
+                if (!userOrderHistory.contains((Order)(Library.getBy(QueryType.ORDER, OrderQueryIndex.BOOK_ID, String.valueOf(book.getID())).get(0)))) {
                     newBooks.add(book);
                 }
             }
