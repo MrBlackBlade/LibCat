@@ -5,8 +5,6 @@ import libcat.util.*;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -135,7 +133,7 @@ public class FileSystemManager {
                             String.valueOf(book.getGenre()),
                             String.valueOf(book.getYear()),
                             String.valueOf(book.getRating()),
-                            String.valueOf(book.getPrice()),
+                            String.valueOf(book.getBasePrice()),
                             String.valueOf(book.getSalePercent()),
                             String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
                             String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)),

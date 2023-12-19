@@ -50,7 +50,7 @@ public class Transaction implements Comparable<Transaction> {
 
     // automatically called when the user logs in to check if there's a fine or not
     public void applyFine() {
-        fine = book.getPrice() * (overDue() ? 0.15 : 0.0);
+        fine = book.getBasePrice() * (overDue() ? 0.15 : 0.0);
     }
 
     public int getID() {

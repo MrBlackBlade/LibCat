@@ -4,6 +4,7 @@ import libcat.FileSystemManager;
 import libcat.Library;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,7 +21,7 @@ public class Book implements Comparable<Book>{
     private String genre;
     private HashMap<Availablity, Boolean> status = new HashMap<Availablity, Boolean>();
     private String year;
-    private double price;
+    private double basePrice;
     private double salePercent;
     private float rating;
 
@@ -35,7 +36,7 @@ public class Book implements Comparable<Book>{
             String author,
             String genre,
             String year,
-            double price,
+            double basePrice,
             double salePercent,
             boolean purchasable,
             boolean borrowable,
@@ -46,7 +47,7 @@ public class Book implements Comparable<Book>{
         this.author = author;
         this.genre = genre;
         this.year = year;
-        this.price = price;
+        this.basePrice = basePrice;
         this.salePercent = salePercent;
         status.put(Availablity.PURCHASABLE, purchasable);
         status.put(Availablity.BORROWABLE, borrowable);
@@ -72,8 +73,8 @@ public class Book implements Comparable<Book>{
 
 
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
     }
 
     public void setSalePercent(double salePercent) {
@@ -104,8 +105,13 @@ public class Book implements Comparable<Book>{
         return year;
     }
 
-    public double getPrice() {
-        return this.price;
+    public double getBasePrice() {
+        return this.basePrice;
+    }
+
+    public double getSalePrice() {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        return Double.parseDouble(decimalFormat.format(this.basePrice * (1-salePercent)));
     }
 
     public double getSalePercent() {

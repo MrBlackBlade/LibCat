@@ -6,31 +6,52 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 
 import static libcat.AdminFrame.border;
-import static libcat.AdminFrame.panelHeight;
 
 public class CartFrame extends JFrame implements FrameEnvironment {
 
+    private JPanel containerPanel = new JPanel();
+    private JScrollPane scrollPane = new JScrollPane(containerPanel);
+    private Customer customer;
+
     public CartFrame(User user) {
-        // Window Size, Icon and Name
+        this.customer = (Customer) user;
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(780, 900);
         setResizable(false);
         setTitle("LibCat");
         setIconImage(icon.getImage());
         getContentPane().setBackground(C_ListBG);
-        setVisible(true);
 
-        JPanel containerPanel = new JPanel();
         containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
 
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
+        add(scrollPane);
+    }
+    protected void showCart(){
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setVisible(false);
+            }
+        });
 
-        for (Order order : ((Customer)user).getCart().getPendingOrders()) {
+        setVisible(true);
+        updateCart();
+    }
+    protected void updateCart() {
+
+        containerPanel.removeAll();
+        for (Order order : customer.getCart().getPendingOrders()) {
 
             JTextPane bookLabel = new JTextPane();
             bookLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -42,7 +63,7 @@ public class CartFrame extends JFrame implements FrameEnvironment {
             JPanel ListItemPanel = new JPanel();
             ListItemPanel.setLayout(new GridBagLayout());
             ListItemPanel.setBackground(C_ListBG);
-            ListItemPanel.setPreferredSize(new Dimension(700, 350));
+            ListItemPanel.setPreferredSize(new Dimension(700, 200));
             ListItemPanel.setBorder(border);
 
             //Book Image
@@ -58,10 +79,6 @@ public class CartFrame extends JFrame implements FrameEnvironment {
             JPanel buttonContainerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             buttonContainerPanel.setOpaque(false);
 
-            double discountedPrice = order.getBook().getPrice() * (1 - order.getBook().getSalePercent());
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
-            double salePrice = Double.parseDouble(decimalFormat.format(discountedPrice));
-
             JButton addQuantity = new JButton("+");
             addQuantity.setBackground(C_ButtonBG);
             addQuantity.setForeground(Color.WHITE);
@@ -76,68 +93,52 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    if(order.getBook().getSalePercent() > 0.0) {
+                    if (order.getBook().getSalePercent() > 0.0) {
 
                         order.setQuantity(order.getQuantity() + 1);
-                        order.setTotalPrice(order.getTotalPrice() + salePrice);
 
-                        System.out.println(order.getQuantity());
-                        System.out.println(((Customer) user).getCart().getPendingOrders());
-                    }
-                    else{
+                    } else {
                         order.setQuantity(order.getQuantity() + 1);
-                        order.setTotalPrice(order.getTotalPrice() + order.getBook().getPrice());
 
-                        System.out.println(order.getQuantity());
-                        System.out.println(((Customer) user).getCart().getPendingOrders());
                     }
 
                     bookLabel.setText(String.format("Title: %s\n\nPrice: $%s\n\nQuantity: %s",
                             order.getBook().getTitle(),
-                            salePrice,
+                            order.getBook().getSalePrice(),
                             order.getQuantity()));
 
-                    //containerPanel.revalidate();
-                    //containerPanel.repaint();
                 }
             });
             decQuantity.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    if(order.getQuantity() > 1){
+                    if (order.getQuantity() > 1) {
 
-                        if(order.getBook().getSalePercent() > 0.0) {
+                        if (order.getBook().getSalePercent() > 0.0) {
 
                             order.setQuantity(order.getQuantity() - 1);
-                            order.setTotalPrice(order.getTotalPrice() - salePrice);
 
-                            System.out.println(order.getQuantity());
-                            System.out.println(((Customer) user).getCart().getPendingOrders());
-                        }
-                        else{
+                        } else {
                             order.setQuantity(order.getQuantity() - 1);
-                            order.setTotalPrice(order.getTotalPrice() - order.getBook().getPrice());
 
-                            System.out.println(order.getQuantity());
-                            System.out.println(((Customer) user).getCart().getPendingOrders());
                         }
 
-                    }
-                    else{
+                    } else {
 
-                        ((Customer) user).getCart().deletePurchase(order.getBook());
-                        System.out.println(((Customer) user).getCart().getPendingOrders());
+                        customer.getCart().deletePurchase(order.getBook());
+
+                        containerPanel.remove(ListItemPanel);
+                        containerPanel.revalidate();
+                        containerPanel.repaint();
 
                     }
 
                     bookLabel.setText(String.format("Title: %s\n\nPrice: $%s\n\nQuantity: %s",
                             order.getBook().getTitle(),
-                            salePrice,
+                            order.getBook().getSalePrice(),
                             order.getQuantity()));
 
-                    //containerPanel.revalidate();
-                    //containerPanel.repaint();
                 }
             });
 
@@ -151,13 +152,11 @@ public class CartFrame extends JFrame implements FrameEnvironment {
             gbcButtonContainerPanel.gridy = 0;
             gbcButtonContainerPanel.anchor = GridBagConstraints.EAST;  // Align to the right
 
-            //imageLabel.setPreferredSize(new Dimension());
             imageLabel.setIconTextGap(15);
 
             //GBCs
             GridBagConstraints gbcImageLabel = new GridBagConstraints();
             gbcImageLabel.fill = GridBagConstraints.HORIZONTAL;
-            //gbcImageLabel.weightx = 1.0;
             gbcImageLabel.gridx = 0;
             gbcImageLabel.gridy = 0;
             gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
@@ -165,14 +164,13 @@ public class CartFrame extends JFrame implements FrameEnvironment {
 
             //Book Text
             bookLabel.setText(String.format("Title: %s\n\nPrice: $%s\n\nQuantity: %s",
-                order.getBook().getTitle(),
-                salePrice,
-                order.getQuantity()));
+                    order.getBook().getTitle(),
+                    order.getBook().getSalePrice(),
+                    order.getQuantity()));
 
             //GBCs
             GridBagConstraints gbcBookLabel = new GridBagConstraints();
             gbcBookLabel.fill = GridBagConstraints.HORIZONTAL;
-            //gbcImageLabel.weightx = 1.0;
             gbcBookLabel.gridx = 1;
             gbcBookLabel.gridy = 0;
             gbcBookLabel.anchor = GridBagConstraints.WEST; // Align to the left
@@ -194,12 +192,9 @@ public class CartFrame extends JFrame implements FrameEnvironment {
             ListItemPanel.add(emptyPanel, gbcEmptyPanel);
             containerPanel.add(ListItemPanel);
         }
-
-        JScrollPane scrollPane = new JScrollPane(containerPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-        add(scrollPane);
+        containerPanel.revalidate();
+        containerPanel.repaint();
+        scrollPane.revalidate();
+        scrollPane.repaint();
     }
 }

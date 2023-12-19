@@ -17,7 +17,7 @@ public class Cart {
     public boolean addPurchase(Book book, int quantity) {
         if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
             pendingOrders.add(new Order(customer, book, quantity, pendingOrders));
-            totalPrice += book.getPrice();
+            totalPrice += book.getBasePrice();
             return true;
         } else {
             return false;
@@ -76,7 +76,7 @@ public class Cart {
             for (Order order : getPendingOrders()) {
                 Library.createOrder(order);
 
-                totalPrice += order.getBook().getPrice() * (1 - order.getBook().getSalePercent()) * order.getQuantity();
+                totalPrice += order.getBook().getBasePrice() * (1 - order.getBook().getSalePercent()) * order.getQuantity();
             }
 
             getPendingOrders().clear();

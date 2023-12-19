@@ -1,9 +1,6 @@
 package libcat;
 
-import libcat.util.Book;
-import libcat.util.Customer;
-import libcat.util.Rating;
-import libcat.util.User;
+import libcat.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -75,11 +72,16 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         cartButton.setForeground(Color.WHITE);
         cartButton.setPreferredSize(new Dimension(80,80));
 
+        CartFrame cart = new CartFrame(user);
         cartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                new CartFrame(user);
+               if(!(((Customer)user).getCart().getPendingOrders().isEmpty() && ((Customer)user).getCart().getPendingTransactions().isEmpty())){
+                   cart.showCart();
+               }
+               else{
+                   JOptionPane.showMessageDialog(null, "Cart is empty, Please add Items first.");
+               }
 
             }
         });
@@ -240,10 +242,6 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     bookLabel.setFocusable(false);
 
                     if (book.getSalePercent() > 0.0) {
-                        double discountedPrice = book.getPrice() * (1 - book.getSalePercent());
-                        // Format the discountedPrice to two decimal places
-                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-                        String salePrice = decimalFormat.format(discountedPrice);
 
                         bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice:",
                                 book.getTitle(),
@@ -258,13 +256,13 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                         try {
                             StyleConstants.setFontSize(strike,20);
                             doc.insertString(doc.getLength(), String.format(" $%.2f",
-                                    book.getPrice()),
+                                    book.getBasePrice()),
                                     strike);
                         } catch (BadLocationException ex) {
                             throw new RuntimeException(ex);
                         }
                         try {
-                            doc.insertString(doc.getLength(), String.format("  $%s", salePrice), null);
+                            doc.insertString(doc.getLength(), String.format("  $%s", book.getSalePrice()), null);
                         } catch (BadLocationException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -274,7 +272,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                 book.getTitle(),
                                 book.getAuthor(),
                                 book.getGenre(),
-                                String.valueOf(book.getPrice())));
+                                String.valueOf(book.getBasePrice())));
                     }
 
                     //GBCs
@@ -343,15 +341,27 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     //Buttons Action
                     buyButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            // Logic will be here
-                            if(((Customer)user).getCart().addPurchase(book,1)){
 
-                                System.out.println(((Customer) user).getCart());
-                                System.out.println(((Customer) user).getCart().getTotalPrice());
+                            boolean inCart = false;
+
+                            for(Order order : ((Customer)user).getCart().getPendingOrders()){
+                                if(order.getBook().getTitle().equalsIgnoreCase(book.getTitle())){
+                                    inCart = true;
+                                }
+                            }
+                            if(!inCart){
+
+                                if(((Customer)user).getCart().addPurchase(book,1)){
+                                    System.out.println("Book Added to Cart");
+                                    cart.updateCart();
+                                }
+                                else{
+                                    JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment.");
+                                }
 
                             }
                             else{
-                                JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment");
+                                JOptionPane.showMessageDialog(null, "Book Already in Cart.");
                             }
                         }
                     });

@@ -3,7 +3,6 @@ package libcat;
 import libcat.util.*;
 
 
-import java.util.Iterator;
 import libcat.util.Customer;
 import libcat.util.User;
 
@@ -43,7 +42,7 @@ public class Admin extends User{
                 book.setAuthor(newAuthor);
                 book.setGenre(newGenre);
                 book.setYear(newYear);
-                book.setPrice(newPrice);
+                book.setBasePrice(newPrice);
                 book.setSalePercent(newSalePercent);
                 book.setAvailable(newAvailability);
                 break;

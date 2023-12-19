@@ -65,7 +65,7 @@ public class Order implements Comparable<Order> {
     }
 
     private static double calculateTotalPrice(double quantity, Book book) {
-        return quantity * (book.getPrice() * (1 - book.getSalePercent()));
+        return quantity * book.getSalePrice();
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
