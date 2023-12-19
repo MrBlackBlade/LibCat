@@ -3,13 +3,13 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 # User-specific stuff
-.idea/
 .idea/**/workspace.xml
 .idea/**/uiDesigner.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/misc.xml
 
 ### Eclipse ###
 .apt_generated
