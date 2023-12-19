@@ -9,4 +9,4 @@
 8,Zigo,customer
 9,Jimmy,customer
 10,Makronomic,borrower
-11,1,admin
+11,1,customer
