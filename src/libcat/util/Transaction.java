@@ -3,6 +3,7 @@ package libcat.util;
 import libcat.Library;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Collections;
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class Transaction implements Comparable<Transaction> {
     private Book book;
     private double fine;
     private LocalDate borrowDate;
-    private boolean isReturned;
+    protected boolean isReturned;
 
     public Transaction(int transactionID, int borrowerID, int bookID, String borrowDate) {
         this.transactionID = transactionID;
@@ -77,6 +78,10 @@ public class Transaction implements Comparable<Transaction> {
         return fine;
     }
 
+    public boolean isReturned() {
+        return isReturned;
+    }
+
     @Override
     public int compareTo(Transaction o) {
         return Math.max(this.getID(), o.getID());
@@ -92,5 +97,14 @@ public class Transaction implements Comparable<Transaction> {
                 ", borrowDate=" + borrowDate +
                 ", isReturned=" + isReturned +
                 '}';
+    }
+
+    public ChronoLocalDate getDueDate() {
+    }
+
+    public void returnBook() {
+    }
+
+    public void setFinePaid(double fine) {
     }
 }

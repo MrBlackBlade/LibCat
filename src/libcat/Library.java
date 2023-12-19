@@ -1,10 +1,14 @@
 package libcat;
 
 import javax.swing.*;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 
 import libcat.util.*;
+
+import static libcat.FileSystemManager.updateData;
 
 public class Library {
     protected static ArrayList<Admin> admins;
@@ -422,6 +426,44 @@ public class Library {
 
     public static <T extends Comparable<? super T>> T getMax(ArrayList<T> array) {
         return Collections.max(getSortedList(array));
+    }
+    public static void FineandReturnBook(Borrower borrower, Book book, LocalDate currentDate){
+        ArrayList<Transaction> borrowerTransactions = getBy(QueryType.TRANSACTION, TransactionQueryIndex.USER_ID, String.valueOf(borrower.getID()));
+        for(Transaction transaction : borrowerTransactions){
+            if (transaction.getBook().getID()==book.getID() && !transaction.isReturned()){
+                if (currentDate.isAfter(transaction.getDueDate())){
+                    double fine = calculateFine(currentDate,transaction.getDueDate());
+                    borrower.deductFine(fine);
+                    transaction.setFinePaid(fine);
+                    transaction.returnBook();
+                    if(borrower.getBooksBorrowed().isEmpty()){
+                       removeBorrower(borrower);
+                       updateData();
+                       return;
+                    }
+                }
+            }else{
+                transaction.returnBook();
+                if (borrower.getBooksBorrowed().isEmpty()){
+                    removeBorrower(borrower);
+                    updateData();
+                    return;
+                }
+            }
+        }
+    }
+
+    private static void removeBorrower(Borrower borrower) {
+        if (Library.getBorrowers().contains(borrower)){
+            Library.getBorrowers().remove(borrower);
+            Library.getCustomers().add(new Customer(borrower.getID(),borrower.getName()));
+        }
+    }
+
+    private static double calculateFine(LocalDate currentDate, ChronoLocalDate dueDate) {
+        int daysOverdue = (int) currentDate.datesUntil((LocalDate) dueDate).count();
+        double finePerDay=0.15;
+                return daysOverdue * finePerDay;
     }
 
 }

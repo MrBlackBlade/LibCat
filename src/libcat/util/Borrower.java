@@ -15,4 +15,10 @@ public class Borrower extends Customer{
     public void setName(String name) {
         super.setName(name);
     }
+
+    public void deductFine(double fine) {
+    }
+
+    public CharSequence getBooksBorrowed() {
+    }
 }
