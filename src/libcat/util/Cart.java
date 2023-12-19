@@ -33,36 +33,27 @@ public class Cart {
     }
 
     public boolean deletePurchase(Book book) {
-        Order orderToRemove = null;
+        boolean deleteSuccessful = false;
         for (Order order : pendingOrders) {
             if ((order.getBook().equals(book))) {
-                orderToRemove = order;
+                pendingOrders.remove(order);
+                deleteSuccessful = true;
                 break;
             }
         }
-        if (orderToRemove != null) {
-            pendingOrders.remove(orderToRemove);
-            return true;
-        } else {
-            return false;
-        }
-
+        return deleteSuccessful;
     }
 
     public boolean deleteBorrow(Book book) {
-        Transaction transactionToRemove = null;
+        boolean deleteSuccessful = false;
         for (Transaction transaction : pendingTransactions) {
             if (transaction.getBook().equals(book)) {
-                transactionToRemove = transaction;
+                pendingTransactions.remove(transaction);
+                deleteSuccessful = true;
                 break;
             }
         }
-        if (transactionToRemove != null) {
-            pendingTransactions.remove(transactionToRemove);
-            return true;
-        } else {
-            return false;
-        }
+        return deleteSuccessful;
     }
 
     public ArrayList<Order> getPendingOrders() {

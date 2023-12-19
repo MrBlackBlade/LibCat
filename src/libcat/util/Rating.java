@@ -5,33 +5,38 @@ import libcat.Library;
 import java.util.ArrayList;
 
 public class Rating {
-    private int bookID;
-    private int customerID;
+    private Book book;
+    private Customer customer;
     private boolean like;
     private String review;
 
-    public Rating(int bookID, int customerID, boolean like, String review){
-        this.bookID = bookID;
-        this.customerID = customerID;
+    public Rating(Book book, Customer customer, boolean like, String review){
+        this.book = book;
+        this.customer = customer;
         this.like = like;
         this.review = review;
     }
 
-    public int getBookID() { return bookID; }
-    public void setCustomerID(int customerID) { this.customerID = customerID; }
+    public int getBookID() { return book.getID(); }
     public boolean isLike() { return like; }
     public String getReview() {return review;}
 
+    public Book getBook() {
+        return book;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
     public String getUsername() {
-        ArrayList<User> queryResult = new ArrayList<User>();
-        queryResult = Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, String.valueOf(this.customerID));
-        return queryResult.get(0).getName();
+        return customer.getName();
     }
     @Override
     public String toString() {
         return "Rating{" +
-                "bookID=" + bookID +
-                ", customerID=" + customerID +
+                "book=" + book +
+                ", customer=" + customer +
                 ", like=" + like +
                 ", review='" + review + '\'' +
                 '}';

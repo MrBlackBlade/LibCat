@@ -7,17 +7,21 @@ import java.util.regex.Pattern;
 import libcat.util.*;
 
 public class Library {
-    public static ArrayList<Admin> admins;
-    public static ArrayList<Book> books;
-    public static ArrayList<Rating> ratings;
-    public static ArrayList<Customer> customers;
-    public static ArrayList<Borrower> borrowers;
-    public static ArrayList<User> users;
-    private static ArrayList<Order> orders;
-    private static ArrayList<Transaction> transactions;
+    protected static ArrayList<Admin> admins;
+    protected static ArrayList<Book> books;
+    protected static ArrayList<Rating> ratings;
+    protected static ArrayList<Customer> customers;
+    protected static ArrayList<Borrower> borrowers;
+    protected static ArrayList<User> users;
+    protected static ArrayList<Order> orders;
+    protected static ArrayList<Transaction> transactions;
 
     public enum QueryType {
         BOOK, USER, ORDER, TRANSACTION, RATING, QUERY_TYPE_MAX,
+    }
+
+    public enum RatingQueryIndex implements QueryIndex {
+        BOOK_ID, USER_ID, RATING_QUERY_INDEX_MAX,
     }
 
     public enum BookQueryIndex implements QueryIndex {
@@ -49,9 +53,9 @@ public class Library {
         orders = new ArrayList<Order>();
         transactions = new ArrayList<Transaction>();
 
-        Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeUsers();
         Library.makeBooks();
+        Library.makeRatings(); //has to be called before books (prolly before users too)
         Library.makeOrders();
         Library.makeTransactions();
     }
@@ -83,12 +87,11 @@ public class Library {
                     row[2],
                     row[3],
                     row[4],
-                    getRatingsByBookID(Integer.parseInt(row[0])),
                     Double.parseDouble(row[6]),
                     Double.parseDouble(row[7]),
                     Boolean.parseBoolean(row[8]),
                     Boolean.parseBoolean(row[9]),
-                    new ImageIcon(FileSystemManager.cwd +"\\images\\"+ row[10])));
+                    (row[10])));
         }
     }
 
@@ -121,14 +124,10 @@ public class Library {
 
     public static void createOrder(Order order) {
         orders.add(order);
-
-        FileSystemManager.updateData(FileSystemManager.ordersFile);
     }
 
     public static void createTransaction(Transaction transaction) {
         transactions.add(transaction);
-
-        FileSystemManager.updateData(FileSystemManager.transactionsFile);
     }
 
     public static ArrayList<User> getUsers() {
@@ -138,12 +137,32 @@ public class Library {
         return users;
     }
 
+    public static ArrayList<Admin> getAdmins() {
+        return admins;
+    }
+
+    public static ArrayList<Customer> getCustomers() {
+        return customers;
+    }
+
+    public static ArrayList<Borrower> getBorrowers() {
+        return borrowers;
+    }
+
+    public static ArrayList<Book> getBooks() {
+        return books;
+    }
+
     public static ArrayList<Order> getOrders() {
         return Library.orders;
     }
 
     public static ArrayList<Transaction> getTransactions() {
         return Library.transactions;
+    }
+
+    public static ArrayList<Rating> getRatings() {
+        return Library.ratings;
     }
 
     public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource, BookQueryIndex queryIndex) {
@@ -288,38 +307,51 @@ public class Library {
                 }
 
                 case ORDER: {
-                    for (Order order : Library.getOrders()) {
-                        try {
+                    try {
+                        for (Order order : Library.getOrders()) {
                             if (queryIndex == OrderQueryIndex.ORDER_ID && String.valueOf(order.getID()).equalsIgnoreCase(searchValue)
                                     || queryIndex == OrderQueryIndex.USER_ID && String.valueOf(order.getUser().getID()).equalsIgnoreCase(searchValue)
                                     || queryIndex == OrderQueryIndex.BOOK_ID && String.valueOf(order.getBook().getID()).equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) order);
                             }
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
-                        }
 
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
                     }
                     break;
                 }
 
                 case TRANSACTION: {
-                    for (Transaction transaction : Library.getTransactions()) {
-                        try {
+                    try {
+                        for (Transaction transaction : Library.getTransactions()) {
                             if (queryIndex == TransactionQueryIndex.TRANSACTION_ID && String.valueOf(transaction.getID()).equalsIgnoreCase(searchValue)
                                     || queryIndex == TransactionQueryIndex.USER_ID && String.valueOf(transaction.getUser().getID()).equalsIgnoreCase(searchValue)
                                     || queryIndex == TransactionQueryIndex.BOOK_ID && String.valueOf(transaction.getBook().getID()).equalsIgnoreCase(searchValue)
                             ) {
                                 foundValue.add((T) transaction);
                             }
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
                         }
-                        break;
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
                     }
+                    break;
                 }
-
+                case RATING: {
+                    try {
+                        for (Rating rating : Library.getRatings()) {
+                            if (queryIndex == RatingQueryIndex.USER_ID && String.valueOf(rating.getCustomer().getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex == RatingQueryIndex.BOOK_ID && String.valueOf(rating.getBook().getID()).equalsIgnoreCase(searchValue)
+                            ) {
+                                foundValue.add((T) rating);
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                    break;
+                }
                 // may be redundant if all getBy() calls are hard coded and not user-dependent
                 default:
                     throw new Exception("Invalid QueryType");
@@ -329,7 +361,6 @@ public class Library {
 
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-
             return new ArrayList<T>();
         }
     }
@@ -341,13 +372,20 @@ public class Library {
             String review = "";
             for (int i = 3; i < row.length; i++) {
                 review = review.concat(row[i]);
+                if (i < (row.length - 1)) {
+                    review = review.concat(",");
+                }
             }
             ratings.add(new Rating(
-                    Integer.parseInt(row[0]),
-                    Integer.parseInt(row[1]),
+                    (Book) getBy(QueryType.BOOK, BookQueryIndex.ID, row[0]).get(0),
+                    (Customer) getBy(QueryType.USER, UserQueryIndex.ID, row[1]).get(0),
                     Boolean.parseBoolean(row[2]),
                     review
             ));
+        }
+
+        for (Book book : Library.getBooks()) {
+            book.initializeRatings();
         }
     }
 
@@ -369,6 +407,7 @@ public class Library {
         sortedList.sort(Comparator.naturalOrder());
         return sortedList;
     }
+
     public static <T extends Comparable<? super T>> T getMax(ArrayList<T> array) {
         return Collections.max(getSortedList(array));
     }

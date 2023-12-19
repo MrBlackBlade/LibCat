@@ -1,5 +1,8 @@
 package libcat.util;
 
+import libcat.FileSystemManager;
+import libcat.Library;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +24,7 @@ public class Book implements Comparable<Book>{
     private double salePercent;
     private float rating;
 
+    private final String imagePath;
     private final ImageIcon imageIcon;
 
     private ArrayList<Rating> ratings;
@@ -31,26 +35,23 @@ public class Book implements Comparable<Book>{
             String author,
             String genre,
             String year,
-            ArrayList<Rating> ratings,
             double price,
             double salePercent,
             boolean purchasable,
             boolean borrowable,
-            ImageIcon imageIcon
+            String imagePath
     ) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.year = year;
-        this.ratings = ratings;
         this.price = price;
         this.salePercent = salePercent;
         status.put(Availablity.PURCHASABLE, purchasable);
         status.put(Availablity.BORROWABLE, borrowable);
-        this.imageIcon = imageIcon;
-
-        this.rating = calculateRating(this.ratings);
+        this.imagePath = imagePath;
+        this.imageIcon = new ImageIcon(FileSystemManager.getImageWD() + imagePath);
     }
 
     public void setID(int id) {
@@ -99,6 +100,10 @@ public class Book implements Comparable<Book>{
         return this.genre;
     }
 
+    public String getYear() {
+        return year;
+    }
+
     public double getPrice() {
         return this.price;
     }
@@ -115,11 +120,15 @@ public class Book implements Comparable<Book>{
         return ratings;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
     public ImageIcon getImageIcon() {
         return imageIcon;
     }
 
-    private float calculateRating(ArrayList<Rating> ratings) {
+    private float calculateRating() {
         float sum = 0;
         for (Rating rating : ratings) {
             sum = rating.isLike() ? sum + 1 : sum;
@@ -136,5 +145,10 @@ public class Book implements Comparable<Book>{
     }
 
     public void setAvailable(boolean newAvailability) {
+    }
+    public void initializeRatings() {
+        this.ratings = Library.getBy(Library.QueryType.RATING, Library.RatingQueryIndex.BOOK_ID, String.valueOf(this.getID()));
+
+        this.rating = calculateRating();
     }
 }

@@ -20,12 +20,11 @@ public class Admin extends User{
     }
 
     protected static void addCustomer(int id, String name) {
-        Library.customers.add(new Customer(id, name));
-        FileSystemManager.updateData(FileSystemManager.usersDataFile);
+        Library.getCustomers().add(new Customer(id, name));
     }
 
     protected static void addBook(Book newBook) {
-        Library.books.add(newBook);
+        Library.getBooks().add(newBook);
     }
 
     protected static void updateBook(
@@ -38,7 +37,7 @@ public class Admin extends User{
             double newSalePercent,
             boolean newAvailability
     ) {
-        for (Book book : Library.books) {
+        for (Book book : Library.getBooks()) {
             if (book.getID() == bookID) {
                 book.setTitle(newTitle);
                 book.setAuthor(newAuthor);
@@ -52,16 +51,13 @@ public class Admin extends User{
         }
     }
 
-    protected static void deleteBook(int bookID) {
-        Iterator<Book> iterator = Library.books.iterator();
-
-        while (iterator.hasNext()) {
-            Book book = iterator.next();
-            if (book.getID() == bookID) {
-                iterator.remove();
-                break;
-            }
+    protected static boolean deleteBook(Book book) {
+        boolean deleteSuccessful = false;
+        if (Library.getBooks().contains(book)) {
+            Library.getBooks().remove(book);
+            deleteSuccessful = true;
         }
+        return deleteSuccessful;
     }
 
     protected static void addBorrower(
@@ -69,22 +65,13 @@ public class Admin extends User{
             String name
     ) {
         Borrower newBorrower = new Borrower(ID, name);
-        Library.borrowers.add(newBorrower);
+        Library.getBorrowers().add(newBorrower);
     }
 
     // Overload: Adds a Borrower to the borrowers list using ID, and removes the corresponding Customer with the same ID
     protected static void addBorrower(Customer customer) {
-
-        Library.borrowers.add(new Borrower(customer.getID(), customer.getName()));
-
-        Iterator<Customer> iterator = Library.customers.iterator();
-        while (iterator.hasNext()) {
-            Customer customerIterator = iterator.next();
-            if (customerIterator.getID() == customer.getID()) {
-                iterator.remove();
-                break;
-            }
-        }
+        Library.getBorrowers().add(new Borrower(customer.getID(), customer.getName()));
+        Library.getCustomers().remove(customer);
     }
 
 
@@ -92,7 +79,7 @@ public class Admin extends User{
             int borrowerID,
             String borrowerName
     ) {
-        for (Borrower borrower : Library.borrowers) {
+        for (Borrower borrower : Library.getBorrowers()) {
             if (borrower.getID() == borrowerID) {
                 borrower.setName(borrowerName);
                 break;
@@ -100,15 +87,12 @@ public class Admin extends User{
         }
     }
 
-    protected static void deleteBorrower(int borrowerID) {
-        Iterator<Borrower> iterator = Library.borrowers.iterator();
-
-        while (iterator.hasNext()) {
-            Borrower borrower = iterator.next();
-            if (borrower.getID() == borrowerID) {
-                iterator.remove();
-                break;
-            }
+    protected static boolean deleteBorrower(Borrower borrower) {
+        boolean deleteSuccessful = false;
+        if (Library.getBorrowers().contains(borrower)) {
+            Library.getBorrowers().remove(borrower);
+            deleteSuccessful = true;
         }
+        return deleteSuccessful;
     }
 }

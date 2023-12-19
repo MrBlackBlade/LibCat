@@ -19,6 +19,10 @@ public class FileSystemManager {
     protected static final String ordersFile = "orders.txt";
     protected static final String transactionsFile = "transaction.txt";
 
+    public static String getImageWD() {
+        return (cwd + "\\images\\");
+    }
+
     protected static String[] mergeStringArrays(String[] array1, String[] array2) {
         String[] mergedArray = Arrays.copyOf(array1, array1.length + array2.length);
         System.arraycopy(array2, 0, mergedArray, array1.length, array2.length);
@@ -120,7 +124,33 @@ public class FileSystemManager {
 
                 break;
             }
+            case booksFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
+                    raf.setLength(0);
+                    raf.seek(0);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Book book : Library.getBooks()) { //how do you keep getting sidetracked a7a
+                    insertRow(booksFile, new String[]{
+                            String.valueOf(book.getID()),
+                            String.valueOf(book.getTitle()),
+                            String.valueOf(book.getAuthor()),
+                            String.valueOf(book.getGenre()),
+                            String.valueOf(book.getYear()),
+                            String.valueOf(book.getRating()),
+                            String.valueOf(book.getPrice()),
+                            String.valueOf(book.getSalePercent()),
+                            String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                            String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)),
+                            String.valueOf(book.getImagePath())
+                    });
+                }
 
+                break;
+            }
             case ordersFile: {
                 try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
                     raf.setLength(0);
@@ -162,6 +192,34 @@ public class FileSystemManager {
 
                 break;
             }
+            case ratingsFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
+                    raf.setLength(0);
+                    raf.seek(0);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Rating ratings : Library.getRatings()) {
+                    insertRow(ratingsFile, new String[]{
+                            String.valueOf(ratings.getBook().getID()),
+                            String.valueOf(ratings.getCustomer().getID()),
+                            String.valueOf(ratings.isLike()),
+                            String.valueOf(ratings.getReview())
+                    });
+                }
+
+                break;
+            }
         }
+    }
+
+    protected static void updateData() {
+        updateData(usersDataFile);
+        updateData(booksFile);
+        updateData(ordersFile);
+        updateData(transactionsFile);
+        updateData(ratingsFile);
     }
 }
