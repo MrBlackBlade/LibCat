@@ -146,14 +146,6 @@ public class Library {
         return Library.transactions;
     }
 
-    public static ArrayList<Order> getOrderHistory(Customer customer) {
-        return getBy(QueryType.ORDER, OrderQueryIndex.USER_ID, String.valueOf(customer.getID()));
-    }
-
-    public static ArrayList<Transaction> getBorrowHistory(Borrower borrower) {
-        return getBy(QueryType.TRANSACTION, OrderQueryIndex.USER_ID, String.valueOf(borrower.getID()));
-    }
-
     public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource, BookQueryIndex queryIndex) {
         ArrayList<Book> sortedBooks = new ArrayList<>(bookSource);
         ArrayList<Book> positiveList = new ArrayList<>();
@@ -203,9 +195,9 @@ public class Library {
         return sortedBooks;
     }
 
-    public static ArrayList<Book> recommendBooks(User user) {
+    public static ArrayList<Book> recommendBooks(Customer customer) {
         ArrayList<Book> recommendedBooks = new ArrayList<>();
-        ArrayList<Order> userOrderHistory = getOrderHistory((Customer) user);
+        ArrayList<Order> userOrderHistory = customer.getOrderHistory();
 
         try {
             HashMap<String, Integer> genres = new HashMap<>();
