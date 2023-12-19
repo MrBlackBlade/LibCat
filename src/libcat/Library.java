@@ -88,7 +88,7 @@ public class Library {
                     Double.parseDouble(row[7]),
                     Boolean.parseBoolean(row[8]),
                     Boolean.parseBoolean(row[9]),
-                    new ImageIcon(FileSystemManager.cwd + row[10])));
+                    new ImageIcon(FileSystemManager.cwd +"\\images\\"+ row[10])));
         }
     }
 
