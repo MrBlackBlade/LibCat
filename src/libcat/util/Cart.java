@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Cart {
     private final Customer customer;
+
     private ArrayList<Order> pendingOrders = new ArrayList<Order>();
     private ArrayList<Transaction> pendingTransactions = new ArrayList<Transaction>();
 
@@ -21,13 +22,55 @@ public class Cart {
             return false;
         }
     }
+
     public boolean addBorrow(Book book) {
         if (book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
-            pendingTransactions.add(new Transaction( customer, book));
+            pendingTransactions.add(new Transaction(customer, book));
             return true;
         } else {
             return false;
         }
+    }
+
+    public boolean deletePurchase(Book book) {
+        Order orderToRemove = null;
+        for (Order order : pendingOrders) {
+            if ((order.getBook().equals(book))) {
+                orderToRemove = order;
+                break;
+            }
+        }
+        if (orderToRemove != null) {
+            pendingOrders.remove(orderToRemove);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean deleteBorrow(Book book) {
+        Transaction transactionToRemove = null;
+        for (Transaction transaction : pendingTransactions) {
+            if (transaction.getBook().equals(book)) {
+                transactionToRemove = transaction;
+                break;
+            }
+        }
+        if (transactionToRemove != null) {
+            pendingTransactions.remove(transactionToRemove);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public ArrayList<Order> getPendingOrders() {
+        return pendingOrders;
+    }
+
+    public ArrayList<Transaction> getPendingTransactions() {
+        return pendingTransactions;
     }
 
     @Override
@@ -38,38 +81,5 @@ public class Cart {
                 ", pendingTransactions=" + pendingTransactions +
                 '}';
     }
-    public boolean deletePurchase(Book book){
-        Order orderToRemove=null;
-        for (Order order : pendingOrders){
-            if ((order.getBook().equals(book))){
-                orderToRemove=order;
-                break;
-            }
-        }
-        if (orderToRemove != null){
-            pendingOrders.remove(orderToRemove);
-            return true;
-        }
-        else {
-            return false;
-        }
-
-        }
-    public boolean deleteBorrow(Book book){
-        Transaction transactionToRemove = null;
-        for(Transaction transaction : pendingTransactions){
-            if (transaction.getBook().equals(book)){
-                transactionToRemove=transaction;
-                break;
-            }
-        }
-        if (transactionToRemove !=null) {
-            pendingTransactions.remove(transactionToRemove);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    }
+}
 
