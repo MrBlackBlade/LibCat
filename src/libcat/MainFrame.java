@@ -8,10 +8,13 @@ import libcat.util.User;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.awt.Font;
 
 public class MainFrame extends JFrame implements FrameEnvironment{
 
@@ -51,7 +54,6 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         JButton profileButton = new JButton(scaledProfile);
         profileButton.setBorderPainted(false);
         profileButton.setBackground(C_WelcomeBG);
-        profileButton.setForeground(Color.WHITE);
         profileButton.setPreferredSize(new Dimension(100,100));
 
         profileButton.addActionListener(new ActionListener() {
@@ -82,7 +84,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         JPanel welcomePanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         welcomePanel.setBackground(C_WelcomeBG);
-        welcomePanel.setBounds(0,0,1280,150);
+        welcomePanel.setBounds(0,0,1280,180);
 
         JLabel welcomeLabel = new JLabel("Welcome " + user.getName());
         welcomeLabel.setHorizontalTextPosition(JLabel.CENTER);
@@ -222,17 +224,49 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     gbcImageLabel.insets = new Insets(0, 48, 0, 0); // Add space between components
 
                     //Book Text
-                    JTextArea bookLabel = new JTextArea(2, 20);
-                    bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
-                            book.getTitle(),
-                            book.getAuthor(),
-                            book.getGenre()));
-                    bookLabel.setFont(new Font("Arial", Font.BOLD, 25));
-                    bookLabel.setWrapStyleWord(true);
-                    bookLabel.setLineWrap(true);
+                    JTextPane bookLabel = new JTextPane();
+                    bookLabel.setFont(new Font("Arial", Font.BOLD, 22));
                     bookLabel.setOpaque(false);
                     bookLabel.setEditable(false);
                     bookLabel.setFocusable(false);
+
+                    if (book.getSalePercent() > 0.0) {
+                        double discountedPrice = book.getPrice() * (1 - book.getSalePercent());
+                        // Format the discountedPrice to two decimal places
+                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                        String salePrice = decimalFormat.format(discountedPrice);
+
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice:",
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getGenre()));
+
+                        // Create a StyledDocument for the old price with strikethrough
+                        StyledDocument doc = bookLabel.getStyledDocument();
+                        SimpleAttributeSet strike = new SimpleAttributeSet();
+                        strike.addAttribute(StyleConstants.StrikeThrough, Boolean.TRUE);
+
+                        try {
+                            StyleConstants.setFontSize(strike,20);
+                            doc.insertString(doc.getLength(), String.format(" $%.2f",
+                                    book.getPrice()),
+                                    strike);
+                        } catch (BadLocationException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        try {
+                            doc.insertString(doc.getLength(), String.format("  $%s", salePrice), null);
+                        } catch (BadLocationException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                    } else {
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice: $%s",
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getGenre(),
+                                String.valueOf(book.getPrice())));
+                    }
 
                     //GBCs
                     GridBagConstraints gbcBookLabel = new GridBagConstraints();
@@ -331,10 +365,10 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                 }
                             }
                             if(alreadyRated){
-                                JOptionPane.showMessageDialog(null, "kys now");
+                                JOptionPane.showMessageDialog(null, "You already rated this book.");
                             }
                             else{
-                                System.out.println("ba3basny");
+                                System.out.println("Borrowed");
                             }
 
                         }
