@@ -1,8 +1,5 @@
 package libcat;
 
-import javax.swing.*;
-import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -20,9 +17,11 @@ public class Library {
     protected static ArrayList<User> users;
     protected static ArrayList<Order> orders;
     protected static ArrayList<Transaction> transactions;
+    protected static ArrayList<Reservation> purchaseReservations;
+    protected static ArrayList<Reservation> borrowReservations;
 
     public enum QueryType {
-        BOOK, USER, ORDER, TRANSACTION, RATING, QUERY_TYPE_MAX,
+        BOOK, USER, ORDER, TRANSACTION, RATING, RESERVATION, QUERY_TYPE_MAX,
     }
 
     public enum RatingQueryIndex implements QueryIndex {
@@ -45,6 +44,10 @@ public class Library {
         TRANSACTION_ID, USER_ID, BOOK_ID, TRANSACTION_QUERY_INDEX_MAX,
     }
 
+    public enum ReservationQueryIndex implements QueryIndex {
+        RESERVATION_TYPE, USER_ID, BOOK_ID, RESERVATION_QUERY_INDEX_MAX,
+    }
+
     public static void initialize() {
         //FileSystemManager.initFile(FileSystemManager.usersCredsFile);
         FileSystemManager.initFile(FileSystemManager.ordersFile);
@@ -57,12 +60,15 @@ public class Library {
         borrowers = new ArrayList<Borrower>();
         orders = new ArrayList<Order>();
         transactions = new ArrayList<Transaction>();
+        purchaseReservations = new ArrayList<Reservation>();
+        borrowReservations = new ArrayList<Reservation>();
 
         Library.makeUsers();
         Library.makeBooks();
         Library.makeRatings();
         Library.makeOrders();
         Library.makeTransactions();
+        Library.makeReservations();
     }
 
     private static void makeUsers() {
@@ -132,6 +138,36 @@ public class Library {
         }
     }
 
+    private static void makeReservations() {
+        Library.makePurchaseReservations();
+        Library.makeBorrowReservations();
+    }
+
+    private static void makePurchaseReservations() {
+        ArrayList<String[]> purchaseReservationsList = FileSystemManager.query(FileSystemManager.purchaseReservationsFile);
+
+        for (String[] row : purchaseReservationsList) {
+            purchaseReservations.add(new Reservation(
+                    "purchase",
+                    Integer.parseInt(row[0]),
+                    Integer.parseInt(row[1])
+            ));
+        }
+
+    }
+
+    private static void makeBorrowReservations() {
+        ArrayList<String[]> borrowReservationsList = FileSystemManager.query(FileSystemManager.borrowReservationsFile);
+
+        for (String[] row : borrowReservationsList) {
+            borrowReservations.add(new Reservation(
+                    "borrow",
+                    Integer.parseInt(row[0]),
+                    Integer.parseInt(row[1])
+            ));
+        }
+    }
+
     private static void makeTransactions() {
         ArrayList<String[]> transactionsList = FileSystemManager.query(FileSystemManager.transactionsFile);
 
@@ -197,8 +233,89 @@ public class Library {
         return Library.transactions;
     }
 
+    public static ArrayList<Reservation> getReservations() {
+        return Library.mergeArrays(purchaseReservations, borrowReservations);
+    }
+
     public static ArrayList<Rating> getRatings() {
         return Library.ratings;
+    }
+
+    public static void addPurchaseReservation(Book book, Customer customer) {
+        ArrayList<Reservation> totalBookReservations = Library.getBy(
+                QueryType.RESERVATION,
+                ReservationQueryIndex.BOOK_ID,
+                String.valueOf(book.getID()));
+
+        for (Reservation reservation : totalBookReservations) {
+            if (reservation.getCustomer().getID() == customer.getID() && reservation.getType().equals("purchase")) {
+                return;
+            }
+        }
+
+        purchaseReservations.add(new Reservation(
+                "purchase",
+                customer,
+                book
+        ));
+    }
+
+
+    public static void addBorrowReservation(Book book, Customer customer) {
+        ArrayList<Reservation> totalBookReservations = Library.getBy(
+                QueryType.RESERVATION,
+                ReservationQueryIndex.BOOK_ID,
+                String.valueOf(book.getID()));
+
+        for (Reservation reservation : totalBookReservations) {
+            if (reservation.getCustomer().getID() == customer.getID() && reservation.getType().equals("borrow")) {
+                return;
+            }
+        }
+
+        borrowReservations.add(new Reservation(
+                "borrow",
+                customer,
+                book
+        ));
+    }
+
+    public static boolean removePurchaseReservation(Book book, Customer customer) {
+        boolean deleteSuccess = false;
+
+        ArrayList<Reservation> userPurchaseReservations = getUserPurchaseReservations(customer);
+
+        for (Reservation reservation : userPurchaseReservations) {
+            if (reservation.getBook().getID() == book.getID() && reservation.getBook().getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
+                purchaseReservations.remove(reservation);
+                deleteSuccess = true;
+            }
+        }
+
+        return deleteSuccess;
+    }
+
+    public static boolean removeBorrowReservation(Book book, Customer customer) {
+        boolean deleteSuccess = false;
+
+        ArrayList<Reservation> userBorrowReservations = getUserBorrowReservations(customer);
+
+        for (Reservation reservation : userBorrowReservations) {
+            if (reservation.getBook().getID() == book.getID() && reservation.getBook().getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
+                borrowReservations.remove(reservation);
+                deleteSuccess = true;
+            }
+        }
+
+        return deleteSuccess;
+    }
+
+    public static ArrayList<Reservation> getPurchaseReservations() {
+        return purchaseReservations;
+    }
+
+    public static ArrayList<Reservation> getBorrowReservations() {
+        return borrowReservations;
     }
 
     public static ArrayList<Book> sortByRating(ArrayList<Book> bookSource, BookQueryIndex queryIndex) {
@@ -274,8 +391,8 @@ public class Library {
 
             // create a list of the books not found in the user's order history
             ArrayList<Book> newBooks = new ArrayList<>();
-            for (Book book : Library.books) {
-                if (!userOrderHistory.contains((Order)(Library.getBy(QueryType.ORDER, OrderQueryIndex.BOOK_ID, String.valueOf(book.getID())).get(0)))) {
+            for (Book book : Library.getBooks()) {
+                if (!userOrderHistory.contains((Order) (Library.getBy(QueryType.ORDER, OrderQueryIndex.BOOK_ID, String.valueOf(book.getID())).get(0)))) {
                     newBooks.add(book);
                 }
             }
@@ -308,7 +425,7 @@ public class Library {
             switch (queryType) {
                 case BOOK: {
                     try {
-                        for (Book book : Library.books) {
+                        for (Book book : Library.getBooks()) {
                             if ((queryIndex == BookQueryIndex.ID && String.valueOf(book.getID()).equalsIgnoreCase(searchValue))
                                     || (queryIndex == BookQueryIndex.TITLE && isLike(book.getTitle(), searchValue))
                                     || (queryIndex == BookQueryIndex.AUTHOR && isLike(book.getAuthor(), searchValue))
@@ -388,6 +505,21 @@ public class Library {
                     }
                     break;
                 }
+                case RESERVATION: {
+                    try {
+                        for (Reservation reservation : Library.getReservations()) {
+                            if (queryIndex == ReservationQueryIndex.RESERVATION_TYPE && String.valueOf(reservation.getType()).equalsIgnoreCase(searchValue)
+                                    || queryIndex == ReservationQueryIndex.USER_ID && String.valueOf(reservation.getCustomer().getID()).equalsIgnoreCase(searchValue)
+                                    || queryIndex == ReservationQueryIndex.BOOK_ID && String.valueOf(reservation.getBook().getID()).equalsIgnoreCase(searchValue)
+                            ) {
+                                foundValue.add((T) reservation);
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                    break;
+                }
                 // may be redundant if all getBy() calls are hard coded and not user-dependent
                 default:
                     throw new Exception("Invalid QueryType");
@@ -426,6 +558,40 @@ public class Library {
         for (Book book : Library.getBooks()) {
             book.initializeRatings();
         }
+    }
+
+    public static ArrayList<Reservation> getUserReservations(Customer customer) {
+        return Library.getBy(
+                QueryType.RESERVATION,
+                ReservationQueryIndex.USER_ID,
+                String.valueOf(customer.getID())
+        );
+    }
+
+    public static ArrayList<Reservation> getUserPurchaseReservations(Customer customer) {
+        ArrayList<Reservation> userReservations = getUserReservations(customer);
+        ArrayList<Reservation> userPurchaseReservations = new ArrayList<Reservation>();
+
+        for (Reservation reservation : userReservations) {
+            if (reservation.getType().equals("purchase")) {
+                userPurchaseReservations.add(reservation);
+            }
+        }
+
+        return userPurchaseReservations;
+    }
+
+    public static ArrayList<Reservation> getUserBorrowReservations(Customer customer) {
+        ArrayList<Reservation> userReservations = getUserReservations(customer);
+        ArrayList<Reservation> userBorrowReservations = new ArrayList<Reservation>();
+
+        for (Reservation reservation : userReservations) {
+            if (reservation.getType().equals("borrow")) {
+                userBorrowReservations.add(reservation);
+            }
+        }
+
+        return userBorrowReservations;
     }
 
     public static <T extends Comparable<? super T>> ArrayList<T> getSortedList(ArrayList<T> array) {

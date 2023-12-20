@@ -15,6 +15,18 @@ public class FileSystemManager {
     protected static final String ratingsFile = "ratings.txt";
     protected static final String ordersFile = "orders.txt";
     protected static final String transactionsFile = "transaction.txt";
+    protected static final String purchaseReservationsFile = "purchase_reservations.txt";
+    protected static final String borrowReservationsFile = "borrow_reservations.txt";
+
+    protected static final String[] fileArray = new String[] {
+            usersDataFile,
+            booksFile,
+            ratingsFile,
+            ordersFile,
+            transactionsFile,
+            purchaseReservationsFile,
+            borrowReservationsFile
+    };
 
     public static String getImageWD() {
         return (cwd + "\\images\\");
@@ -156,14 +168,43 @@ public class FileSystemManager {
                 }
                 break;
             }
+            case purchaseReservationsFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
+                    raf.setLength(0);
+                    raf.seek(0);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Reservation reservation : Library.getPurchaseReservations()) {
+                    insertRow(purchaseReservationsFile, reservation.toStringArray());
+                }
+
+                break;
+            }
+
+            case borrowReservationsFile: {
+                try (RandomAccessFile raf = new RandomAccessFile(cwd + file, "rw")) {
+                    raf.setLength(0);
+                    raf.seek(0);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Reservation reservation : Library.getBorrowReservations()) {
+                    insertRow(borrowReservationsFile, reservation.toStringArray());
+                }
+
+                break;
+            }
         }
     }
 
     protected static void updateData() {
-        updateData(usersDataFile);
-        updateData(booksFile);
-        updateData(ordersFile);
-        updateData(transactionsFile);
-        updateData(ratingsFile);
+        for (String fileName : fileArray) {
+            updateData(fileName);
+        }
     }
 }

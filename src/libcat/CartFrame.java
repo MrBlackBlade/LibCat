@@ -353,9 +353,20 @@ public class CartFrame extends JFrame implements FrameEnvironment {
             public void actionPerformed(ActionEvent e) {
                 if (customer.getCart().checkout()) {
                     System.out.println("Checkout complete");
+                    Object[] options = {"Cash", "Credit Card"};
+                    int paymentMethod =
+                            JOptionPane.showOptionDialog(
+                                    null,
+                                    "How would you like to pay ?",
+                                    "Payment Method",
+                                    JOptionPane.YES_NO_OPTION,
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,         // Use default icon
+                                    options,      // Buttons
+                                    options[0]);  // Default button (Cash)
+                    JOptionPane.showMessageDialog(null, "Thank you for your purchase!");
                     switch (customer.getType()) {
                         case "customer": {
-                            System.out.println("This is a customer");
                             if (customer.hasBorrows()) {
                                 customer = Admin.convertToBorrower(customer);
                             }
@@ -363,13 +374,12 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                         }
 
                         case "borrower": {
-                            System.out.println("This is a borrower");
                             break;
                         }
                     }
 
                     updateCart();
-                    System.out.printf("The customer is now a %s", customer.getType() + "\n");
+                    setVisible(false);
                 }
             }
         });

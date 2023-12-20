@@ -245,10 +245,11 @@ public class MainFrame extends JFrame implements FrameEnvironment {
 
                     if (book.getSalePercent() > 0.0) {
 
-                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice:",
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nRating: %s\n\nPrice:",
                                 book.getTitle(),
                                 book.getAuthor(),
-                                book.getGenre()));
+                                book.getGenre(),
+                                String.valueOf(book.getRating())+"% of the Readers Liked this"));
 
                         // Create a StyledDocument for the old price with strikethrough
                         StyledDocument doc = bookLabel.getStyledDocument();
@@ -270,10 +271,11 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                         }
 
                     } else {
-                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice: $%s",
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nRating: %s\n\nPrice: $%s",
                                 book.getTitle(),
                                 book.getAuthor(),
                                 book.getGenre(),
+                                String.valueOf(book.getRating()+"% of the Readers Liked this"),
                                 String.valueOf(book.getBasePrice())));
                     }
 
@@ -358,6 +360,33 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                     cart.updateCart();
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment.");
+
+                                    Object[] options = {"Yes", "No"};
+                                    int addToReservation =
+                                            JOptionPane.showOptionDialog(
+                                            null,
+                                            "Would you like to add the book to your purchase reservations?",
+                                            "Confirmation",
+                                            JOptionPane.YES_NO_OPTION,
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,         // Use default icon
+                                            options,      // Buttons
+                                            options[0]);  // Default button (Yes)
+
+                                    if (addToReservation == 0) {
+                                        ArrayList<Reservation> pastReservations = Library.getUserPurchaseReservations((Customer) user);
+                                        Library.addPurchaseReservation(book, (Customer) user);
+                                        if (pastReservations.equals(Library.getUserPurchaseReservations((Customer) user))) {
+                                            JOptionPane.showMessageDialog(null, "You've already added this book to the purchase reservations.");
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Book not added to reservations.");
+                                    }
+
+                                    System.out.println("CURRENT USER'S PURCHASE RESERVES:");
+                                    for (Reservation reservation : Library.getUserPurchaseReservations((Customer)user)) {
+                                        System.out.printf("\tID: %s, Title: %s\n", reservation.getBook().getID(), reservation.getBook().getTitle());
+                                    }
                                 }
 
                             } else {
@@ -384,6 +413,32 @@ public class MainFrame extends JFrame implements FrameEnvironment {
 
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Book is not available for borrowing now.");
+                                    Object[] options = {"Yes", "No"};
+                                    int addToReservation =
+                                            JOptionPane.showOptionDialog(
+                                                    null,
+                                                    "Would you like to add the book to your borrow reservations?",
+                                                    "Confirmation",
+                                                    JOptionPane.YES_NO_OPTION,
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,         // Use default icon
+                                                    options,      // Buttons
+                                                    options[0]);  // Default button (Yes)
+
+                                    if (addToReservation == 0) {
+                                        ArrayList<Reservation> pastReservations = Library.getUserBorrowReservations((Customer) user);
+                                        Library.addBorrowReservation(book, (Customer) user);
+                                        if (pastReservations.equals(Library.getUserBorrowReservations((Customer) user))) {
+                                            JOptionPane.showMessageDialog(null, "You've already added this book to the borrow reservations.");
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Book not added to reservations.");
+                                    }
+
+                                    System.out.println("CURRENT USER'S BORROW RESERVES:");
+                                    for (Reservation reservation : Library.getUserBorrowReservations((Customer) user)) {
+                                        System.out.printf("\tID: %s, Title: %s\n", reservation.getBook().getID(), reservation.getBook().getTitle());
+                                    }
                                 }
 
                             } else {
