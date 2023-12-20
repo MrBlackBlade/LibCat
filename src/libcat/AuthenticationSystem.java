@@ -38,6 +38,20 @@ public class AuthenticationSystem extends FileSystemManager {
             passwordValidations.put("AllChecksPass", pass);
             return passwordValidations;
         }
+        protected static HashMap<String, Boolean> getEmailValidations(String email) {
+            HashMap<String, Boolean> emailValidations = new HashMap<>();
+            boolean pass = true;
+
+            emailValidations.put("E-mail is not valid", emailInvalid(email));
+
+            for (String key: emailValidations.keySet()) {
+                pass = !emailValidations.get(key) && pass;
+            }
+
+            emailValidations.put("AllChecksPass", pass);
+
+            return emailValidations;
+        }
         protected static boolean userExists(String user) {
             boolean userExists = false;
             for (String[] rowFields: query(usersCredsFile)) {
@@ -69,6 +83,15 @@ public class AuthenticationSystem extends FileSystemManager {
 
             return matcher.find();
         }
+        protected static boolean emailInvalid(String email) {
+            String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+            Pattern pattern = Pattern.compile(EMAIL_REGEX);
+
+            Matcher matcher = pattern.matcher(email);
+            System.out.println(matcher.matches());
+            return !matcher.matches();
+        }
     }
     protected static boolean credentialsMatch(String usr, String pswd) {
         boolean credentialsMatch = false;
@@ -85,6 +108,6 @@ public class AuthenticationSystem extends FileSystemManager {
         int userid = Library.getMax(Library.getUsers()).getID() + 1;
         row = Library.mergeStringArrays(new String[]{String.valueOf(userid)},row);
         insertRow(usersCredsFile, row);
-        Admin.addCustomer(userid, row[1]);
+        Admin.addCustomer(userid, row[1], "00", "e@g.c");
     }
 }

@@ -11,8 +11,8 @@ public class Admin extends User{
         super(id, name);
     }
 
-    protected static void addCustomer(int id, String name) {
-        Library.getCustomers().add(new Customer(id, name));
+    protected static void addCustomer(int id, String name, String phoneNumber, String email) {
+        Library.getCustomers().add(new Customer(id, name, phoneNumber, email));
     }
 
     protected static void addBook(Book newBook) {
@@ -54,15 +54,17 @@ public class Admin extends User{
 
     protected static void addBorrower(
             int ID,
-            String name
+            String name,
+            String phoneNumber,
+            String email
     ) {
-        Borrower newBorrower = new Borrower(ID, name);
+        Borrower newBorrower = new Borrower(ID, name, phoneNumber, email);
         Library.getBorrowers().add(newBorrower);
     }
 
     // Overload: Adds a Borrower to the borrowers list using ID, and removes the corresponding Customer with the same ID
     protected static Borrower convert(Customer customer) {
-        Borrower newBorrower = new Borrower(customer.getID(), customer.getName());
+        Borrower newBorrower = new Borrower(customer.getID(), customer.getName(), customer.getPhoneNumber(), customer.getEmail());
 
         Library.getBorrowers().add(newBorrower);
         Library.getCustomers().remove(customer);
@@ -71,7 +73,7 @@ public class Admin extends User{
     }
 
     protected static Customer convert(Borrower borrower) {
-        Customer newCustomer = new Customer(borrower.getID(), borrower.getName());
+        Customer newCustomer = new Customer(borrower.getID(), borrower.getName(), borrower.getPhoneNumber(), borrower.getEmail());
 
         Library.getCustomers().add(newCustomer);
         Library.getBorrowers().remove(borrower);

@@ -70,10 +70,10 @@ public class Library {
         for (String[] userRow : userList) {
             switch (userRow[2]) {
                 case "borrower":
-                    borrowers.add(new Borrower(Integer.parseInt(userRow[0]), userRow[1]));
+                    borrowers.add(new Borrower(Integer.parseInt(userRow[0]), userRow[1], userRow[3], userRow[4]));
                     break;
                 case "customer":
-                    customers.add(new Customer(Integer.parseInt(userRow[0]), userRow[1]));
+                    customers.add(new Customer(Integer.parseInt(userRow[0]), userRow[1], userRow[3], userRow[4]));
                     break;
                 case "admin":
                     admins.add(new Admin(Integer.parseInt(userRow[0]), userRow[1]));

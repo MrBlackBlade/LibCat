@@ -1,8 +1,8 @@
 package libcat.util;
 
 public class Borrower extends Customer {
-    public Borrower(int id, String name) {
-        super(id, name);
+    public Borrower(int id, String name, String phoneNumber, String email) {
+        super(id, name, phoneNumber, email);
     }
 
     @Override
