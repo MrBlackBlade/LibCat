@@ -19,7 +19,6 @@ public class FileSystemManager {
     protected static final String borrowReservationsFile = "borrow_reservations.txt";
 
     protected static final String[] fileArray = new String[] {
-            usersCredsFile,
             usersDataFile,
             booksFile,
             ratingsFile,
