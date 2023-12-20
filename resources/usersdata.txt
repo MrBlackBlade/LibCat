@@ -5,7 +5,7 @@
 4,MrBlackBlade,borrower
 5,Boldingar,customer
 6,Peter,borrower
-7,Maria,customer
+7,Maria,borrower
 8,Zigo,customer
 9,Jimmy,customer
 10,Makronomic,borrower
