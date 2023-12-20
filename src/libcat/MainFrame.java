@@ -367,12 +367,29 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     });
                     borrowButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            // Logic will be here
-                            if(((Customer)user).getCart().addBorrow(book)){
+
+                            boolean inCart = false;
+
+                            for(Transaction transaction : ((Customer)user).getCart().getPendingTransactions()){
+                                if(transaction.getBook().getTitle().equalsIgnoreCase(book.getTitle())){
+                                    inCart = true;
+                                }
+                            }
+                            if(!inCart){
+
+                                if(((Customer)user).getCart().addBorrow(book)){
+
+                                    System.out.println("Book Added to Borrow List");
+                                    cart.updateCart();
+
+                                }
+                                else{
+                                    JOptionPane.showMessageDialog(null, "Book is not available for borrowing now.");
+                                }
 
                             }
                             else{
-                                JOptionPane.showMessageDialog(null, "Book is not available for borrow at the moment");
+                                JOptionPane.showMessageDialog(null, "Book already in Cart.");
                             }
                         }
                     });
