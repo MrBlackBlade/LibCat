@@ -2,6 +2,7 @@ package libcat.util;
 
 import libcat.Library;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Cart {
@@ -63,7 +64,8 @@ public class Cart {
     }
 
     public double getTotalPrice() {
-        return totalPrice;
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        return Double.parseDouble(decimalFormat.format(totalPrice));
     }
 
     public ArrayList<Order> getPendingOrders() {
