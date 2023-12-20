@@ -59,7 +59,7 @@ public class Library {
 
         Library.makeUsers();
         Library.makeBooks();
-        Library.makeRatings(); //has to be called before books (prolly before users too)
+        Library.makeRatings();
         Library.makeOrders();
         Library.makeTransactions();
     }
@@ -121,7 +121,8 @@ public class Library {
                     Integer.parseInt(row[0]),
                     Integer.parseInt(row[1]),
                     Integer.parseInt(row[2]),
-                    row[3]
+                    row[3],
+                    Boolean.parseBoolean(row[4])
             ));
         }
     }
@@ -405,19 +406,6 @@ public class Library {
         }
     }
 
-    /**
-     * can be absorbed into getBy
-     */
-    private static ArrayList<Rating> getRatingsByBookID(int bookID) {
-        ArrayList<Rating> queryResult = new ArrayList<Rating>();
-        for (Rating rating : ratings) {
-            if (rating.getBookID() == bookID) {
-                queryResult.add(rating);
-            }
-        }
-        return queryResult;
-    }
-
     public static <T extends Comparable<? super T>> ArrayList<T> getSortedList(ArrayList<T> array) {
         ArrayList<T> sortedList = new ArrayList<>(array);
         sortedList.sort(Comparator.naturalOrder());
@@ -427,43 +415,4 @@ public class Library {
     public static <T extends Comparable<? super T>> T getMax(ArrayList<T> array) {
         return Collections.max(getSortedList(array));
     }
-    public static void FineandReturnBook(Borrower borrower, Book book, LocalDate currentDate){
-        ArrayList<Transaction> borrowerTransactions = getBy(QueryType.TRANSACTION, TransactionQueryIndex.USER_ID, String.valueOf(borrower.getID()));
-        for(Transaction transaction : borrowerTransactions){
-            if (transaction.getBook().getID()==book.getID() && !transaction.isReturned()){
-                if (currentDate.isAfter(transaction.getDueDate())){
-                    double fine = calculateFine(currentDate,transaction.getDueDate());
-                    borrower.deductFine(fine);
-                    transaction.setFinePaid(fine);
-                    transaction.returnBook();
-                    if(borrower.getBooksBorrowed().isEmpty()){
-                       removeBorrower(borrower);
-                       updateData();
-                       return;
-                    }
-                }
-            }else{
-                transaction.returnBook();
-                if (borrower.getBooksBorrowed().isEmpty()){
-                    removeBorrower(borrower);
-                    updateData();
-                    return;
-                }
-            }
-        }
-    }
-
-    private static void removeBorrower(Borrower borrower) {
-        if (Library.getBorrowers().contains(borrower)){
-            Library.getBorrowers().remove(borrower);
-            Library.getCustomers().add(new Customer(borrower.getID(),borrower.getName()));
-        }
-    }
-
-    private static double calculateFine(LocalDate currentDate, ChronoLocalDate dueDate) {
-        int daysOverdue = (int) currentDate.datesUntil((LocalDate) dueDate).count();
-        double finePerDay=0.15;
-                return daysOverdue * finePerDay;
-    }
-
 }
