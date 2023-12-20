@@ -111,12 +111,13 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                        order.setQuantity(order.getQuantity() + 1);
+                    customer.getCart().modifyPurchase(order, order.getQuantity() + 1);
 
                     bookLabel.setText(String.format("Title: %s\n\nPrice: $%s\n\nQuantity: %s",
                             order.getBook().getTitle(),
                             order.getBook().getSalePrice(),
                             order.getQuantity()));
+                    updateCart();
                     System.out.println(customer.getCart().getTotalPrice());
                 }
             });
@@ -126,12 +127,12 @@ public class CartFrame extends JFrame implements FrameEnvironment {
 
                     if (order.getQuantity() > 1) {
 
-                            order.setQuantity(order.getQuantity() - 1);
+                        customer.getCart().modifyPurchase(order, (order.getQuantity() - 1));
 
 
                     } else {
 
-                        customer.getCart().deletePurchase(order.getBook());
+                        customer.getCart().modifyPurchase(order, 0);
                         if (customer.getCart().getPendingOrders().isEmpty()) {
 
                             containerPanel.remove(purchaseLabelPanel);
@@ -147,7 +148,7 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                             order.getBook().getTitle(),
                             order.getBook().getSalePrice(),
                             order.getQuantity()));
-
+                    updateCart();
                 }
             });
 
@@ -267,16 +268,16 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    customer.getCart().deleteBorrow(transaction.getBook());
+                    customer.getCart().deleteBorrow(transaction);
 
                     if (customer.getCart().getPendingTransactions().isEmpty()) {
 
                         containerPanel.remove(borrowLabelPanel);
                     }
-
                     containerPanel.remove(ListItemPanel);
                     containerPanel.revalidate();
                     containerPanel.repaint();
+                    updateCart();
                 }
             });
             buttonContainerPanel.add(decQuantity);
@@ -298,7 +299,7 @@ public class CartFrame extends JFrame implements FrameEnvironment {
             gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
             gbcImageLabel.insets = new Insets(0, 48, 0, 0); // Add space between components
 
-            bookLabel.setText(String.format("Title: %s\n\nBorrow Date: $%s\n\nReturn Date: %s",
+            bookLabel.setText(String.format("Title: %s\n\nBorrow Date: %s\n\nReturn Date: %s",
                     transaction.getBook().getTitle(),
                     transaction.getBorrowDate(),
                     transaction.getReturnDate()));
@@ -331,6 +332,7 @@ public class CartFrame extends JFrame implements FrameEnvironment {
         scrollPane.revalidate();
         scrollPane.repaint();
     }
+
     private JPanel checkoutPanel() {
         JPanel checkoutPanel = new JPanel();
         checkoutPanel.setLayout(new BoxLayout(checkoutPanel, BoxLayout.X_AXIS));
@@ -349,8 +351,24 @@ public class CartFrame extends JFrame implements FrameEnvironment {
         checkoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add your checkout logic here
-                // For example, you can open a new checkout frame or perform other actions
+                if (customer.getCart().checkout()) {
+                    System.out.println("Checkout complete");
+                    switch (customer.getType()) {
+                        case "customer": {
+                            System.out.println("This is a customer");
+                            customer = Admin.convert(customer);
+                            break;
+                        }
+
+                        case "borrower": {
+                            System.out.println("This is a borrower");
+                            break;
+                        }
+                    }
+
+                    updateCart();
+                    System.out.printf("The customer is now a %s", customer.getType() + "\n");
+                }
             }
         });
 
