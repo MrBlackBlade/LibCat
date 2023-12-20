@@ -267,7 +267,7 @@ public class Library {
         ArrayList<Reservation> userPurchaseReservations = getUserPurchaseReservations(customer);
 
         for (Reservation reservation : userPurchaseReservations) {
-            if (reservation.getBook().getID() == book.getID()) {
+            if (reservation.getBook().getID() == book.getID() && reservation.getBook().getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
                 purchaseReservations.remove(reservation);
                 deleteSuccess = true;
             }
@@ -282,7 +282,7 @@ public class Library {
         ArrayList<Reservation> userBorrowReservations = getUserBorrowReservations(customer);
 
         for (Reservation reservation : userBorrowReservations) {
-            if (reservation.getBook().getID() == book.getID()) {
+            if (reservation.getBook().getID() == book.getID() && reservation.getBook().getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
                 borrowReservations.remove(reservation);
                 deleteSuccess = true;
             }

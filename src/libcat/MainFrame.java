@@ -371,7 +371,11 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                             options[0]);  // Default button (Yes)
 
                                     if (addToReservation == 0) {
-                                        Library.addPurchaseReservation(book, (Customer)user);
+                                        ArrayList<Reservation> pastReservations = Library.getUserPurchaseReservations((Customer) user);
+                                        Library.addPurchaseReservation(book, (Customer) user);
+                                        if (pastReservations.equals(Library.getUserPurchaseReservations((Customer) user))) {
+                                            JOptionPane.showMessageDialog(null, "You've already added this book to the purchase reservations.");
+                                        }
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Book not added to reservations.");
                                     }
@@ -421,7 +425,11 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                                     options[0]);  // Default button (Yes)
 
                                     if (addToReservation == 0) {
+                                        ArrayList<Reservation> pastReservations = Library.getUserBorrowReservations((Customer) user);
                                         Library.addBorrowReservation(book, (Customer) user);
+                                        if (pastReservations.equals(Library.getUserBorrowReservations((Customer) user))) {
+                                            JOptionPane.showMessageDialog(null, "You've already added this book to the borrow reservations.");
+                                        }
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Book not added to reservations.");
                                     }
