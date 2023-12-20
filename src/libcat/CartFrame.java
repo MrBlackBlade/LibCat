@@ -357,7 +357,9 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                     switch (customer.getType()) {
                         case "customer": {
                             System.out.println("This is a customer");
-                            customer = Admin.convert(customer);
+                            if (customer.hasBorrows()) {
+                                customer = Admin.convert(customer);
+                            }
                             break;
                         }
 

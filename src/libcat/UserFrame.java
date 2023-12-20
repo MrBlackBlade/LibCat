@@ -295,8 +295,9 @@ public class UserFrame extends JFrame implements FrameEnvironment {
                         transaction.setReturned(true);
 
                         if (!customer.hasBorrows()) {
-                            customer = Admin.convert(customer);
+                            customer = Admin.convert(((Borrower)customer));
                         }
+                        updateTransactionHistory();
                     }
                 });
 
@@ -333,5 +334,7 @@ public class UserFrame extends JFrame implements FrameEnvironment {
             emptyPanel.add(emptyLabel, gbcEmptyLabel);
             containerPanel.add(emptyPanel);
         }
+        containerPanel.revalidate();
+        containerPanel.repaint();
     }
 }
