@@ -83,22 +83,31 @@ public class Admin extends User{
     }
 
 
-    protected static void updateBorrower(
-            int borrowerID,
-            String borrowerName
+    protected static void updateUser(
+            int userID,
+            String userName
     ) {
         for (Borrower borrower : Library.getBorrowers()) {
-            if (borrower.getID() == borrowerID) {
-                borrower.setName(borrowerName);
+            if (borrower.getID() == userID) {
+                borrower.setName(userName);
                 break;
+            }
+        }
+        for (Customer customer : Library.getCustomers()){
+            if(customer.getID() == userID){
+                customer.setName(userName);
             }
         }
     }
 
-    protected static boolean deleteBorrower(Borrower borrower) {
+    protected static boolean deleteUser(User user) {
         boolean deleteSuccessful = false;
-        if (Library.getBorrowers().contains(borrower)) {
-            Library.getBorrowers().remove(borrower);
+        if (Library.getBorrowers().contains(user)) {
+            Library.getBorrowers().remove(user);
+            deleteSuccessful = true;
+        }
+        if (Library.getCustomers().contains(user)){
+            Library.getCustomers().remove(user);
             deleteSuccessful = true;
         }
         return deleteSuccessful;

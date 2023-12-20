@@ -1,6 +1,7 @@
 package libcat;
 
 import libcat.util.Book;
+import libcat.util.Borrower;
 import libcat.util.Rating;
 import libcat.util.User;
 
@@ -128,8 +129,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-            // Read content from a text file and set it in the text field
-            // A txt file will have all the filePaths of every review and will loop on that file
+            //Read Reviews and Ratings
             StringBuilder reviews = new StringBuilder();
             for (Rating rating : book.getRatings()) {
                 String isLike = rating.isLike() ? " likes:\n" : " dislikes:\n";
@@ -239,14 +239,11 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             //Book Properties
             imageLabel.setHorizontalTextPosition(JLabel.RIGHT);
             imageLabel.setVerticalTextPosition(JLabel.CENTER);
-
-            //imageLabel.setPreferredSize(new Dimension());
             imageLabel.setIconTextGap(15);
 
             //GBCs
             GridBagConstraints gbcImageLabel = new GridBagConstraints();
             gbcImageLabel.fill = GridBagConstraints.HORIZONTAL;
-            //gbcImageLabel.weightx = 1.0;
             gbcImageLabel.gridx = 0;
             gbcImageLabel.gridy = 0;
             gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
@@ -268,7 +265,6 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             //GBCs
             GridBagConstraints gbcUserLabel = new GridBagConstraints();
             gbcUserLabel.fill = GridBagConstraints.HORIZONTAL;
-            //gbcImageLabel.weightx = 1.0;
             gbcUserLabel.gridx = 1;
             gbcUserLabel.gridy = 0;
             gbcUserLabel.anchor = GridBagConstraints.WEST; // Align to the left
@@ -283,7 +279,51 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             gbcEmptyPanel.gridx = 2;
             gbcEmptyPanel.gridy = 0;
 
+            JButton updateButton = new JButton("Update");
+            updateButton.setFont(new Font("Arial", Font.PLAIN, 18));
+            updateButton.setBackground(C_ButtonBG);
+            updateButton.setForeground(Color.WHITE);
+            updateButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // Logic will be here
 
+                }
+            });
+
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.setFont(new Font("Arial", Font.PLAIN, 18));
+            deleteButton.setBackground(C_ButtonBG);
+            deleteButton.setForeground(Color.WHITE);
+
+            deleteButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?",
+                            "Confirmation", JOptionPane.YES_NO_OPTION);
+
+                    if (option == JOptionPane.YES_OPTION) {
+                        Admin.deleteUser(user);
+                    }
+                }
+            });
+
+
+
+            // GBCs for buttons
+            GridBagConstraints gbcUpdateButton = new GridBagConstraints();
+            gbcUpdateButton.gridx = 3;
+            gbcUpdateButton.gridy = 0;
+            gbcUpdateButton.anchor = GridBagConstraints.EAST; // Align to the right
+            gbcUpdateButton.insets = new Insets(0, 0, 0, 60); // Add space between components
+
+            GridBagConstraints gbcDeleteButton = new GridBagConstraints();
+            gbcDeleteButton.gridx = 4;
+            gbcDeleteButton.gridy = 0;
+            gbcDeleteButton.anchor = GridBagConstraints.EAST; // Align to the right
+            gbcDeleteButton.insets = new Insets(0, 0, 0, 60); // Add space between components
+
+            // Add buttons to the panel
+            ListItemPanel.add(updateButton, gbcUpdateButton);
+            ListItemPanel.add(deleteButton, gbcDeleteButton);
             ListItemPanel.add(imageLabel, gbcImageLabel);
             ListItemPanel.add(userLabel, gbcUserLabel);
             ListItemPanel.add(emptyPanel, gbcEmptyPanel);

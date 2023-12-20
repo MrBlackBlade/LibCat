@@ -67,6 +67,31 @@ public class Customer extends User {
                 ));
             }
         }
+        for (Transaction transaction : getBorrowHistory()){
+            if (transaction.getBook().equals(book)) {
+                Library.getRatings().add(new Rating(
+                        book,
+                        this,
+                        like,
+                        finalReview
+                ));
+            }
+
+        }
+    }
+    public boolean seenBook(Book book){
+        boolean seen = false;
+        for(Order order : getOrderHistory()){
+
+            seen = order.getBook().equals(book) ? true : seen;
+
+        }
+        for(Transaction transaction : getBorrowHistory()){
+
+            seen = transaction.getBook().equals(book) ? true : seen;
+
+        }
+        return seen;
     }
     @Override
     public String[] toStringArray() {
