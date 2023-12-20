@@ -61,9 +61,22 @@ public class Admin extends User{
     }
 
     // Overload: Adds a Borrower to the borrowers list using ID, and removes the corresponding Customer with the same ID
-    protected static void addBorrower(Customer customer) {
-        Library.getBorrowers().add(new Borrower(customer.getID(), customer.getName()));
+    protected static Borrower convert(Customer customer) {
+        Borrower newBorrower = new Borrower(customer.getID(), customer.getName());
+
+        Library.getBorrowers().add(newBorrower);
         Library.getCustomers().remove(customer);
+
+        return newBorrower;
+    }
+
+    protected static Customer convert(Borrower borrower) {
+        Customer newCustomer = new Customer(borrower.getID(), borrower.getName());
+
+        Library.getCustomers().add(newCustomer);
+        Library.getBorrowers().remove(borrower);
+
+        return newCustomer;
     }
 
 

@@ -351,8 +351,24 @@ public class CartFrame extends JFrame implements FrameEnvironment {
         checkoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add your checkout logic here
-                // For example, you can open a new checkout frame or perform other actions
+                if (customer.getCart().checkout()) {
+                    System.out.println("Checkout complete");
+                    switch (customer.getType()) {
+                        case "customer": {
+                            System.out.println("This is a customer");
+                            customer = Admin.convert(customer);
+                            break;
+                        }
+
+                        case "borrower": {
+                            System.out.println("This is a borrower");
+                            break;
+                        }
+                    }
+
+                    updateCart();
+                    System.out.printf("The customer is now a %s", customer.getType() + "\n");
+                }
             }
         });
 
