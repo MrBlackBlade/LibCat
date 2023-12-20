@@ -357,6 +357,29 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                 }
                                 else{
                                     JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment.");
+
+                                    Object[] options = {"Yes", "No"};
+                                    int addToReservation =
+                                            JOptionPane.showOptionDialog(
+                                            null,
+                                            "Would you like to add the book to your purchase reservations?",
+                                            "Confirmation",
+                                            JOptionPane.YES_NO_OPTION,
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,         // Use default icon
+                                            options,      // Buttons
+                                            options[0]);  // Default button (Yes)
+
+                                    if (addToReservation == 0) {
+                                        ((Customer)user).getReservation().addPurchaseReservation(book);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Book not added to reservations.");
+                                    }
+
+                                    System.out.println("CURRENT USER'S PURCHASE RESERVES:");
+                                    for (Book book : ((Customer) user).getReservation().getReservedPurchases()) {
+                                        System.out.printf("\tID: %s, Title: %s\n", book.getID(), book.getTitle());
+                                    }
                                 }
 
                             }
@@ -385,6 +408,28 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                 }
                                 else{
                                     JOptionPane.showMessageDialog(null, "Book is not available for borrowing now.");
+                                    Object[] options = {"Yes", "No"};
+                                    int addToReservation =
+                                            JOptionPane.showOptionDialog(
+                                                    null,
+                                                    "Would you like to add the book to your borrow reservations?",
+                                                    "Confirmation",
+                                                    JOptionPane.YES_NO_OPTION,
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,         // Use default icon
+                                                    options,      // Buttons
+                                                    options[0]);  // Default button (Yes)
+
+                                    if (addToReservation == 0) {
+                                        ((Customer)user).getReservation().addBorrowReservation(book);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Book not added to reservations.");
+                                    }
+
+                                    System.out.println("CURRENT USER'S BORROW RESERVES:");
+                                    for (Book book : ((Customer) user).getReservation().getReservedBorrows()) {
+                                        System.out.printf("\tID: %s, Title: %s\n", book.getID(), book.getTitle());
+                                    }
                                 }
 
                             }
