@@ -245,10 +245,11 @@ public class MainFrame extends JFrame implements FrameEnvironment {
 
                     if (book.getSalePercent() > 0.0) {
 
-                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice:",
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nRating: %s\n\nPrice:",
                                 book.getTitle(),
                                 book.getAuthor(),
-                                book.getGenre()));
+                                book.getGenre(),
+                                String.valueOf(book.getRating())+"% of the Readers Liked this"));
 
                         // Create a StyledDocument for the old price with strikethrough
                         StyledDocument doc = bookLabel.getStyledDocument();
@@ -270,10 +271,11 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                         }
 
                     } else {
-                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice: $%s",
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nRating: %s\n\nPrice: $%s",
                                 book.getTitle(),
                                 book.getAuthor(),
                                 book.getGenre(),
+                                String.valueOf(book.getRating()+"% of the Readers Liked this"),
                                 String.valueOf(book.getBasePrice())));
                     }
 
