@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import libcat.util.*;
 
 import static libcat.FileSystemManager.updateData;
+import static libcat.FileSystemManager.usersDataFile;
 
 public class Library {
     protected static ArrayList<Admin> admins;
@@ -45,7 +46,7 @@ public class Library {
     }
 
     public static void initialize() {
-        FileSystemManager.initFile(FileSystemManager.usersCredsFile);
+        //FileSystemManager.initFile(FileSystemManager.usersCredsFile);
         FileSystemManager.initFile(FileSystemManager.ordersFile);
         FileSystemManager.initFile(FileSystemManager.transactionsFile);
 
@@ -65,18 +66,36 @@ public class Library {
     }
 
     private static void makeUsers() {
-        ArrayList<String[]> userList = FileSystemManager.query("usersdata.txt");
+        ArrayList<String[]> userList = FileSystemManager.query(usersDataFile);
 
         for (String[] userRow : userList) {
-            switch (userRow[2]) {
+            switch (userRow[5]) {
                 case "borrower":
-                    borrowers.add(new Borrower(Integer.parseInt(userRow[0]), userRow[1]));
+                    borrowers.add(new Borrower(
+                            Integer.parseInt(userRow[0]),
+                            userRow[1],
+                            userRow[2],
+                            userRow[3],
+                            userRow[4])
+                    );
                     break;
                 case "customer":
-                    customers.add(new Customer(Integer.parseInt(userRow[0]), userRow[1]));
+                    customers.add(new Customer(
+                            Integer.parseInt(userRow[0]),
+                            userRow[1],
+                            userRow[2],
+                            userRow[3],
+                            userRow[4]
+                    ));
                     break;
                 case "admin":
-                    admins.add(new Admin(Integer.parseInt(userRow[0]), userRow[1]));
+                    admins.add(new Admin(
+                            Integer.parseInt(userRow[0]),
+                            userRow[1],
+                            userRow[2],
+                            userRow[3],
+                            userRow[4]
+                    ));
             }
         }
     }

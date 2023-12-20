@@ -9,11 +9,13 @@ public class Customer extends User {
     private ArrayList<Book> reservedPurchases;
     private ArrayList<Book> reservedBorrows;
 
-    public Customer(int id, String name) {
-        super(id, name);
+
+    public Customer(int id, String name, String password, String phoneNumber, String email) {
+        super(id, name, password, phoneNumber, email);
         cart = new Cart(this);
         reservedPurchases = new ArrayList<Book>();
         reservedBorrows = new ArrayList<Book>();
+
     }
 
     @Override
@@ -27,10 +29,13 @@ public class Customer extends User {
     public void setName(String name) {
         super.setName(name);
     }
+    public void setEmail(String email) {super.setEmail(email);}
+    public void setPhoneNumber(String phoneNumber) {super.setPhoneNumber(phoneNumber);}
 
     public Cart getCart() {
         return cart;
     }
+
 
     public boolean hasBorrows() {
         boolean hasBorrows = false;
@@ -87,5 +92,16 @@ public class Customer extends User {
 
         }
         return seen;
+    }
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+                String.valueOf(getID()),
+                getName(),
+                getPassword(),
+                getPhoneNumber(),
+                getEmail(),
+                getType()
+        };
     }
 }
