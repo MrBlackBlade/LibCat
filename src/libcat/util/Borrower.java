@@ -21,13 +21,7 @@ public class Borrower extends Customer {
     public void returnBook(Transaction transaction) {
         transaction.setReturned(true);
     }
-    public boolean hasBorrows() {
-        boolean hasBorrows = false;
-        for (Transaction transaction : getBorrowHistory()) {
-            hasBorrows = !transaction.isReturned() || hasBorrows;
-        }
-        return hasBorrows;
-    }
+
 
     public double getTotalFines() {
         double totalFines = 0;

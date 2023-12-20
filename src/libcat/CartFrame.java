@@ -274,6 +274,7 @@ public class CartFrame extends JFrame implements FrameEnvironment {
 
                         containerPanel.remove(borrowLabelPanel);
                     }
+
                     containerPanel.remove(ListItemPanel);
                     containerPanel.revalidate();
                     containerPanel.repaint();

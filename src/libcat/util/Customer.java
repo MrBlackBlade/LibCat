@@ -32,6 +32,13 @@ public class Customer extends User {
         return cart;
     }
 
+    public boolean hasBorrows() {
+        boolean hasBorrows = false;
+        for (Transaction transaction : getBorrowHistory()) {
+            hasBorrows = !transaction.isReturned() || hasBorrows;
+        }
+        return hasBorrows;
+    }
 
     public ArrayList<Order> getOrderHistory() {
         return Library.getBy(Library.QueryType.ORDER, Library.OrderQueryIndex.USER_ID, String.valueOf(getID()));
