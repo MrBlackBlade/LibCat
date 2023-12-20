@@ -8,9 +8,11 @@ public abstract class User implements StringArrayRepresentation, Comparable<User
     private int id;
     private String name;
 
+
     public User(int id, String name) {
         this.id = id;
         this.name = name;
+
     }
 
     public String getType() {
@@ -28,6 +30,7 @@ public abstract class User implements StringArrayRepresentation, Comparable<User
     public void setName(String name) {
         this.name = name;
     }
+
 
     @Override
     public int compareTo(User o) {
