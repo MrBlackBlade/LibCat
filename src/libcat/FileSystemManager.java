@@ -166,7 +166,6 @@ public class FileSystemManager {
                 for (Rating rating : Library.getRatings()) {
                     insertRow(ratingsFile, rating.toStringArray());
                 }
-
                 break;
             }
             case purchaseReservationsFile: {

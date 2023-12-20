@@ -551,7 +551,10 @@ public class Library {
                     review
             ));
         }
+        updateRatings();
+    }
 
+    public static void updateRatings(){
         for (Book book : Library.getBooks()) {
             book.initializeRatings();
         }

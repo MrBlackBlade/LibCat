@@ -6,8 +6,8 @@ import libcat.util.*;
 import libcat.util.Customer;
 import libcat.util.User;
 
-public class Admin extends User{
-    public Admin(int id, String name, String password, String phoneNumberString ,String email) {
+public class Admin extends User {
+    public Admin(int id, String name, String password, String phoneNumberString, String email) {
         super(id, name, password, phoneNumberString, email);
     }
 
@@ -27,7 +27,8 @@ public class Admin extends User{
             String newYear,
             double newPrice,
             double newSalePercent,
-            boolean newAvailability
+            boolean newPurchaseAvailability,
+            boolean newBorrowAvailability
     ) {
         for (Book book : Library.getBooks()) {
             if (book.getID() == bookID) {
@@ -37,7 +38,8 @@ public class Admin extends User{
                 book.setYear(newYear);
                 book.setBasePrice(newPrice);
                 book.setSalePercent(newSalePercent);
-                book.setAvailable(newAvailability);
+                book.setPurchasable(newPurchaseAvailability);
+                book.setBorrowable(newBorrowAvailability);
                 break;
             }
         }
@@ -73,6 +75,14 @@ public class Admin extends User{
         return newBorrower;
     }
 
+    protected static Customer convertToCustomer(Customer borrower) {
+        Customer newCustomer = new Customer(borrower.getID(), borrower.getName(), borrower.getPassword(), borrower.getPhoneNumber(), borrower.getEmail());
+
+        Library.getCustomers().add(newCustomer);
+        Library.getBorrowers().remove(borrower);
+
+        return newCustomer;
+    }
     protected static Customer convertToCustomer(Borrower borrower) {
         Customer newCustomer = new Customer(borrower.getID(), borrower.getName(), borrower.getPassword(), borrower.getPhoneNumber(), borrower.getEmail());
 
@@ -83,30 +93,40 @@ public class Admin extends User{
     }
 
 
-    protected static void updateBorrower(
-            int borrowerID,
-            String borrowerName
+    protected static void updateUser(
+            int userID,
+            String userName
     ) {
         for (Borrower borrower : Library.getBorrowers()) {
-            if (borrower.getID() == borrowerID) {
-                borrower.setName(borrowerName);
+            if (borrower.getID() == userID) {
+                borrower.setName(userName);
                 break;
+            }
+        }
+        for (Customer customer : Library.getCustomers()) {
+            if (customer.getID() == userID) {
+                customer.setName(userName);
             }
         }
     }
 
     protected static boolean deleteBorrower(Borrower borrower) {
         boolean deleteSuccessful = false;
-        if (Library.getBorrowers().contains(borrower)) {
-            Library.getBorrowers().remove(borrower);
-            deleteSuccessful = true;
+        for (Transaction transaction : borrower.getBorrowHistory()) {
+            transaction.setReturned(true);
         }
+        if (!borrower.hasBorrows()) {
+            Admin.convertToCustomer(borrower);
+        }
+        deleteSuccessful = true;
         return deleteSuccessful;
     }
+
     @Override
     public String getType() {
         return "admin";
     }
+
     public String toString() {
         return String.format("Admin ID: %d, Admin Username: %s", getID(), getName());
     }

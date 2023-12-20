@@ -13,8 +13,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.awt.Font;
 
-public class MainFrame extends JFrame implements FrameEnvironment{
+public class MainFrame extends JFrame implements FrameEnvironment {
 
+    private MainFrame selfReference;
+    protected JButton searchButton;
     private enum RadioSelect {
         ONE,
         TWO,
@@ -25,6 +27,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
     static RadioSelect choice = RadioSelect.ONE;
 
     public MainFrame(User user) {
+        selfReference = this;
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
@@ -39,19 +42,19 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         layeredPane.setPreferredSize(new Dimension(1280, 175));
 
         // Panel on top and to the left of welcomePanel
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,820,5));
-        topPanel.setBackground(new Color(200,0,200)); // Set your desired background color
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 820, 5));
+        topPanel.setBackground(new Color(200, 0, 200)); // Set your desired background color
         topPanel.setBounds(-380, 40, 2000, 300);
         topPanel.setOpaque(false);
 
         ImageIcon profileIcon = new ImageIcon(FileSystemManager.cwd + "userProfile.png");
-        Image scaledIcon = profileIcon.getImage().getScaledInstance(100,100,Image.SCALE_SMOOTH);
+        Image scaledIcon = profileIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         ImageIcon scaledProfile = new ImageIcon(scaledIcon);
 
         JButton profileButton = new JButton(scaledProfile);
         profileButton.setBorderPainted(false);
         profileButton.setBackground(C_WelcomeBG);
-        profileButton.setPreferredSize(new Dimension(100,100));
+        profileButton.setPreferredSize(new Dimension(100, 100));
 
         profileButton.addActionListener(new ActionListener() {
             @Override
@@ -63,25 +66,24 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         });
 
         ImageIcon cartIcon = new ImageIcon(FileSystemManager.cwd + "Cart.png");
-        Image scaledImage = cartIcon.getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH);
+        Image scaledImage = cartIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
         ImageIcon scaledCart = new ImageIcon(scaledImage);
 
         JButton cartButton = new JButton(scaledCart);
         cartButton.setBorderPainted(false);
         cartButton.setBackground(C_WelcomeBG);
         cartButton.setForeground(Color.WHITE);
-        cartButton.setPreferredSize(new Dimension(80,80));
+        cartButton.setPreferredSize(new Dimension(80, 80));
 
         CartFrame cart = new CartFrame(user);
         cartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               if(!(((Customer)user).getCart().getPendingOrders().isEmpty() && ((Customer)user).getCart().getPendingTransactions().isEmpty())){
-                   cart.showCart();
-               }
-               else{
-                   JOptionPane.showMessageDialog(null, "Cart is empty, Please add Items first.");
-               }
+                if (!(((Customer) user).getCart().getPendingOrders().isEmpty() && ((Customer) user).getCart().getPendingTransactions().isEmpty())) {
+                    cart.showCart();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cart is empty, Please add Items first.");
+                }
 
             }
         });
@@ -95,7 +97,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         JPanel welcomePanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         welcomePanel.setBackground(C_WelcomeBG);
-        welcomePanel.setBounds(0,0,1280,180);
+        welcomePanel.setBounds(0, 0, 1280, 180);
 
         JLabel welcomeLabel = new JLabel("Welcome " + user.getName());
         welcomeLabel.setHorizontalTextPosition(JLabel.CENTER);
@@ -107,7 +109,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         searchBar.setPreferredSize(new Dimension(250, 30));
         searchBar.setFont(new Font("Arial", Font.PLAIN, 25));
 
-        JButton searchButton = new JButton("Search");
+        searchButton = new JButton("Search");
         searchButton.setBackground(C_ButtonBG);
         searchButton.setForeground(Color.WHITE);
 
@@ -243,10 +245,11 @@ public class MainFrame extends JFrame implements FrameEnvironment{
 
                     if (book.getSalePercent() > 0.0) {
 
-                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice:",
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nRating: %s\n\nPrice:",
                                 book.getTitle(),
                                 book.getAuthor(),
-                                book.getGenre()));
+                                book.getGenre(),
+                                String.valueOf(book.getRating())+"% of the Readers Liked this"));
 
                         // Create a StyledDocument for the old price with strikethrough
                         StyledDocument doc = bookLabel.getStyledDocument();
@@ -254,9 +257,9 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                         strike.addAttribute(StyleConstants.StrikeThrough, Boolean.TRUE);
 
                         try {
-                            StyleConstants.setFontSize(strike,20);
+                            StyleConstants.setFontSize(strike, 20);
                             doc.insertString(doc.getLength(), String.format(" $%.2f",
-                                    book.getBasePrice()),
+                                            book.getBasePrice()),
                                     strike);
                         } catch (BadLocationException ex) {
                             throw new RuntimeException(ex);
@@ -268,10 +271,11 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                         }
 
                     } else {
-                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPrice: $%s",
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nRating: %s\n\nPrice: $%s",
                                 book.getTitle(),
                                 book.getAuthor(),
                                 book.getGenre(),
+                                String.valueOf(book.getRating()+"% of the Readers Liked this"),
                                 String.valueOf(book.getBasePrice())));
                     }
 
@@ -344,18 +348,17 @@ public class MainFrame extends JFrame implements FrameEnvironment{
 
                             boolean inCart = false;
 
-                            for(Order order : ((Customer)user).getCart().getPendingOrders()){
-                                if(order.getBook().getTitle().equalsIgnoreCase(book.getTitle())){
+                            for (Order order : ((Customer) user).getCart().getPendingOrders()) {
+                                if (order.getBook().getTitle().equalsIgnoreCase(book.getTitle())) {
                                     inCart = true;
                                 }
                             }
-                            if(!inCart){
+                            if (!inCart) {
 
-                                if(((Customer)user).getCart().addPurchase(book,1)){
+                                if (((Customer) user).getCart().addPurchase(book, 1)) {
                                     System.out.println("Book Added to Cart");
                                     cart.updateCart();
-                                }
-                                else{
+                                } else {
                                     JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment.");
 
                                     Object[] options = {"Yes", "No"};
@@ -386,8 +389,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                     }
                                 }
 
-                            }
-                            else{
+                            } else {
                                 JOptionPane.showMessageDialog(null, "Book Already in Cart.");
                             }
                         }
@@ -397,20 +399,19 @@ public class MainFrame extends JFrame implements FrameEnvironment{
 
                             boolean inCart = false;
 
-                            for(Transaction transaction : ((Customer)user).getCart().getPendingTransactions()){
-                                if(transaction.getBook().getTitle().equalsIgnoreCase(book.getTitle())){
+                            for (Transaction transaction : ((Customer) user).getCart().getPendingTransactions()) {
+                                if (transaction.getBook().getTitle().equalsIgnoreCase(book.getTitle())) {
                                     inCart = true;
                                 }
                             }
-                            if(!inCart){
+                            if (!inCart) {
 
-                                if(((Customer)user).getCart().addBorrow(book)){
+                                if (((Customer) user).getCart().addBorrow(book)) {
 
                                     System.out.println("Book Added to Borrow List");
                                     cart.updateCart();
 
-                                }
-                                else{
+                                } else {
                                     JOptionPane.showMessageDialog(null, "Book is not available for borrowing now.");
                                     Object[] options = {"Yes", "No"};
                                     int addToReservation =
@@ -440,8 +441,7 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                     }
                                 }
 
-                            }
-                            else{
+                            } else {
                                 JOptionPane.showMessageDialog(null, "Book already in Cart.");
                             }
                         }
@@ -451,16 +451,21 @@ public class MainFrame extends JFrame implements FrameEnvironment{
 
                             boolean alreadyRated = false;
 
-                            for(Rating rate : book.getRatings()){
-                                if(user.getName().equalsIgnoreCase(rate.getUsername())){
-                                    alreadyRated = true;
+                            if (((Customer)user).seenBook(book)) {
+
+                                for (Rating rate : book.getRatings()) {
+                                    if (user.getName().equalsIgnoreCase(rate.getUsername())) {
+                                        alreadyRated = true;
+                                    }
+                                }
+                                if (alreadyRated) {
+                                    JOptionPane.showMessageDialog(null, "You already rated this book.");
+                                } else {
+                                    new RateFrame(user, book, selfReference);
                                 }
                             }
-                            if(alreadyRated){
-                                JOptionPane.showMessageDialog(null, "You already rated this book.");
-                            }
-                            else{
-                                System.out.println("Borrowed");
+                            else {
+                                JOptionPane.showMessageDialog(null, "Read the book first.");
                             }
 
                         }
@@ -496,6 +501,13 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                     emptyPanel.add(emptyLabel, gbcEmptyLabel);
                     containerPanel.add(emptyPanel);
                 }
+
+                SwingUtilities.invokeLater(() -> {
+                    setLocationRelativeTo(null);
+                    setVisible(true);
+                    scrollPane.getVerticalScrollBar().setValue(0);
+                });
+
                 scrollPane.revalidate();
                 scrollPane.repaint();
             }
@@ -506,10 +518,6 @@ public class MainFrame extends JFrame implements FrameEnvironment{
         add(scrollPane, BorderLayout.CENTER);
 
         searchButton.doClick();
-        SwingUtilities.invokeLater(() -> {
-            setLocationRelativeTo(null);
-            setVisible(true);
-            scrollPane.getVerticalScrollBar().setValue(0);
-        });
+
     }
 }
