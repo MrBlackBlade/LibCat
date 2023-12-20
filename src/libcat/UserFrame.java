@@ -1,8 +1,6 @@
 package libcat;
 
-import libcat.util.Book;
-import libcat.util.Rating;
-import libcat.util.User;
+import libcat.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -11,18 +9,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 public class UserFrame extends JFrame implements FrameEnvironment{
 
-    private enum RadioSelect {
-        ONE,
-        TWO,
-        THREE,
-        RADIO_SELECT_MAX,
-    }
-
-    static RadioSelect choice = RadioSelect.ONE;
+    static int panelHeight = 300;
+    static JPanel containerPanel = new JPanel();
+    static Border border = BorderFactory.createLineBorder(Color.black, 3);
 
     public UserFrame(User user) {
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setLayout(new BorderLayout());
@@ -37,42 +32,23 @@ public class UserFrame extends JFrame implements FrameEnvironment{
         layeredPane.setPreferredSize(new Dimension(1280, 175));
 
         // Panel on top and to the left of welcomePanel
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,820,5));
-        topPanel.setBackground(new Color(200,0,200)); // Set your desired background color
-        topPanel.setBounds(-380, 40, 2000, 300);
-        topPanel.setOpaque(false);
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
+        topPanel.setPreferredSize(new Dimension(200, 150)); // Set your preferred size
+        topPanel.setBackground(C_WelcomeBG); // Set your desired background color
+        topPanel.setBounds(0, 140, 1280, 40);
 
-        ImageIcon profileIcon = new ImageIcon(FileSystemManager.cwd + "userProfile.png");
-        Image scaledIcon = profileIcon.getImage().getScaledInstance(100,100,Image.SCALE_SMOOTH);
-        ImageIcon scaledProfile = new ImageIcon(scaledIcon);
+        JButton transButton = new JButton("Transactions");
+        transButton.setBackground(C_ButtonBG);
+        transButton.setForeground(Color.WHITE);
+        transButton.setPreferredSize(new Dimension(120,26));
 
-        JButton profileButton = new JButton(scaledProfile);
-        profileButton.setBorderPainted(false);
-        profileButton.setBackground(C_WelcomeBG);
-        profileButton.setForeground(Color.WHITE);
-        profileButton.setPreferredSize(new Dimension(100,100));
+        JButton ordersButton = new JButton("Orders");
+        ordersButton.setBackground(C_ButtonBG);
+        ordersButton.setForeground(Color.WHITE);
+        ordersButton.setPreferredSize(new Dimension(120,26));
 
-        profileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                new UserFrame(user);
-
-            }
-        });
-
-        ImageIcon cartIcon = new ImageIcon(FileSystemManager.cwd + "Cart.png");
-        Image scaledImage = cartIcon.getImage().getScaledInstance(80,80,Image.SCALE_SMOOTH);
-        ImageIcon scaledCart = new ImageIcon(scaledImage);
-
-        JButton cartButton = new JButton(scaledCart);
-        cartButton.setBorderPainted(false);
-        cartButton.setBackground(C_WelcomeBG);
-        cartButton.setForeground(Color.WHITE);
-        cartButton.setPreferredSize(new Dimension(80,80));
-
-        topPanel.add(profileButton);
-        topPanel.add(cartButton);
+        topPanel.add(transButton);
+        topPanel.add(ordersButton);
 
         layeredPane.add(topPanel, JLayeredPane.PALETTE_LAYER);
 
@@ -82,57 +58,11 @@ public class UserFrame extends JFrame implements FrameEnvironment{
         welcomePanel.setBackground(C_WelcomeBG);
         welcomePanel.setBounds(0,0,1280,150);
 
-        JLabel welcomeLabel = new JLabel("Welcome " + user.getName());
+        JLabel welcomeLabel = new JLabel("Welcome "+user.getName());
         welcomeLabel.setHorizontalTextPosition(JLabel.CENTER);
         welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
         welcomeLabel.setVerticalAlignment(JLabel.TOP);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 50));
-
-        JTextField searchBar = new JTextField();
-        searchBar.setPreferredSize(new Dimension(250, 30));
-        searchBar.setFont(new Font("Arial", Font.PLAIN, 25));
-
-        JButton searchButton = new JButton("Search");
-        searchButton.setBackground(C_ButtonBG);
-        searchButton.setForeground(Color.WHITE);
-
-        // Add radio buttons
-        JRadioButton radioButton1 = new JRadioButton("Title");
-        radioButton1.setBackground(C_WelcomeBG);
-
-        JRadioButton radioButton2 = new JRadioButton("Author");
-        radioButton2.setBackground(C_WelcomeBG);
-
-        JRadioButton radioButton3 = new JRadioButton("Genre");
-        radioButton3.setBackground(C_WelcomeBG);
-
-        // Group the radio buttons so that only one can be selected at a time
-        ButtonGroup radioButtonGroup = new ButtonGroup();
-        radioButtonGroup.add(radioButton1);
-        radioButtonGroup.add(radioButton2);
-        radioButtonGroup.add(radioButton3);
-
-        // To display the radio button being selected by default
-        radioButton1.setSelected(true);
-
-        // Perform the action based on the selected radio button
-        ActionListener radioListener = new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-                if (radioButton1.isSelected()) {
-                    choice = RadioSelect.ONE;
-                } else if (radioButton2.isSelected()) {
-                    choice = RadioSelect.TWO;
-                } else if (radioButton3.isSelected()) {
-                    choice = RadioSelect.THREE;
-                }
-            }
-        };
-
-        radioButton1.addActionListener(radioListener);
-        radioButton2.addActionListener(radioListener);
-        radioButton3.addActionListener(radioListener);
 
         // Components placing
         gbc.gridx = 0;
@@ -140,55 +70,21 @@ public class UserFrame extends JFrame implements FrameEnvironment{
         gbc.insets = new Insets(0, 0, 10, 0); // Add some space between components
         welcomePanel.add(welcomeLabel, gbc);
 
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        searchPanel.add(searchBar);
-        searchPanel.add(searchButton);
-
-        gbc.gridy = 1;
-        welcomePanel.add(searchPanel, gbc);
-
-        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        radioPanel.add(radioButton1);
-        radioPanel.add(radioButton2);
-        radioPanel.add(radioButton3);
-        radioPanel.setBorder(new LineBorder(Color.WHITE, 3));
-
-        gbc.gridy = 2;
-        gbc.gridwidth = 2; // Span two columns
-        welcomePanel.add(radioPanel, gbc);
-
         layeredPane.add(welcomePanel, JLayeredPane.DEFAULT_LAYER);
 
         // Book Panels
-        Border border = BorderFactory.createLineBorder(Color.black, 3);
-        int panelHeight = 420;
-
-        JPanel containerPanel = new JPanel();
-        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
-
         JScrollPane scrollPane = new JScrollPane(containerPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        searchButton.addActionListener(new ActionListener() {
+        ordersButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
+                boolean orderFound = false;
                 containerPanel.removeAll();
-                boolean bookFound = false;
 
-                String searchResult = searchBar.getText();
-                ArrayList<Book> queryResult = new ArrayList<Book>();
-
-                switch (choice) {
-                    case ONE ->
-                            queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.TITLE, searchResult);
-                    case TWO ->
-                            queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.AUTHOR, searchResult);
-                    case THREE ->
-                            queryResult = Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.GENRE, searchResult);
-                }
-
-                for (Book book : queryResult) {
+                for (Order order : ((Customer)user).getOrderHistory()) {
 
                     //Main Panel
                     JPanel ListItemPanel = new JPanel();
@@ -198,8 +94,8 @@ public class UserFrame extends JFrame implements FrameEnvironment{
                     ListItemPanel.setBorder(border);
 
                     //Book Image
-                    ImageIcon bookImage = book.getImageIcon();
-                    Image scaledImage = bookImage.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH); // Adjust size
+                    ImageIcon userImage = new ImageIcon(FileSystemManager.cwd + "order.png");
+                    Image scaledImage = userImage.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH); // Adjust size
                     ImageIcon scaledBookImage = new ImageIcon(scaledImage);
                     JLabel imageLabel = new JLabel(scaledBookImage);
 
@@ -221,11 +117,12 @@ public class UserFrame extends JFrame implements FrameEnvironment{
 
                     //Book Text
                     JTextArea bookLabel = new JTextArea(2, 20);
-                    bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
-                            book.getTitle(),
-                            book.getAuthor(),
-                            book.getGenre()));
-                    bookLabel.setFont(new Font("Arial", Font.BOLD, 25));
+                    bookLabel.setText(String.format("ID: %s\n\nTitle: %s\n\nQuantity: %s\n\nPrice: $%s",
+                            order.getID(),
+                            order.getBook().getTitle(),
+                            order.getQuantity(),
+                            order.getTotalPrice()));
+                    bookLabel.setFont(new Font("Arial", Font.BOLD, 22));
                     bookLabel.setWrapStyleWord(true);
                     bookLabel.setLineWrap(true);
                     bookLabel.setOpaque(false);
@@ -235,7 +132,6 @@ public class UserFrame extends JFrame implements FrameEnvironment{
                     //GBCs
                     GridBagConstraints gbcBookLabel = new GridBagConstraints();
                     gbcBookLabel.fill = GridBagConstraints.HORIZONTAL;
-                    //gbcImageLabel.weightx = 1.0;
                     gbcBookLabel.gridx = 1;
                     gbcBookLabel.gridy = 0;
                     gbcBookLabel.anchor = GridBagConstraints.WEST; // Align to the left
@@ -250,101 +146,20 @@ public class UserFrame extends JFrame implements FrameEnvironment{
                     gbcEmptyPanel.gridx = 2;
                     gbcEmptyPanel.gridy = 0;
 
-                    JPanel rightPanel = new JPanel(new BorderLayout());
-                    rightPanel.setBackground(Color.black);
-                    rightPanel.setPreferredSize(new Dimension(400, panelHeight - 15));
-
-                    GridBagConstraints gbcRightPanel = new GridBagConstraints();
-                    gbcRightPanel.fill = GridBagConstraints.HORIZONTAL;
-                    gbcRightPanel.gridx = 3;
-                    gbcRightPanel.gridy = 0;
-                    gbcRightPanel.anchor = GridBagConstraints.EAST; // Align to the left
-                    gbcRightPanel.insets = new Insets(0, 0, 0, 48);
-
-                    JTextArea reviewField = new JTextArea();
-                    reviewField.setFont(new Font("Arial", Font.BOLD, 16));
-                    reviewField.setLineWrap(true);
-                    reviewField.setWrapStyleWord(true);
-                    reviewField.setMargin(new Insets(4, 4, 4, 4));
-                    reviewField.setEditable(false);
-
-                    // Set scroll bar for the reviews
-                    JScrollPane reviewScroll = new JScrollPane(reviewField);
-                    reviewScroll.setPreferredSize(new Dimension(300, 350));
-                    reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                    reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-                    // Read content from a text file and set it in the text field
-                    // A txt file will have all the filePaths of every review and will loop on that file
-                    StringBuilder reviews = new StringBuilder();
-                    for (Rating rating : book.getRatings()) {
-                        String isLike = rating.isLike() ? " likes:\n" : " dislikes:\n";
-                        reviews.append(rating.getUsername()).append(isLike).append(rating.getReview()).append("\n\n");
-                    }
-                    reviewField.setText(reviews.toString().trim());
-
-                    JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
-                    JButton buyButton = new JButton("Buy");
-                    JButton borrowButton = new JButton("Borrow");
-                    JButton likeButton = new JButton("Like");
-                    JButton dislikeButton = new JButton("Dislike");
-
-                    buyButton.setBackground(C_ButtonBG);
-                    buyButton.setForeground(Color.WHITE);
-                    borrowButton.setBackground(C_ButtonBG);
-                    borrowButton.setForeground(Color.WHITE);
-                    likeButton.setBackground(C_ButtonBG);
-                    likeButton.setForeground(Color.WHITE);
-                    dislikeButton.setBackground(C_ButtonBG);
-                    dislikeButton.setForeground(Color.WHITE);
-
                     //Buttons Action
-                    buyButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            // Logic will be here
-                            JOptionPane.showMessageDialog(null, "Buy");
-                        }
-                    });
-                    borrowButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            // Logic will be here
-                            JOptionPane.showMessageDialog(null, "Borrowed");
-                        }
-                    });
-                    likeButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            /// Logic will be here
-                            JOptionPane.showMessageDialog(null, "Like");
-                        }
-                    });
-                    dislikeButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            // Logic will be here
-                            JOptionPane.showMessageDialog(null, "Dislike");
-                        }
-                    });
-
-                    buttonPanel.add(likeButton);
-                    buttonPanel.add(dislikeButton);
-                    buttonPanel.add(buyButton);
-                    buttonPanel.add(borrowButton);
-
-                    rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
-                    rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
-
                     ListItemPanel.add(imageLabel, gbcImageLabel);
                     ListItemPanel.add(bookLabel, gbcBookLabel);
                     ListItemPanel.add(emptyPanel, gbcEmptyPanel);
-                    ListItemPanel.add(rightPanel, gbcRightPanel);
                     containerPanel.add(ListItemPanel);
-                    bookFound = true;
+                    orderFound = true;
                 }
-                if (!bookFound) {
+                if (!orderFound) {
+                    containerPanel.removeAll();
                     JPanel emptyPanel = new JPanel();
                     emptyPanel.setLayout(new GridBagLayout());
                     emptyPanel.setBackground(C_ListBG);
 
-                    JLabel emptyLabel = new JLabel("Couldn't find what you are searching for :(");
+                    JLabel emptyLabel = new JLabel("You have not made any Orders yet.");
                     emptyLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
                     GridBagConstraints gbcEmptyLabel = new GridBagConstraints();
@@ -354,8 +169,131 @@ public class UserFrame extends JFrame implements FrameEnvironment{
                     emptyPanel.add(emptyLabel, gbcEmptyLabel);
                     containerPanel.add(emptyPanel);
                 }
-                scrollPane.revalidate();
-                scrollPane.repaint();
+                SwingUtilities.invokeLater(() -> {
+                    setLocationRelativeTo(null);
+                    setVisible(true);
+                    scrollPane.getVerticalScrollBar().setValue(0);
+                });
+            }
+        });
+        transButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                boolean transFound = false;
+                containerPanel.removeAll();
+
+
+                for (Transaction transaction : ((Customer)user).getBorrowHistory()) {
+
+                    //Main Panel
+                    JPanel ListItemPanel = new JPanel();
+                    ListItemPanel.setLayout(new GridBagLayout());
+                    ListItemPanel.setBackground(C_ListBG);
+                    ListItemPanel.setPreferredSize(new Dimension(1280, panelHeight));
+                    ListItemPanel.setBorder(border);
+
+                    //Book Image
+                    ImageIcon userImage = new ImageIcon(FileSystemManager.cwd + "order.png");
+                    Image scaledImage = userImage.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH); // Adjust size
+                    ImageIcon scaledBookImage = new ImageIcon(scaledImage);
+                    JLabel imageLabel = new JLabel(scaledBookImage);
+
+                    //Book Properties
+                    imageLabel.setHorizontalTextPosition(JLabel.RIGHT);
+                    imageLabel.setVerticalTextPosition(JLabel.CENTER);
+
+                    //imageLabel.setPreferredSize(new Dimension());
+                    imageLabel.setIconTextGap(15);
+
+                    //GBCs
+                    GridBagConstraints gbcImageLabel = new GridBagConstraints();
+                    gbcImageLabel.fill = GridBagConstraints.HORIZONTAL;
+                    gbcImageLabel.gridx = 0;
+                    gbcImageLabel.gridy = 0;
+                    gbcImageLabel.anchor = GridBagConstraints.WEST; // Align to the left
+                    gbcImageLabel.insets = new Insets(0, 48, 0, 0); // Add space between components
+
+                    //Book Text
+                    JTextArea bookLabel = new JTextArea(2, 20);
+                    bookLabel.setText(String.format("ID: %s\n\nTitle: %s\n\nBorrow Date: %s\n\nReturn Date: %s",
+                            transaction.getID(),
+                            transaction.getBook().getTitle(),
+                            transaction.getBorrowDate(),
+                            transaction.getReturnDate()));
+                    bookLabel.setFont(new Font("Arial", Font.BOLD, 22));
+                    bookLabel.setWrapStyleWord(true);
+                    bookLabel.setLineWrap(true);
+                    bookLabel.setOpaque(false);
+                    bookLabel.setEditable(false);
+                    bookLabel.setFocusable(false);
+
+                    //GBCs
+                    GridBagConstraints gbcBookLabel = new GridBagConstraints();
+                    gbcBookLabel.fill = GridBagConstraints.HORIZONTAL;
+                    gbcBookLabel.gridx = 1;
+                    gbcBookLabel.gridy = 0;
+                    gbcBookLabel.anchor = GridBagConstraints.WEST; // Align to the left
+                    gbcBookLabel.insets = new Insets(0, 16, 0, 0); // Add space between components
+
+                    //Empty Space
+                    JPanel emptyPanel = new JPanel();
+                    emptyPanel.setBackground(C_ListBG);
+                    GridBagConstraints gbcEmptyPanel = new GridBagConstraints();
+                    gbcEmptyPanel.fill = GridBagConstraints.HORIZONTAL;
+                    gbcEmptyPanel.weightx = 1.0;
+                    gbcEmptyPanel.gridx = 2;
+                    gbcEmptyPanel.gridy = 0;
+
+                    JButton returnButton = new JButton("Return Book");
+                    returnButton.setBackground(C_ButtonBG);
+                    returnButton.setForeground(Color.WHITE);
+                    returnButton.setPreferredSize(new Dimension(120,40));
+                    returnButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+
+                        }
+                    });
+
+                    // GBCs for the button
+                    GridBagConstraints gbcReturnButton = new GridBagConstraints();
+                    gbcReturnButton.fill = GridBagConstraints.HORIZONTAL;
+                    gbcReturnButton.gridx = 3;
+                    gbcReturnButton.gridy = 0;
+                    gbcReturnButton.insets = new Insets(0, 0, 0, 70);
+
+                    // Add the button to the panel
+                    ListItemPanel.add(returnButton, gbcReturnButton);
+
+                    //Buttons Action
+                    ListItemPanel.add(imageLabel, gbcImageLabel);
+                    ListItemPanel.add(bookLabel, gbcBookLabel);
+                    ListItemPanel.add(emptyPanel, gbcEmptyPanel);
+                    containerPanel.add(ListItemPanel);
+                    transFound = true;
+                }
+                if (!transFound) {
+                    JPanel emptyPanel = new JPanel();
+                    emptyPanel.setLayout(new GridBagLayout());
+                    emptyPanel.setBackground(C_ListBG);
+
+                    JLabel emptyLabel = new JLabel("Your Borrow history is empty.");
+                    emptyLabel.setFont(new Font("Arial", Font.BOLD, 30));
+
+                    GridBagConstraints gbcEmptyLabel = new GridBagConstraints();
+                    gbcEmptyLabel.gridx = 0;
+                    gbcEmptyLabel.gridy = 0;
+
+                    emptyPanel.add(emptyLabel, gbcEmptyLabel);
+                    containerPanel.add(emptyPanel);
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    setLocationRelativeTo(null);
+                    setVisible(true);
+                    scrollPane.getVerticalScrollBar().setValue(0);
+                });
             }
         });
 
@@ -363,11 +301,15 @@ public class UserFrame extends JFrame implements FrameEnvironment{
         add(layeredPane, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        searchButton.doClick();
+        ordersButton.doClick();
+        transButton.doClick();
+
         SwingUtilities.invokeLater(() -> {
             setLocationRelativeTo(null);
             setVisible(true);
             scrollPane.getVerticalScrollBar().setValue(0);
         });
+
     }
+
 }
