@@ -1,11 +1,12 @@
 package libcat.util;
 
 import libcat.Library;
+import libcat.StringArrayRepresentation;
 
 import java.util.Collections;
 import java.util.ArrayList;
 
-public class Order implements Comparable<Order> {
+public class Order implements StringArrayRepresentation, Comparable<Order> {
     private int orderID;
     private User user;
     private Book book;
@@ -89,6 +90,17 @@ public class Order implements Comparable<Order> {
                 ", totalPrice=" + totalPrice +
                 ", quantity=" + quantity +
                 '}';
+    }
+
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+            String.valueOf(getID()),
+            String.valueOf(getUser().getID()),
+            String.valueOf(getBook().getID()),
+            String.valueOf(getQuantity()),
+            String.valueOf(getTotalPrice())
+        };
     }
 }
 

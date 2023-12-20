@@ -1,10 +1,11 @@
 package libcat.util;
 
 import libcat.Library;
+import libcat.StringArrayRepresentation;
 
 import java.util.ArrayList;
 
-public class Rating {
+public class Rating implements StringArrayRepresentation {
     private Book book;
     private Customer customer;
     private boolean like;
@@ -40,5 +41,15 @@ public class Rating {
                 ", like=" + like +
                 ", review='" + review + '\'' +
                 '}';
+    }
+
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+                String.valueOf(getBook().getID()),
+                String.valueOf(getCustomer().getID()),
+                String.valueOf(isLike()),
+                String.valueOf(getReview())
+        };
     }
 }

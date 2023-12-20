@@ -1,10 +1,14 @@
 package libcat;
 
 import javax.swing.*;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 
 import libcat.util.*;
+
+import static libcat.FileSystemManager.updateData;
 
 public class Library {
     protected static ArrayList<Admin> admins;
@@ -55,7 +59,7 @@ public class Library {
 
         Library.makeUsers();
         Library.makeBooks();
-        Library.makeRatings(); //has to be called before books (prolly before users too)
+        Library.makeRatings();
         Library.makeOrders();
         Library.makeTransactions();
     }
@@ -117,7 +121,8 @@ public class Library {
                     Integer.parseInt(row[0]),
                     Integer.parseInt(row[1]),
                     Integer.parseInt(row[2]),
-                    row[3]
+                    row[3],
+                    Boolean.parseBoolean(row[4])
             ));
         }
     }
@@ -401,19 +406,6 @@ public class Library {
         }
     }
 
-    /**
-     * can be absorbed into getBy
-     */
-    private static ArrayList<Rating> getRatingsByBookID(int bookID) {
-        ArrayList<Rating> queryResult = new ArrayList<Rating>();
-        for (Rating rating : ratings) {
-            if (rating.getBookID() == bookID) {
-                queryResult.add(rating);
-            }
-        }
-        return queryResult;
-    }
-
     public static <T extends Comparable<? super T>> ArrayList<T> getSortedList(ArrayList<T> array) {
         ArrayList<T> sortedList = new ArrayList<>(array);
         sortedList.sort(Comparator.naturalOrder());
@@ -423,5 +415,4 @@ public class Library {
     public static <T extends Comparable<? super T>> T getMax(ArrayList<T> array) {
         return Collections.max(getSortedList(array));
     }
-
 }

@@ -93,25 +93,7 @@ public class FileSystemManager {
                     throw new RuntimeException(e);
                 }
                 for (User user : Library.getSortedList(Library.getUsers())) {
-                    if (user.getType().equalsIgnoreCase("admin")) {
-                        insertRow(usersDataFile, new String[]{
-                                String.valueOf(user.getID()),
-                                user.getName(),
-                                "admin"
-                        });
-                    } else if (user.getType().equalsIgnoreCase("borrower")) {
-                        insertRow(usersDataFile, new String[]{
-                                String.valueOf(user.getID()),
-                                user.getName(),
-                                "borrower"
-                        });
-                    } else if (user.getType().equalsIgnoreCase("customer")) {
-                        insertRow(usersDataFile, new String[]{
-                                String.valueOf(user.getID()),
-                                user.getName(),
-                                "customer"
-                        });
-                    }
+                    insertRow(usersDataFile, user.toStringArray());
                 }
 
                 break;
@@ -126,19 +108,7 @@ public class FileSystemManager {
                     throw new RuntimeException(e);
                 }
                 for (Book book : Library.getBooks()) { //how do you keep getting sidetracked a7a
-                    insertRow(booksFile, new String[]{
-                            String.valueOf(book.getID()),
-                            String.valueOf(book.getTitle()),
-                            String.valueOf(book.getAuthor()),
-                            String.valueOf(book.getGenre()),
-                            String.valueOf(book.getYear()),
-                            String.valueOf(book.getRating()),
-                            String.valueOf(book.getBasePrice()),
-                            String.valueOf(book.getSalePercent()),
-                            String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
-                            String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)),
-                            String.valueOf(book.getImagePath())
-                    });
+                    insertRow(booksFile, book.toStringArray());
                 }
 
                 break;
@@ -153,13 +123,7 @@ public class FileSystemManager {
                     throw new RuntimeException(e);
                 }
                 for (Order order : Library.getOrders()) {
-                    insertRow(ordersFile, new String[]{
-                            String.valueOf(order.getID()),
-                            String.valueOf(order.getUser().getID()),
-                            String.valueOf(order.getBook().getID()),
-                            String.valueOf(order.getQuantity()),
-                            String.valueOf(order.getTotalPrice())
-                    });
+                    insertRow(ordersFile, order.toStringArray());
                 }
 
                 break;
@@ -174,12 +138,7 @@ public class FileSystemManager {
                     throw new RuntimeException(e);
                 }
                 for (Transaction transaction : Library.getTransactions()) {
-                    insertRow(transactionsFile, new String[]{
-                            String.valueOf(transaction.getID()),
-                            String.valueOf(transaction.getUser().getID()),
-                            String.valueOf(transaction.getBook().getID()),
-                            transaction.getBorrowDate().toString()
-                    });
+                    insertRow(transactionsFile, transaction.toStringArray());
                 }
 
                 break;
@@ -193,13 +152,8 @@ public class FileSystemManager {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                for (Rating ratings : Library.getRatings()) {
-                    insertRow(ratingsFile, new String[]{
-                            String.valueOf(ratings.getBook().getID()),
-                            String.valueOf(ratings.getCustomer().getID()),
-                            String.valueOf(ratings.isLike()),
-                            String.valueOf(ratings.getReview())
-                    });
+                for (Rating rating : Library.getRatings()) {
+                    insertRow(ratingsFile, rating.toStringArray());
                 }
 
                 break;

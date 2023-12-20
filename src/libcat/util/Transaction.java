@@ -1,12 +1,13 @@
 package libcat.util;
 
 import libcat.Library;
+import libcat.StringArrayRepresentation;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.ArrayList;
 
-public class Transaction implements Comparable<Transaction> {
+public class Transaction implements StringArrayRepresentation, Comparable<Transaction> {
     private int transactionID;
     private User user;
     private Book book;
@@ -14,7 +15,7 @@ public class Transaction implements Comparable<Transaction> {
     private LocalDate borrowDate;
     private boolean isReturned;
 
-    public Transaction(int transactionID, int borrowerID, int bookID, String borrowDate) {
+    public Transaction(int transactionID, int borrowerID, int bookID, String borrowDate, boolean isReturned) {
         this.transactionID = transactionID;
         this.user = (User) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, String.valueOf(borrowerID)).get(0);
         this.book = (Book) Library.getBy(Library.QueryType.BOOK, Library.BookQueryIndex.ID, String.valueOf(bookID)).get(0);
@@ -22,7 +23,7 @@ public class Transaction implements Comparable<Transaction> {
         String[] borrowDateArray = borrowDate.split("-");
 
         this.borrowDate = LocalDate.of(Integer.parseInt(borrowDateArray[0]), Integer.parseInt(borrowDateArray[1]), Integer.parseInt(borrowDateArray[2]));
-
+        this.isReturned = isReturned;
         this.applyFine();
     }
 
@@ -31,7 +32,8 @@ public class Transaction implements Comparable<Transaction> {
                 Collections.max(Library.getTransactions()).getID() + 1,
                 customer.getID(),
                 book.getID(),
-                LocalDate.now().toString()
+                LocalDate.now().toString(),
+                false
         );
     }
 
@@ -40,17 +42,18 @@ public class Transaction implements Comparable<Transaction> {
                 Collections.max(Library.mergeArrays(Library.getTransactions(), pendingTransactions)).getID() + 1,
                 customer.getID(),
                 book.getID(),
-                LocalDate.now().toString()
+                LocalDate.now().toString(),
+                false
         );
     }
 
-    private boolean overDue() {
-        return LocalDate.now().isAfter(this.borrowDate.plusWeeks(3));
+    public boolean overDue() {
+        return LocalDate.now().isAfter(getReturnDate());
     }
 
     // automatically called when the user logs in to check if there's a fine or not
     public void applyFine() {
-        fine = book.getBasePrice() * (overDue() ? 0.15 : 0.0);
+        fine = book.getBasePrice() * (!isReturned && overDue() ? 0.15 : 0.0);
     }
 
     public int getID() {
@@ -77,6 +80,10 @@ public class Transaction implements Comparable<Transaction> {
         return fine;
     }
 
+    public boolean isReturned() {
+        return isReturned;
+    }
+
     @Override
     public int compareTo(Transaction o) {
         return Math.max(this.getID(), o.getID());
@@ -92,5 +99,21 @@ public class Transaction implements Comparable<Transaction> {
                 ", borrowDate=" + borrowDate +
                 ", isReturned=" + isReturned +
                 '}';
+    }
+
+    public void setReturned(boolean returned) {
+        isReturned = returned;
+        applyFine();
+    }
+
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+                String.valueOf(getID()),
+                String.valueOf(getUser().getID()),
+                String.valueOf(getBook().getID()),
+                getBorrowDate().toString(),
+                String.valueOf(isReturned())
+        };
     }
 }

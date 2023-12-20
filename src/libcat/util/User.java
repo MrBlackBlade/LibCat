@@ -1,8 +1,10 @@
 package libcat.util;
 
+import libcat.StringArrayRepresentation;
+
 import java.util.Comparator;
 
-public abstract class User implements Comparable<User>, Comparator<User> {
+public abstract class User implements StringArrayRepresentation, Comparable<User>, Comparator<User> {
     private int id;
     private String name;
 
@@ -35,5 +37,13 @@ public abstract class User implements Comparable<User>, Comparator<User> {
     @Override
     public int compare(User o1, User o2) {
         return Integer.compare(o1.getID(),o2.getID());
+    }
+    @Override
+    public String[] toStringArray() {
+        return new String[]{
+                String.valueOf(getID()),
+                getName(),
+                getType()
+        };
     }
 }
