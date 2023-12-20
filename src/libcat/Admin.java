@@ -73,7 +73,7 @@ public class Admin extends User{
         return newBorrower;
     }
 
-    protected static Customer convertToCustomer(Borrower borrower) {
+    protected static Customer convertToCustomer(Customer borrower) {
         Customer newCustomer = new Customer(borrower.getID(), borrower.getName(), borrower.getPassword(), borrower.getPhoneNumber(), borrower.getEmail());
 
         Library.getCustomers().add(newCustomer);

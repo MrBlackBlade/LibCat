@@ -9,5 +9,6 @@
 8,Zigo,blyat,01400000000,example@exmpl.com,customer
 9,Jimmy,password,01400000000,example@exmpl.com,customer
 10,Makronomic,177013,01400000000,example@exmpl.com,borrower
-11,1,1,01400000000,example@exmpl.com,customer
+11,1,1,01400000000,example@exmpl.com,borrower
+11,1,1,01400000000,example@exmpl.com,borrower
 12,newgamer,newgamerplusplus,01200040886,i.ahmed@robone.net,customer

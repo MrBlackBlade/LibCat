@@ -1,17 +1,17 @@
-1,To Kill a Mockingbird,Harper Lee,Fiction,1960,100.0,12.99,0.4,true,true,ToKillAMockingBird.jpg
+1,To Kill a Mockingbird,Harper Lee,Fiction,1960,-1.0,12.99,0.4,true,true,ToKillAMockingBird.jpg
 2,1984,George Orwell,Dystopian,1949,-1.0,10.99,0.2,true,true,1984.jpg
 3,The Great Gatsby,F. Scott Fitzgerald,Classic,1925,-1.0,11.5,0.6,true,true,TheGreatGatsby.jpg
 4,Pride and Prejudice,Jane Austen,Romance,1813,-1.0,9.99,0.2,true,true,PrideAndPrejudice.jpg
 5,The Catcher in the Rye,J.D. Salinger,Coming-of-Age,1951,-1.0,13.49,0.3,true,true,TheCatcherInTheRye.jpg
-6,Brave New World,Aldous Huxley,Sci-Fi,1932,100.0,14.95,0.1,true,true,BraveNewWorld.jpg
+6,Brave New World,Aldous Huxley,Sci-Fi,1932,-1.0,14.95,0.1,true,true,BraveNewWorld.jpg
 7,The Hobbit,J.R.R. Tolkien,Fantasy,1937,-1.0,15.99,0.5,true,true,TheHobbit.jpg
-8,The Lord of the Rings,J.R.R. Tolkien,Fantasy,1954,0.0,24.99,0.0,true,true,TheLordOfTheRings.jpg
+8,The Lord of the Rings,J.R.R. Tolkien,Fantasy,1954,-1.0,24.99,0.0,true,true,TheLordOfTheRings.jpg
 9,Harry Potter and the Sorcerer's Stone,J.K. Rowling,Fantasy,1997,-1.0,18.5,0.0,true,true,HarryPotterAndTheSorcerer'sStone.jpg
 10,The Da Vinci Code,Dan Brown,Mystery,2003,-1.0,9.95,0.0,true,true,TheDaVinciCode.jpg
 11,The Hunger Games,Suzanne Collins,Dystopian,2008,-1.0,8.99,0.0,true,true,TheHungerGames.jpg
 12,The Hitchhiker's Guide to the Galaxy,Douglas Adams,Sci-Fi,1979,50.0,11.75,0.0,true,true,TheHitchhiker'sGuideToTheGalaxy.jpg
 13,The Road,Cormac McCarthy,Post-Apocalyptic,2006,-1.0,13.25,0.0,true,true,TheRoad.jpg
-14,The Shining,Stephen King,Horror,1977,100.0,14.99,0.0,true,true,TheShining.jpg
+14,The Shining,Stephen King,Horror,1977,-1.0,14.99,0.0,true,true,TheShining.jpg
 15,The Alchemist,Paulo Coelho,Fiction,1988,-1.0,12.0,0.4,true,true,TheAlchemist.jpg
 16,Gone with the Wind,Margaret Mitchell,Historical Fiction,1936,-1.0,16.99,0.0,true,true,GoneWithTheWind.jpg
 17,Animal Farm,George Orwell,Satire,1945,-1.0,9.0,0.2,true,true,AnimalFarm.jpg
@@ -22,16 +22,16 @@
 22,The Road Not Taken,Robert Frost,Poetry,1916,-1.0,8.0,0.2,true,true,TheRoadNotTaken.jpg
 23,The Color Purple,Alice Walker,Fiction,1982,-1.0,13.99,0.3,true,true,TheColorPurple.jpg
 24,Sapiens: A Brief History of Humankind,Yuval Noah Harari,Non-Fiction,2011,-1.0,16.95,0.0,true,true,SapiensABriefHistoryOfHumankind.jpg
-25,The Fault in Our Stars,John Green,Young Adult,2012,100.0,9.95,0.5,true,true,TheFaultInOurStars.jpg
+25,The Fault in Our Stars,John Green,Young Adult,2012,-1.0,9.95,0.5,true,true,TheFaultInOurStars.jpg
 26,The Old Man and the Sea,Ernest Hemingway,Classic,1952,-1.0,11.25,0.5,true,true,TheOldManAndTheSea.jpg
 27,One Hundred Years of Solitude,Gabriel García Márquez,Magical Realism,1967,100.0,14.5,0.0,true,true,OneHundredYearsOfSolitude.jpg
 28,The Odyssey,Homer,Epic Poetry,8th century BCE,-1.0,12.99,0.0,true,true,TheOdyssey.jpg
 29,Fahrenheit 451,Ray Bradbury,Dystopian,1953,-1.0,10.99,0.0,true,true,Fahrenheit.jpg
 30,The Road Less Traveled,M. Scott Peck,Self-Help,1978,-1.0,13.75,0.0,true,true,TheRoadLessTraveled.jpg
-31,The Kite Runner,Khaled Hosseini,Historical Fiction,2003,0.0,11.0,0.0,true,true,TheKiteRunner.jpg
+31,The Kite Runner,Khaled Hosseini,Historical Fiction,2003,-1.0,11.0,0.0,true,true,TheKiteRunner.jpg
 32,The Count of Monte Cristo,Alexandre Dumas,Adventure,1844,-1.0,15.99,0.0,true,true,TheCountOfMonteCristo.jpg
 33,Jane Eyre,Charlotte Bronte,Romance,1847,-1.0,10.5,0.0,true,true,JaneEyre.jpg
-34,The Art of War,Sun Tzu,Philosophy,5th century BCE,75.0,8.5,0.0,true,true,ArtOfWar.jpg
+34,The Art of War,Sun Tzu,Philosophy,5th century BCE,-1.0,8.5,0.0,true,true,ArtOfWar.jpg
 35,The Bell Jar,Sylvia Plath,Autobiographical Fiction,1963,-1.0,12.25,0.0,true,true,TheBellJar.jpg
 36,The Princess Bride,William Goldman,Fantasy,1973,100.0,9.99,0.0,true,true,ThePrincessBride.jpg
 37,A Tale of Two Cities,Charles Dickens,Historical Fiction,1859,-1.0,11.95,0.0,true,true,ATaleOfTwoCities.jpg
@@ -44,6 +44,6 @@
 44,Crime and Punishment,Fyodor Dostoevsky,Psychological Fiction,1866,-1.0,12.99,0.0,true,true,CrimeAndPunishment.jpg
 45,The Martian,Andy Weir,Science Fiction,2011,-1.0,14.25,0.0,true,true,TheMartian.jpg
 46,The Big Sleep,Raymond Chandler,Noir Fiction,1939,-1.0,10.49,0.0,true,true,TheBigSleep.jpg
-47,The War of the Worlds,H.G. Wells,Science Fiction,1897,0.0,11.0,0.0,true,true,TheWarOfTheWorlds.jpg
+47,The War of the Worlds,H.G. Wells,Science Fiction,1897,-1.0,11.0,0.0,true,true,TheWarOfTheWorlds.jpg
 48,The Three Musketeers,Alexandre Dumas,Historical Adventure,1844,-1.0,13.5,0.0,true,true,TheThreeMusketeers.jpg
 49,The Jungle Book,Rudyard Kipling,Children's Literature,1894,-1.0,8.75,0.0,true,true,TheJungleBook.jpg

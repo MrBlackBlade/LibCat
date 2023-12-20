@@ -293,9 +293,8 @@ public class UserFrame extends JFrame implements FrameEnvironment {
                     public void actionPerformed(ActionEvent e) {
 
                         transaction.setReturned(true);
-
                         if (!customer.hasBorrows()) {
-                            customer = Admin.convertToCustomer((Borrower) customer);
+                            customer = Admin.convertToCustomer(customer);
                         }
                         updateTransactionHistory();
                     }
