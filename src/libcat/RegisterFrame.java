@@ -130,11 +130,13 @@ class RegisterFrame extends JFrame {
                 //Perform registration logic here
                 HashMap<String, Boolean> userValidations = AuthenticationSystem.Validation.getUsernameValidations(userDetails[0]);
                 HashMap<String, Boolean> passwordValidations = AuthenticationSystem.Validation.getPasswordValidations(userDetails[1]);
-                HashMap<String, Boolean> emailValidations = AuthenticationSystem.Validation.getEmailValidations(userDetails[2]);
+                HashMap<String, Boolean> phoneNumberValidations = AuthenticationSystem.Validation.getPhoneNumberValidations(userDetails[2]);
+                HashMap<String, Boolean> emailValidations = AuthenticationSystem.Validation.getEmailValidations(userDetails[3]);
 
                 if (
                         !userValidations.get("AllChecksPass")
                         || !passwordValidations.get("AllChecksPass")
+                        || !phoneNumberValidations.get("AllChecksPass")
                         || !emailValidations.get("AllChecksPass")
                 ) {
                     StringBuilder errorMessage = new StringBuilder();
@@ -143,6 +145,9 @@ class RegisterFrame extends JFrame {
                     }
                     for (String key: passwordValidations.keySet()) {
                         if (passwordValidations.get(key) && !key.equals("AllChecksPass")) { errorMessage.append(key).append("\n"); }
+                    }
+                    for (String key: phoneNumberValidations.keySet()) {
+                        if (phoneNumberValidations.get(key) && !key.equals("AllChecksPass")) { errorMessage.append(key).append("\n"); }
                     }
                     for (String key: emailValidations.keySet()) {
                         if (emailValidations.get(key) && !key.equals("AllChecksPass")) { errorMessage.append(key).append("\n"); }

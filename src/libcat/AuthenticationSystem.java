@@ -38,6 +38,20 @@ public class AuthenticationSystem extends FileSystemManager {
             passwordValidations.put("AllChecksPass", pass);
             return passwordValidations;
         }
+        protected static HashMap<String, Boolean> getPhoneNumberValidations(String phoneNumber) {
+            HashMap<String, Boolean> phoneNumberValidations = new HashMap<>();
+            boolean pass = true;
+
+            phoneNumberValidations.put("Phone number is not valid", phoneNumberInvalid(phoneNumber));
+
+            for (String key: phoneNumberValidations.keySet()) {
+                pass = !phoneNumberValidations.get(key) && pass;
+            }
+
+            phoneNumberValidations.put("AllChecksPass", pass);
+
+            return phoneNumberValidations;
+        }
         protected static HashMap<String, Boolean> getEmailValidations(String email) {
             HashMap<String, Boolean> emailValidations = new HashMap<>();
             boolean pass = true;
@@ -83,13 +97,21 @@ public class AuthenticationSystem extends FileSystemManager {
 
             return matcher.find();
         }
-        protected static boolean emailInvalid(String email) {
-            String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        protected static boolean phoneNumberInvalid(String phoneNumber) {
+            String regex = "^(\\+201|01|00201)[0-2,5]{1}[0-9]{8}";
 
-            Pattern pattern = Pattern.compile(EMAIL_REGEX);
+            Pattern pattern = Pattern.compile(regex);
+
+            Matcher matcher = pattern.matcher(phoneNumber);
+            System.out.println(matcher.matches());
+            return !matcher.matches();
+        }
+        protected static boolean emailInvalid(String email) {
+            String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+
+            Pattern pattern = Pattern.compile(regex);
 
             Matcher matcher = pattern.matcher(email);
-            System.out.println(matcher.matches());
             return !matcher.matches();
         }
     }
