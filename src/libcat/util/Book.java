@@ -151,7 +151,11 @@ public class Book implements StringArrayRepresentation, Comparable<Book>{
     public void setYear(String newYear) {
     }
 
-    public void setAvailable(boolean newAvailability) {
+    public void setPurchasable(boolean newAvailability) {
+        this.getPurchaseStatus().put(Availablity.PURCHASABLE,newAvailability);
+    }
+    public void setBorrowable(boolean newAvailability) {
+        this.getPurchaseStatus().put(Availablity.BORROWABLE,newAvailability);
     }
     public void initializeRatings() {
         this.ratings = Library.getBy(Library.QueryType.RATING, Library.RatingQueryIndex.BOOK_ID, String.valueOf(this.getID()));

@@ -1,9 +1,6 @@
 package libcat;
 
-import libcat.util.Book;
-import libcat.util.Borrower;
-import libcat.util.Rating;
-import libcat.util.User;
+import libcat.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -76,11 +73,13 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
 
             //Book Text
             JTextArea bookLabel = new JTextArea(2, 20);
-            bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s",
+            bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
                     book.getTitle(),
                     book.getAuthor(),
-                    book.getGenre()));
-            bookLabel.setFont(new Font("Arial", Font.BOLD, 25));
+                    book.getGenre(),
+                    String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                    String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE))));
+            bookLabel.setFont(new Font("Arial", Font.BOLD, 22));
             bookLabel.setWrapStyleWord(true);
             bookLabel.setLineWrap(true);
             bookLabel.setOpaque(false);
@@ -90,7 +89,6 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             //GBCs
             GridBagConstraints gbcBookLabel = new GridBagConstraints();
             gbcBookLabel.fill = GridBagConstraints.HORIZONTAL;
-            //gbcImageLabel.weightx = 1.0;
             gbcBookLabel.gridx = 1;
             gbcBookLabel.gridy = 0;
             gbcBookLabel.anchor = GridBagConstraints.WEST; // Align to the left
@@ -105,91 +103,94 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             gbcEmptyPanel.gridx = 2;
             gbcEmptyPanel.gridy = 0;
 
-            JPanel rightPanel = new JPanel(new BorderLayout());
-            rightPanel.setBackground(Color.black);
-            rightPanel.setPreferredSize(new Dimension(400, panelHeight - 15));
+            JButton purchaseStatusButton = new JButton("Change Purchase Status");
+            purchaseStatusButton.setBackground(C_ButtonBG);
+            purchaseStatusButton.setForeground(Color.WHITE);
 
-            GridBagConstraints gbcRightPanel = new GridBagConstraints();
-            gbcRightPanel.fill = GridBagConstraints.HORIZONTAL;
-            gbcRightPanel.gridx = 3;
-            gbcRightPanel.gridy = 0;
-            gbcRightPanel.anchor = GridBagConstraints.EAST; // Align to the left
-            gbcRightPanel.insets = new Insets(0, 0, 0, 48);
-
-            JTextArea reviewField = new JTextArea();
-            reviewField.setFont(new Font("Arial", Font.BOLD, 16));
-            reviewField.setLineWrap(true);
-            reviewField.setWrapStyleWord(true);
-            reviewField.setMargin(new Insets(4, 4, 4, 4));
-            reviewField.setEditable(false);
-
-            // Set scroll bar for the reviews
-            JScrollPane reviewScroll = new JScrollPane(reviewField);
-            reviewScroll.setPreferredSize(new Dimension(300, 350));
-            reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            reviewScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-            //Read Reviews and Ratings
-            StringBuilder reviews = new StringBuilder();
-            for (Rating rating : book.getRatings()) {
-                String isLike = rating.isLike() ? " likes:\n" : " dislikes:\n";
-                reviews.append(rating.getUsername()).append(isLike).append(rating.getReview()).append("\n\n");
-            }
-            reviewField.setText(reviews.toString().trim());
-
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 4));
-            JButton buyButton = new JButton("Buy");
-            JButton borrowButton = new JButton("Borrow");
-            JButton likeButton = new JButton("Like");
-            JButton dislikeButton = new JButton("Dislike");
-
-            buyButton.setBackground(C_ButtonBG);
-            buyButton.setForeground(Color.WHITE);
-            borrowButton.setBackground(C_ButtonBG);
-            borrowButton.setForeground(Color.WHITE);
-            likeButton.setBackground(C_ButtonBG);
-            likeButton.setForeground(Color.WHITE);
-            dislikeButton.setBackground(C_ButtonBG);
-            dislikeButton.setForeground(Color.WHITE);
-
-            //Buttons Action
-            buyButton.addActionListener(new ActionListener() {
+            JButton borrowStatusButton = new JButton("Change Borrow Status");
+            borrowStatusButton.setBackground(C_ButtonBG);
+            borrowStatusButton.setForeground(Color.WHITE);
+            purchaseStatusButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // Logic will be here
-                    JOptionPane.showMessageDialog(null, "Buy");
+
+                    if(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)){
+                        book.setPurchasable(false);
+
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getGenre(),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE))));
+
+                        System.out.println(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE));
+
+                    }
+                    else{
+                        book.setPurchasable(true);
+
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getGenre(),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE))));
+
+                        System.out.println(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE));
+                    }
+
+
                 }
             });
-            borrowButton.addActionListener(new ActionListener() {
+            borrowStatusButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // Logic will be here
-                    JOptionPane.showMessageDialog(null, "Borrowed");
-                }
-            });
-            likeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    /// Logic will be here
-                    JOptionPane.showMessageDialog(null, "Like");
-                }
-            });
-            dislikeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    // Logic will be here
-                    JOptionPane.showMessageDialog(null, "Dislike");
+
+                    if(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)){
+                        book.setBorrowable(false);
+
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getGenre(),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE))));
+
+                        System.out.println(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE));
+                    }
+                    else {
+                        book.setBorrowable(true);
+                        bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
+                                book.getTitle(),
+                                book.getAuthor(),
+                                book.getGenre(),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)),
+                                String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE))));
+
+                        System.out.println(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE));
+                    }
                 }
             });
 
-            buttonPanel.add(likeButton);
-            buttonPanel.add(dislikeButton);
-            buttonPanel.add(buyButton);
-            buttonPanel.add(borrowButton);
+            // Add buttons to a panel
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new GridLayout(2, 1, 5, 5)); // Adjust layout as needed
+            buttonPanel.add(purchaseStatusButton);
+            buttonPanel.add(borrowStatusButton);
 
-            rightPanel.add(reviewScroll, BorderLayout.NORTH); // Place the text field at the top
-            rightPanel.add(buttonPanel, BorderLayout.CENTER); // Place the button panel in the center
+            //GBCs
+            GridBagConstraints gbcButtonPanel = new GridBagConstraints();
+            gbcButtonPanel.fill = GridBagConstraints.VERTICAL;
+            gbcButtonPanel.gridx = 3; // Adjust column index as needed
+            gbcButtonPanel.gridy = 0;
+            gbcButtonPanel.anchor = GridBagConstraints.EAST; // Align to the right
+            gbcButtonPanel.insets = new Insets(0, 0, 0, 50); // Add space between components
 
+            // Add buttons to the ListItemPanel
             ListItemPanel.add(imageLabel, gbcImageLabel);
             ListItemPanel.add(bookLabel, gbcBookLabel);
             ListItemPanel.add(emptyPanel, gbcEmptyPanel);
-            ListItemPanel.add(rightPanel, gbcRightPanel);
+            ListItemPanel.add(buttonPanel, gbcButtonPanel); // Add the button panel
+
             containerPanel.add(ListItemPanel);
             bookFound = true;
         }
@@ -279,51 +280,54 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             gbcEmptyPanel.gridx = 2;
             gbcEmptyPanel.gridy = 0;
 
-            JButton updateButton = new JButton("Update");
-            updateButton.setFont(new Font("Arial", Font.PLAIN, 18));
-            updateButton.setBackground(C_ButtonBG);
-            updateButton.setForeground(Color.WHITE);
-            updateButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    // Logic will be here
+            if(user.getType().equalsIgnoreCase("borrower")){
+                JButton updateButton = new JButton("Update");
+                updateButton.setFont(new Font("Arial", Font.PLAIN, 18));
+                updateButton.setBackground(C_ButtonBG);
+                updateButton.setForeground(Color.WHITE);
+                updateButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        // Logic will be here
 
-                }
-            });
-
-            JButton deleteButton = new JButton("Delete");
-            deleteButton.setFont(new Font("Arial", Font.PLAIN, 18));
-            deleteButton.setBackground(C_ButtonBG);
-            deleteButton.setForeground(Color.WHITE);
-
-            deleteButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?",
-                            "Confirmation", JOptionPane.YES_NO_OPTION);
-
-                    if (option == JOptionPane.YES_OPTION) {
-                        Admin.deleteUser(user);
                     }
-                }
-            });
+                });
 
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.setFont(new Font("Arial", Font.PLAIN, 18));
+                deleteButton.setBackground(C_ButtonBG);
+                deleteButton.setForeground(Color.WHITE);
 
+                deleteButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?",
+                                "Confirmation", JOptionPane.YES_NO_OPTION);
 
-            // GBCs for buttons
-            GridBagConstraints gbcUpdateButton = new GridBagConstraints();
-            gbcUpdateButton.gridx = 3;
-            gbcUpdateButton.gridy = 0;
-            gbcUpdateButton.anchor = GridBagConstraints.EAST; // Align to the right
-            gbcUpdateButton.insets = new Insets(0, 0, 0, 60); // Add space between components
+                        if (option == JOptionPane.YES_OPTION) {
+                            Borrower borrower = (Borrower)((Customer)Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID,String.valueOf(user.getID())).get(0));
+                            Admin.deleteBorrower(borrower);
 
-            GridBagConstraints gbcDeleteButton = new GridBagConstraints();
-            gbcDeleteButton.gridx = 4;
-            gbcDeleteButton.gridy = 0;
-            gbcDeleteButton.anchor = GridBagConstraints.EAST; // Align to the right
-            gbcDeleteButton.insets = new Insets(0, 0, 0, 60); // Add space between components
+                        }
+                    }
+                });
 
-            // Add buttons to the panel
-            ListItemPanel.add(updateButton, gbcUpdateButton);
-            ListItemPanel.add(deleteButton, gbcDeleteButton);
+                // GBCs for buttons
+                GridBagConstraints gbcUpdateButton = new GridBagConstraints();
+                gbcUpdateButton.gridx = 3;
+                gbcUpdateButton.gridy = 0;
+                gbcUpdateButton.anchor = GridBagConstraints.EAST; // Align to the right
+                gbcUpdateButton.insets = new Insets(0, 0, 0, 60); // Add space between components
+
+                GridBagConstraints gbcDeleteButton = new GridBagConstraints();
+                gbcDeleteButton.gridx = 4;
+                gbcDeleteButton.gridy = 0;
+                gbcDeleteButton.anchor = GridBagConstraints.EAST; // Align to the right
+                gbcDeleteButton.insets = new Insets(0, 0, 0, 60); // Add space between components
+
+                // Add buttons to the panel
+                ListItemPanel.add(updateButton, gbcUpdateButton);
+                ListItemPanel.add(deleteButton, gbcDeleteButton);
+
+            }
             ListItemPanel.add(imageLabel, gbcImageLabel);
             ListItemPanel.add(userLabel, gbcUserLabel);
             ListItemPanel.add(emptyPanel, gbcEmptyPanel);
