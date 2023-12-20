@@ -371,14 +371,14 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                             options[0]);  // Default button (Yes)
 
                                     if (addToReservation == 0) {
-                                        ((Customer)user).getReservation().addPurchaseReservation(book);
+                                        Library.addPurchaseReservation(book, (Customer)user);
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Book not added to reservations.");
                                     }
 
                                     System.out.println("CURRENT USER'S PURCHASE RESERVES:");
-                                    for (Book book : ((Customer) user).getReservation().getReservedPurchases()) {
-                                        System.out.printf("\tID: %s, Title: %s\n", book.getID(), book.getTitle());
+                                    for (Reservation reservation : Library.getUserPurchaseReservations((Customer)user)) {
+                                        System.out.printf("\tID: %s, Title: %s\n", reservation.getBook().getID(), reservation.getBook().getTitle());
                                     }
                                 }
 
@@ -421,14 +421,14 @@ public class MainFrame extends JFrame implements FrameEnvironment{
                                                     options[0]);  // Default button (Yes)
 
                                     if (addToReservation == 0) {
-                                        ((Customer)user).getReservation().addBorrowReservation(book);
+                                        Library.addBorrowReservation(book, (Customer) user);
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Book not added to reservations.");
                                     }
 
                                     System.out.println("CURRENT USER'S BORROW RESERVES:");
-                                    for (Book book : ((Customer) user).getReservation().getReservedBorrows()) {
-                                        System.out.printf("\tID: %s, Title: %s\n", book.getID(), book.getTitle());
+                                    for (Reservation reservation : Library.getUserBorrowReservations((Customer) user)) {
+                                        System.out.printf("\tID: %s, Title: %s\n", reservation.getBook().getID(), reservation.getBook().getTitle());
                                     }
                                 }
 

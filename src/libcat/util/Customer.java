@@ -6,12 +6,10 @@ import java.util.ArrayList;
 
 public class Customer extends User {
     private Cart cart;
-    private Reservation reservation;
 
     public Customer(int id, String name) {
         super(id, name);
         cart = new Cart(this);
-        reservation = new Reservation(this);
     }
 
     @Override
@@ -28,10 +26,6 @@ public class Customer extends User {
 
     public Cart getCart() {
         return cart;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
     }
 
     public boolean hasBorrows() {

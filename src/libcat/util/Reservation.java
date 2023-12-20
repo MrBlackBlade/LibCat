@@ -1,51 +1,54 @@
 package libcat.util;
 
-import java.util.ArrayList;
+import libcat.Library;
+import libcat.StringArrayRepresentation;
 
-public class Reservation {
+public class Reservation implements StringArrayRepresentation{
     private final Customer customer;
-    private ArrayList<Book> reservedPurchases;
-    private ArrayList<Book> reservedBorrows;
+    private String reservationType;
+    private Book reservedBook;
 
-    public Reservation(Customer customer) {
-        this.customer = customer;
-        reservedPurchases = new ArrayList<Book>();
-        reservedBorrows = new ArrayList<Book>();
+    public Reservation(String reservationType, int userID, int bookID) {
+        this.reservationType = reservationType;
+
+        this.customer = (Customer) Library.getBy(
+                Library.QueryType.USER,
+                Library.UserQueryIndex.ID,
+                String.valueOf(userID)
+        ).get(0);
+
+        this.reservedBook = (Book) Library.getBy(
+                Library.QueryType.BOOK,
+                Library.BookQueryIndex.ID,
+                String.valueOf(bookID)
+        ).get(0);
     }
 
-    public void addPurchaseReservation(Book book) {
-        if (!reservedPurchases.contains(book) && !book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
-            reservedPurchases.add(book);
-        }
-    }
-    public void addBorrowReservation(Book book) {
-        if (!reservedBorrows.contains(book) && !book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
-            reservedBorrows.add(book);
-        }
+    public Reservation(String reservationType, Customer customer, Book book) {
+        this(
+                reservationType,
+                customer.getID(),
+                book.getID()
+        );
     }
 
-    public boolean removePurchaseReservation(Book book) {
-        if (!book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
-            // notify the user that the book is available now
-            return reservedPurchases.remove(book);
-        }
-
-        return false;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public boolean removeBorrowReservation(Book book) {
-        if (!book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
-            // notify the user that the book is available now
-            return reservedBorrows.remove(book);
-        }
-
-        return false;
+    public Book getBook() {
+        return reservedBook;
     }
 
-    public ArrayList<Book> getReservedPurchases() {
-        return reservedPurchases;
+    public String getType() {
+        return reservationType;
     }
-    public ArrayList<Book> getReservedBorrows() {
-        return reservedBorrows;
+
+    @Override
+    public String[] toStringArray() {
+        return new String[] {
+                String.valueOf(customer.getID()),
+                String.valueOf(reservedBook.getID())
+        };
     }
 }
