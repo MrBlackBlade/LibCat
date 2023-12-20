@@ -180,7 +180,8 @@ public class FileSystemManager {
                             String.valueOf(transaction.getID()),
                             String.valueOf(transaction.getUser().getID()),
                             String.valueOf(transaction.getBook().getID()),
-                            transaction.getBorrowDate().toString()
+                            transaction.getBorrowDate().toString(),
+                            String.valueOf(transaction.isReturned())
                     });
                 }
 
