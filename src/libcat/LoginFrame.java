@@ -68,7 +68,7 @@ public class LoginFrame extends JFrame {
                     }
                 } else {
                     //delete system32
-                    JOptionPane.showMessageDialog(null, "User not found.");
+                    JOptionPane.showMessageDialog(null, "Username or password invalid.");
                 }
             }
         });

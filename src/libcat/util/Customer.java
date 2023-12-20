@@ -8,16 +8,14 @@ public class Customer extends User {
     private Cart cart;
     private ArrayList<Book> reservedPurchases;
     private ArrayList<Book> reservedBorrows;
-    private String phoneNumber;
-    private String email;
 
-    public Customer(int id, String name, String phoneNumber, String email) {
-        super(id, name);
+
+    public Customer(int id, String name, String password, String phoneNumber, String email) {
+        super(id, name, password, phoneNumber, email);
         cart = new Cart(this);
         reservedPurchases = new ArrayList<Book>();
         reservedBorrows = new ArrayList<Book>();
-        this.phoneNumber = phoneNumber;
-        this.email =  email;
+
     }
 
     @Override
@@ -31,14 +29,13 @@ public class Customer extends User {
     public void setName(String name) {
         super.setName(name);
     }
-    public void setEmail(String email) {this.email = email;}
-    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+    public void setEmail(String email) {super.setEmail(email);}
+    public void setPhoneNumber(String phoneNumber) {super.setPhoneNumber(phoneNumber);}
 
     public Cart getCart() {
         return cart;
     }
-    public String getPhoneNumber() {return phoneNumber;}
-    public String getEmail() {return email;}
+
 
     public boolean hasBorrows() {
         boolean hasBorrows = false;
@@ -76,9 +73,10 @@ public class Customer extends User {
         return new String[]{
                 String.valueOf(getID()),
                 getName(),
-                getType(),
+                getPassword(),
                 getPhoneNumber(),
-                getEmail()
+                getEmail(),
+                getType()
         };
     }
 }

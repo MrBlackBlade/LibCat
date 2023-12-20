@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class FileSystemManager {
     protected static final String cwd = new File(Paths.get("").toAbsolutePath().toString()) + "\\resources\\";
-    protected static final String usersCredsFile = "userscreds.txt";
     protected static final String usersDataFile = "usersdata.txt";
     protected static final String booksFile = "books.txt";
     protected static final String ratingsFile = "ratings.txt";
