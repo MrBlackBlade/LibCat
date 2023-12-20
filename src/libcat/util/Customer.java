@@ -6,16 +6,11 @@ import java.util.ArrayList;
 
 public class Customer extends User {
     private Cart cart;
-    private ArrayList<Book> reservedPurchases;
-    private ArrayList<Book> reservedBorrows;
 
 
     public Customer(int id, String name, String password, String phoneNumber, String email) {
         super(id, name, password, phoneNumber, email);
         cart = new Cart(this);
-        reservedPurchases = new ArrayList<Book>();
-        reservedBorrows = new ArrayList<Book>();
-
     }
 
     @Override
@@ -35,7 +30,6 @@ public class Customer extends User {
     public Cart getCart() {
         return cart;
     }
-
 
     public boolean hasBorrows() {
         boolean hasBorrows = false;
