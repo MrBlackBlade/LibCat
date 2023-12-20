@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Cart {
     private final Customer customer;
     private double totalPrice;
+    private double priceCalculator;
     private ArrayList<Order> pendingOrders = new ArrayList<Order>();
     private ArrayList<Transaction> pendingTransactions = new ArrayList<Transaction>();
 
@@ -17,7 +18,11 @@ public class Cart {
     public boolean addPurchase(Book book, int quantity) {
         if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
             pendingOrders.add(new Order(customer, book, quantity, pendingOrders));
-            totalPrice += book.getBasePrice();
+            if (book.getSalePercent() == 0.0) {
+                totalPrice += book.getBasePrice();
+            } else {
+                totalPrice += book.getSalePrice();
+            }
             return true;
         } else {
             return false;
@@ -76,7 +81,7 @@ public class Cart {
             for (Order order : getPendingOrders()) {
                 Library.createOrder(order);
 
-                totalPrice += order.getBook().getBasePrice() * (1 - order.getBook().getSalePercent()) * order.getQuantity();
+                totalPrice += order.getBook().getSalePrice() * order.getQuantity();
             }
 
             getPendingOrders().clear();

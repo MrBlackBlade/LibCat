@@ -111,14 +111,7 @@ public class CartFrame extends JFrame implements FrameEnvironment {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    if (order.getBook().getSalePercent() > 0.0) {
-
                         order.setQuantity(order.getQuantity() + 1);
-
-                    } else {
-                        order.setQuantity(order.getQuantity() + 1);
-
-                    }
 
                     bookLabel.setText(String.format("Title: %s\n\nPrice: $%s\n\nQuantity: %s",
                             order.getBook().getTitle(),
@@ -133,14 +126,8 @@ public class CartFrame extends JFrame implements FrameEnvironment {
 
                     if (order.getQuantity() > 1) {
 
-                        if (order.getBook().getSalePercent() > 0.0) {
-
                             order.setQuantity(order.getQuantity() - 1);
 
-                        } else {
-                            order.setQuantity(order.getQuantity() - 1);
-
-                        }
 
                     } else {
 
