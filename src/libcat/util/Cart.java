@@ -16,17 +16,30 @@ public class Cart {
         this.customer = customer;
     }
 
+    public double updateTotalPrice() {
+        totalPrice = 0;
+        for (Order order : pendingOrders) {
+            totalPrice += order.getTotalPrice();
+        }
+        return totalPrice;
+    }
+
     public boolean addPurchase(Book book, int quantity) {
         if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
-            pendingOrders.add(new Order(customer, book, quantity, pendingOrders));
-            if (book.getSalePercent() == 0.0) {
-                totalPrice += book.getBasePrice();
-            } else {
-                totalPrice += book.getSalePrice();
-            }
+            Order newOrder = new Order(customer, book, quantity, pendingOrders);
+            pendingOrders.add(newOrder);
+            updateTotalPrice();
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void modifyPurchase(Order order, int quantity) {
+        order.setQuantity(quantity);
+        updateTotalPrice();
+        if (quantity == 0) {
+            deletePurchase(order);
         }
     }
 
@@ -39,26 +52,20 @@ public class Cart {
         }
     }
 
-    public boolean deletePurchase(Book book) {
+    public boolean deletePurchase(Order order) {
         boolean deleteSuccessful = false;
-        for (Order order : pendingOrders) {
-            if (order.getBook().equals(book)) {
-                pendingOrders.remove(order);
-                deleteSuccessful = true;
-                break;
-            }
+        if (pendingOrders.contains(order)) {
+            pendingOrders.remove(order);
+            deleteSuccessful = true;
         }
         return deleteSuccessful;
     }
 
-    public boolean deleteBorrow(Book book) {
+    public boolean deleteBorrow(Transaction transaction) {
         boolean deleteSuccessful = false;
-        for (Transaction transaction : pendingTransactions) {
-            if (transaction.getBook().equals(book)) {
-                pendingTransactions.remove(transaction);
-                deleteSuccessful = true;
-                break;
-            }
+        if (pendingTransactions.contains(transaction)) {
+            pendingTransactions.remove(transaction);
+            deleteSuccessful = true;
         }
         return deleteSuccessful;
     }

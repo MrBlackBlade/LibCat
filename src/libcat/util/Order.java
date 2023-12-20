@@ -68,8 +68,12 @@ public class Order implements StringArrayRepresentation, Comparable<Order> {
     private static double calculateTotalPrice(double quantity, Book book) {
         return quantity * book.getSalePrice();
     }
+    private double calculateTotalPrice() {
+        return this.quantity * this.book.getSalePrice();
+    }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+        this.totalPrice = calculateTotalPrice();
     }
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
