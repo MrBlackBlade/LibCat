@@ -112,7 +112,8 @@ public class Transaction implements StringArrayRepresentation, Comparable<Transa
                 String.valueOf(getID()),
                 String.valueOf(getUser().getID()),
                 String.valueOf(getBook().getID()),
-                getBorrowDate().toString()
+                getBorrowDate().toString(),
+                String.valueOf(isReturned())
         };
     }
 }
