@@ -49,7 +49,7 @@ public class Customer extends User {
 
     public void rateBook(Book book, boolean like, String review) {
         // check if review is null or empty, sets it to "NO_REVIEW" if any of those
-        String finalReview = (review == null || review.isBlank() ? "NO_REVIEW" : review);
+        String finalReview = (review == null || review.isBlank() ? "" : review);
 
         for (Order order : getOrderHistory()) {
             if (order.getBook().equals(book)) {

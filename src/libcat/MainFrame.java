@@ -17,6 +17,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
 
     private MainFrame selfReference;
     protected JButton searchButton;
+
     private enum RadioSelect {
         ONE,
         TWO,
@@ -249,7 +250,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                 book.getTitle(),
                                 book.getAuthor(),
                                 book.getGenre(),
-                                String.valueOf(book.getRating())+"% of the Readers Liked this"));
+                                String.valueOf(book.getRating()) + "% of the Readers Liked this"));
 
                         // Create a StyledDocument for the old price with strikethrough
                         StyledDocument doc = bookLabel.getStyledDocument();
@@ -275,7 +276,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                 book.getTitle(),
                                 book.getAuthor(),
                                 book.getGenre(),
-                                String.valueOf(book.getRating()+"% of the Readers Liked this"),
+                                String.valueOf(book.getRating() + "% of the Readers Liked this"),
                                 String.valueOf(book.getBasePrice())));
                     }
 
@@ -325,8 +326,10 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                     // A txt file will have all the filePaths of every review and will loop on that file
                     StringBuilder reviews = new StringBuilder();
                     for (Rating rating : book.getRatings()) {
-                        String isLike = rating.isLike() ? " likes:\n" : " dislikes:\n";
-                        reviews.append(rating.getUsername()).append(isLike).append(rating.getReview()).append("\n\n");
+                        if (!rating.getReview().isBlank()) {
+                            String isLike = rating.isLike() ? " likes:\n" : " dislikes:\n";
+                            reviews.append(rating.getUsername()).append(isLike).append(rating.getReview()).append("\n\n");
+                        }
                     }
                     reviewField.setText(reviews.toString().trim());
 
@@ -364,14 +367,14 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                     Object[] options = {"Yes", "No"};
                                     int addToReservation =
                                             JOptionPane.showOptionDialog(
-                                            null,
-                                            "Would you like to add the book to your purchase reservations?",
-                                            "Confirmation",
-                                            JOptionPane.YES_NO_OPTION,
-                                            JOptionPane.QUESTION_MESSAGE,
-                                            null,         // Use default icon
-                                            options,      // Buttons
-                                            options[0]);  // Default button (Yes)
+                                                    null,
+                                                    "Would you like to add the book to your purchase reservations?",
+                                                    "Confirmation",
+                                                    JOptionPane.YES_NO_OPTION,
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,         // Use default icon
+                                                    options,      // Buttons
+                                                    options[0]);  // Default button (Yes)
 
                                     if (addToReservation == 0) {
                                         ArrayList<Reservation> pastReservations = Library.getUserPurchaseReservations((Customer) user);
@@ -384,7 +387,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                     }
 
                                     System.out.println("CURRENT USER'S PURCHASE RESERVES:");
-                                    for (Reservation reservation : Library.getUserPurchaseReservations((Customer)user)) {
+                                    for (Reservation reservation : Library.getUserPurchaseReservations((Customer) user)) {
                                         System.out.printf("\tID: %s, Title: %s\n", reservation.getBook().getID(), reservation.getBook().getTitle());
                                     }
                                 }
@@ -451,7 +454,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
 
                             boolean alreadyRated = false;
 
-                            if (((Customer)user).seenBook(book)) {
+                            if (((Customer) user).seenBook(book)) {
 
                                 for (Rating rate : book.getRatings()) {
                                     if (user.getName().equalsIgnoreCase(rate.getUsername())) {
@@ -463,8 +466,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                 } else {
                                     new RateFrame(user, book, selfReference);
                                 }
-                            }
-                            else {
+                            } else {
                                 JOptionPane.showMessageDialog(null, "Read the book first.");
                             }
 

@@ -22,7 +22,7 @@ public class RateFrame extends JFrame implements FrameEnvironment {
     static RadioSelect choice = null;
     private Customer customer;
     private boolean rating = false;
-    private final JTextArea commentField;
+    private final JTextField commentField;
 
     private MainFrame mainFrameReference;
 
@@ -61,7 +61,7 @@ public class RateFrame extends JFrame implements FrameEnvironment {
 
         // Create components
         JLabel commentLabel = new JLabel("Comment:");
-        commentField = new JTextArea();
+        commentField = new JTextField();
         JButton submitButton = new JButton("Submit");
         JRadioButton radioButton1 = new JRadioButton("Like");
         JRadioButton radioButton2 = new JRadioButton("Dislike");
@@ -85,7 +85,6 @@ public class RateFrame extends JFrame implements FrameEnvironment {
         commentField.setBackground(commentBackgroundColor);
 
         // Set the number of rows and columns for the comment area
-        commentField.setRows(5);
         commentField.setColumns(30);
 
         // Set GridBagConstraints for commentLabel
