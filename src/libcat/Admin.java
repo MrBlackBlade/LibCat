@@ -68,24 +68,38 @@ public class Admin extends User {
     // Overload: Adds a Borrower to the borrowers list using ID, and removes the corresponding Customer with the same ID
     protected static Borrower convertToBorrower(Customer customer) {
         Borrower newBorrower = new Borrower(customer.getID(), customer.getName(), customer.getPassword(), customer.getPhoneNumber(), customer.getEmail());
+        boolean foundInLibrary = false;
+        for (Borrower borrower : Library.getBorrowers()) {
+            if ((customer.getID() == borrower.getID())) {
+                foundInLibrary = true;
+            }
+        }
+        if (!foundInLibrary) {
+            Library.getBorrowers().add(newBorrower);
+            Library.getCustomers().remove(customer);
+        }
 
-        Library.getBorrowers().add(newBorrower);
-        Library.getCustomers().remove(customer);
 
         return newBorrower;
     }
 
     protected static Customer convertToCustomer(Customer borrower) {
         Customer newCustomer = new Customer(borrower.getID(), borrower.getName(), borrower.getPassword(), borrower.getPhoneNumber(), borrower.getEmail());
-
-        Library.getCustomers().add(newCustomer);
-        Library.getBorrowers().remove(borrower);
+        boolean foundInLibrary = false;
+        for (Customer customer : Library.getCustomers()) {
+            if ((borrower.getID() == customer.getID())) {
+                foundInLibrary = true;
+            }
+        }
+        if (!foundInLibrary) {
+            Library.getCustomers().add(newCustomer);
+            Library.getBorrowers().remove(borrower);
+        }
 
         return newCustomer;
     }
     protected static Customer convertToCustomer(Borrower borrower) {
         Customer newCustomer = new Customer(borrower.getID(), borrower.getName(), borrower.getPassword(), borrower.getPhoneNumber(), borrower.getEmail());
-
         Library.getCustomers().add(newCustomer);
         Library.getBorrowers().remove(borrower);
 

@@ -62,9 +62,11 @@ public class LoginFrame extends JFrame {
                     User user = (User) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.NAME_EQUAL, username).get(0);
                     if (user.getType().equalsIgnoreCase("admin")){
                         new AdminFrame();
+                        setVisible(false);
                     }
                     else {
                         new MainFrame(user);
+                        setVisible(false);
                     }
                 } else {
                     //delete system32

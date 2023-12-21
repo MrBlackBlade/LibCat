@@ -2,13 +2,12 @@
 1,TheOne1,Saitama,01400000000,example@exmpl.com,customer
 2,PotatoIdentifier,Potato123,01400000000,example@exmpl.com,customer
 3,Magicslayer,RedHawk,01400000000,example@exmpl.com,customer
-4,MrBlackBlade,sands,01400000000,example@exmpl.com,borrower
+4,MrBlackBlade,sands,01400000000,example@exmpl.com,customer
 5,Boldingar,3110,01400000000,example@exmpl.com,customer
 6,Peter,secure123,01400000000,example@exmpl.com,customer
 7,Maria,bookReader3000,01400000000,example@exmpl.com,borrower
 8,Zigo,blyat,01400000000,example@exmpl.com,customer
 9,Jimmy,password,01400000000,example@exmpl.com,customer
 10,Makronomic,177013,01400000000,example@exmpl.com,borrower
-11,1,1,01400000000,example@exmpl.com,borrower
 11,1,1,01400000000,example@exmpl.com,borrower
 12,newgamer,newgamerplusplus,01200040886,i.ahmed@robone.net,customer

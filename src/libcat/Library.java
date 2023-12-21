@@ -593,6 +593,18 @@ public class Library {
 
         return userBorrowReservations;
     }
+    public static boolean removeReservation(Reservation reservation) {
+        switch (reservation.getType()) {
+            case "purchase":
+                Library.getPurchaseReservations().remove(reservation);
+                break;
+            case "borrow":
+                Library.getBorrowReservations().remove(reservation);
+                break;
+        }
+
+        return true;
+    }
 
     public static <T extends Comparable<? super T>> ArrayList<T> getSortedList(ArrayList<T> array) {
         ArrayList<T> sortedList = new ArrayList<>(array);

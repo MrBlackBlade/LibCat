@@ -522,5 +522,9 @@ public class MainFrame extends JFrame implements FrameEnvironment {
 
         searchButton.doClick();
 
+        StringBuilder notifications = ((Customer) user).getNotifications();
+        if (!notifications.isEmpty()) {
+            JOptionPane.showMessageDialog(this, notifications);
+        }
     }
 }

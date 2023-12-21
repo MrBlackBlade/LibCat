@@ -2,6 +2,7 @@ package libcat.util;
 
 import libcat.Library;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Customer extends User {
@@ -21,11 +22,18 @@ public class Customer extends User {
     public String toString() {
         return String.format("Customer ID: %d, Customer Username: %s", getID(), getName());
     }
+
     public void setName(String name) {
         super.setName(name);
     }
-    public void setEmail(String email) {super.setEmail(email);}
-    public void setPhoneNumber(String phoneNumber) {super.setPhoneNumber(phoneNumber);}
+
+    public void setEmail(String email) {
+        super.setEmail(email);
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        super.setPhoneNumber(phoneNumber);
+    }
 
     public Cart getCart() {
         return cart;
@@ -61,7 +69,7 @@ public class Customer extends User {
                 ));
             }
         }
-        for (Transaction transaction : getBorrowHistory()){
+        for (Transaction transaction : getBorrowHistory()) {
             if (transaction.getBook().equals(book)) {
                 Library.getRatings().add(new Rating(
                         book,
@@ -73,20 +81,42 @@ public class Customer extends User {
 
         }
     }
-    public boolean seenBook(Book book){
+
+    public boolean seenBook(Book book) {
         boolean seen = false;
-        for(Order order : getOrderHistory()){
+        for (Order order : getOrderHistory()) {
 
             seen = order.getBook().equals(book) ? true : seen;
 
         }
-        for(Transaction transaction : getBorrowHistory()){
+        for (Transaction transaction : getBorrowHistory()) {
 
             seen = transaction.getBook().equals(book) ? true : seen;
 
         }
         return seen;
     }
+
+    public StringBuilder getNotifications() {
+        StringBuilder notifications = new StringBuilder();
+        for (Reservation reservation : Library.getUserBorrowReservations(this)) {
+            if (reservation.getBook().getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
+                notifications.append(String.format("%s is now available for borrowing!\n", reservation.getBook().getTitle()));
+            }
+        }
+        for (Reservation reservation : Library.getUserPurchaseReservations(this)) {
+            if (reservation.getBook().getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
+                notifications.append(String.format("%s is now available for purchase!\n", reservation.getBook().getTitle()));
+            }
+        }
+        for (Transaction transaction : getBorrowHistory()) {
+            if (transaction.overDue() && !transaction.isReturned()) {
+                notifications.append(String.format("Transaction #%d is return is overdue!\n",transaction.getID()));
+            }
+        }
+        return notifications;
+    }
+
     @Override
     public String[] toStringArray() {
         return new String[]{

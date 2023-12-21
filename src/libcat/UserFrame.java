@@ -291,7 +291,21 @@ public class UserFrame extends JFrame implements FrameEnvironment {
                 returnButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        if (transaction.overDue()) {
+                            Object[] options = {"Cash", "Credit Card"};
+                            String message = String.format("Overdue fine found: $%.2f\nHow would you like to pay ?", transaction.getFine());
+                            int paymentMethod =
+                                    JOptionPane.showOptionDialog(
+                                            null,
+                                            message,
+                                            "Overdue Fine Payment Method",
+                                            JOptionPane.YES_NO_OPTION,
+                                            JOptionPane.QUESTION_MESSAGE,
+                                            null,         // Use default icon
+                                            options,      // Buttons
+                                            options[0]);  // Default button (Cash)
+                            JOptionPane.showMessageDialog(null, "Fine payment complete.");
+                        }
                         transaction.setReturned(true);
                         if (!customer.hasBorrows()) {
                             customer = Admin.convertToCustomer(customer);

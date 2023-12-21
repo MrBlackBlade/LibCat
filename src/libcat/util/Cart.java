@@ -88,6 +88,11 @@ public class Cart {
 
         if (!getPendingOrders().isEmpty()) {
             for (Order order : getPendingOrders()) {
+                for (Reservation reservation : Library.getUserPurchaseReservations(customer)) {
+                    if (reservation.getBook().equals(order.getBook())) {
+                        Library.removeReservation(reservation);
+                    }
+                }
                 Library.createOrder(order);
 
                 totalPrice += order.getBook().getSalePrice() * order.getQuantity();
@@ -98,6 +103,11 @@ public class Cart {
 
         if (!getPendingTransactions().isEmpty()) {
             for (Transaction transaction : getPendingTransactions()) {
+                for (Reservation reservation : Library.getUserBorrowReservations(customer)) {
+                    if (reservation.getBook().equals(transaction.getBook())) {
+                        Library.removeReservation(reservation);
+                    }
+                }
                 Library.createTransaction(transaction);
             }
 
