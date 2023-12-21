@@ -1,8 +1,8 @@
 1,To Kill a Mockingbird,Harper Lee,Fiction,1960,-1.0,12.99,0.4,false,true,ToKillAMockingBird.jpg
 2,1984,George Orwell,Dystopian,1949,-1.0,10.99,0.2,true,false,1984.jpg
 3,The Great Gatsby,F. Scott Fitzgerald,Classic,1925,-1.0,11.5,0.6,false,true,TheGreatGatsby.jpg
-4,Pride and Prejudice,Jane Austen,Romance,1813,100.0,9.99,0.2,true,true,PrideAndPrejudice.jpg
-5,The Catcher in the Rye,J.D. Salinger,Coming-of-Age,1951,50.0,13.49,0.3,true,false,TheCatcherInTheRye.jpg
+4,Pride and Prejudice,Jane Austen,Romance,1813,-1.0,9.99,0.2,true,true,PrideAndPrejudice.jpg
+5,The Catcher in the Rye,J.D. Salinger,Coming-of-Age,1951,0.0,13.49,0.3,true,false,TheCatcherInTheRye.jpg
 6,Brave New World,Aldous Huxley,Sci-Fi,1932,-1.0,14.95,0.1,true,true,BraveNewWorld.jpg
 7,The Hobbit,J.R.R. Tolkien,Fantasy,1937,-1.0,15.99,0.5,true,true,TheHobbit.jpg
 8,The Lord of the Rings,J.R.R. Tolkien,Fantasy,1954,-1.0,24.99,0.0,true,true,TheLordOfTheRings.jpg

@@ -73,7 +73,6 @@ public class Book implements StringArrayRepresentation, Comparable<Book>{
     }
 
 
-
     public void setBasePrice(double basePrice) {
         this.basePrice = basePrice;
     }

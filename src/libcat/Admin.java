@@ -26,9 +26,7 @@ public class Admin extends User {
             String newGenre,
             String newYear,
             double newPrice,
-            double newSalePercent,
-            boolean newPurchaseAvailability,
-            boolean newBorrowAvailability
+            double newSalePercent
     ) {
         for (Book book : Library.getBooks()) {
             if (book.getID() == bookID) {
@@ -38,8 +36,6 @@ public class Admin extends User {
                 book.setYear(newYear);
                 book.setBasePrice(newPrice);
                 book.setSalePercent(newSalePercent);
-                book.setPurchasable(newPurchaseAvailability);
-                book.setBorrowable(newBorrowAvailability);
                 break;
             }
         }
