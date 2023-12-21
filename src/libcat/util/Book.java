@@ -8,14 +8,16 @@ import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static java.lang.Float.isNaN;
 
-public class Book implements StringArrayRepresentation, Comparable<Book>{
+public class Book implements StringArrayRepresentation, Comparable<Book> {
 
     public enum Availablity {
         PURCHASABLE, BORROWABLE, AVAILABLITY_MAX,
     }
+
     private int id;
     private String title;
     private String author;
@@ -54,6 +56,28 @@ public class Book implements StringArrayRepresentation, Comparable<Book>{
         status.put(Availablity.BORROWABLE, borrowable);
         this.imagePath = imagePath;
         this.imageIcon = new ImageIcon(FileSystemManager.getImageWD() + imagePath);
+    }
+
+    public Book(
+            String title,
+            String author,
+            String genre,
+            String year,
+            double basePrice,
+            double salePercent
+    ) {
+        this(
+                Library.getMax(Library.getBooks()).getID() + 1,
+                title,
+                author,
+                genre,
+                year,
+                basePrice,
+                salePercent,
+                true,
+                true,
+                FileSystemManager.newBookImageFile
+                );
     }
 
     public void setID(int id) {
@@ -111,7 +135,7 @@ public class Book implements StringArrayRepresentation, Comparable<Book>{
 
     public double getSalePrice() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return Double.parseDouble(decimalFormat.format(this.basePrice * (1-salePercent)));
+        return Double.parseDouble(decimalFormat.format(this.basePrice * (1 - salePercent)));
     }
 
     public double getSalePercent() {
@@ -151,11 +175,13 @@ public class Book implements StringArrayRepresentation, Comparable<Book>{
     }
 
     public void setPurchasable(boolean newAvailability) {
-        this.getPurchaseStatus().put(Availablity.PURCHASABLE,newAvailability);
+        this.getPurchaseStatus().put(Availablity.PURCHASABLE, newAvailability);
     }
+
     public void setBorrowable(boolean newAvailability) {
-        this.getPurchaseStatus().put(Availablity.BORROWABLE,newAvailability);
+        this.getPurchaseStatus().put(Availablity.BORROWABLE, newAvailability);
     }
+
     public void initializeRatings() {
         this.ratings = Library.getBy(Library.QueryType.RATING, Library.RatingQueryIndex.BOOK_ID, String.valueOf(this.getID()));
 

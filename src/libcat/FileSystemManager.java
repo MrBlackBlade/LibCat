@@ -17,7 +17,7 @@ public class FileSystemManager {
     protected static final String transactionsFile = "transaction.txt";
     protected static final String purchaseReservationsFile = "purchase_reservations.txt";
     protected static final String borrowReservationsFile = "borrow_reservations.txt";
-
+    public static final String newBookImageFile = "newBook.jpg";
     protected static final String[] fileArray = new String[] {
             usersDataFile,
             booksFile,
@@ -207,4 +207,5 @@ public class FileSystemManager {
             updateData(fileName);
         }
     }
+
 }

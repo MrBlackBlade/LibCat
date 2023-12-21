@@ -17,7 +17,7 @@ public class NewBookFrame extends JFrame {
     private final JTextField newGenre;
     private final JTextField bookPrice;
     private final JTextField salePercent;
-    public NewBookFrame(Book book,AdminFrame adminFrameReference) {
+    public NewBookFrame(AdminFrame adminFrameReference) {
 
         this.adminFrameReference = adminFrameReference;
 
@@ -148,7 +148,14 @@ public class NewBookFrame extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                //Admin.addBook(new Book(book.getID(),bookTitle.getText(),authorName.getText(),newGenre.getText(),newYear.getText(),Double.parseDouble(bookPrice.getText()),Double.parseDouble(salePercent.getText()));
+                Admin.addBook(new Book(
+                        bookTitle.getText(),
+                        authorName.getText(),
+                        newGenre.getText(),
+                        newYear.getText(),
+                        Double.parseDouble(bookPrice.getText()),
+                        Double.parseDouble(salePercent.getText()
+                        )));
                 JOptionPane.showMessageDialog(null, "Book Updated Succecfully");
                 adminFrameReference.searchButton.doClick();
             }

@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class AdminFrame extends JFrame implements FrameEnvironment{
+public class AdminFrame extends JFrame implements FrameEnvironment {
 
     private JScrollPane scrollPane;
     private AdminFrame selfReference;
@@ -24,13 +24,15 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         FIVE,
         RADIO_SELECT_MAX,
     }
+
     static RadioSelect choice = RadioSelect.ONE;
     static int panelHeight = 420;
     static JPanel containerPanel = new JPanel();
     static Border border = BorderFactory.createLineBorder(Color.black, 3);
 
     static Boolean searchForBooks = true;
-    private void searchForBooks(String searchParameter){
+
+    private void searchForBooks(String searchParameter) {
         boolean bookFound = false;
         ArrayList<Book> queryResult = new ArrayList<Book>();
 
@@ -121,7 +123,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             purchaseStatusButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
-                    if(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)){
+                    if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
                         book.setPurchasable(false);
 
                         bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
@@ -133,8 +135,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
 
                         System.out.println(book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE));
 
-                    }
-                    else{
+                    } else {
                         book.setPurchasable(true);
 
                         bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
@@ -153,7 +154,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             borrowStatusButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
-                    if(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)){
+                    if (book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
                         book.setBorrowable(false);
 
                         bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
@@ -164,8 +165,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
                                 String.valueOf(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE))));
 
                         System.out.println(book.getPurchaseStatus().get(Book.Availablity.BORROWABLE));
-                    }
-                    else {
+                    } else {
                         book.setBorrowable(true);
                         bookLabel.setText(String.format("Title: %s\n\nAuthor: %s\n\nGenre: %s\n\nPurchase Status: %s\n\nBorrow Status: %s",
                                 book.getTitle(),
@@ -181,7 +181,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             editBookButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
-                    new EditFrame(book,selfReference);
+                    new EditFrame(book, selfReference);
 
                 }
             });
@@ -189,7 +189,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             // Add buttons to a panel
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new GridLayout(3, 1, 5, 15)); // Adjust layout as needed
-            buttonPanel.setPreferredSize(new Dimension(300 , 1)); // Adjust size
+            buttonPanel.setPreferredSize(new Dimension(300, 1)); // Adjust size
             buttonPanel.setBackground(C_ListBG);
             buttonPanel.add(purchaseStatusButton);
             buttonPanel.add(borrowStatusButton);
@@ -233,7 +233,8 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             scrollPane.getVerticalScrollBar().setValue(0);
         });
     }
-    private void searchForUsers(String searchParameter){
+
+    private void searchForUsers(String searchParameter) {
         boolean usersFound = false;
         ArrayList<User> queryResult = new ArrayList<User>();
 
@@ -302,7 +303,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             gbcEmptyPanel.gridx = 2;
             gbcEmptyPanel.gridy = 0;
 
-            if(user.getType().equalsIgnoreCase("borrower")){
+            if (user.getType().equalsIgnoreCase("borrower")) {
                 JButton updateButton = new JButton("Update");
                 updateButton.setFont(new Font("Arial", Font.PLAIN, 18));
                 updateButton.setBackground(C_ButtonBG);
@@ -325,7 +326,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
                                 "Confirmation", JOptionPane.YES_NO_OPTION);
 
                         if (option == JOptionPane.YES_OPTION) {
-                            Borrower borrower = (Borrower)((Customer)Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID,String.valueOf(user.getID())).get(0));
+                            Borrower borrower = (Borrower) ((Customer) Library.getBy(Library.QueryType.USER, Library.UserQueryIndex.ID, String.valueOf(user.getID())).get(0));
                             Admin.deleteBorrower(borrower);
 
                         }
@@ -391,7 +392,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         layeredPane.setPreferredSize(new Dimension(1280, 175));
 
         // Panel on top and to the left of welcomePanel
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         topPanel.setPreferredSize(new Dimension(200, 150)); // Set your preferred size
         topPanel.setBackground(C_WelcomeBG); // Set your desired background color
         topPanel.setBounds(0, 140, 1280, 40);
@@ -419,7 +420,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         GridBagConstraints gbc = new GridBagConstraints();
         // welcomePanel.setPreferredSize(new Dimension(1280, 150));
         welcomePanel.setBackground(C_WelcomeBG);
-        welcomePanel.setBounds(0,0,1280,150);
+        welcomePanel.setBounds(0, 0, 1280, 150);
 
         JLabel welcomeLabel = new JLabel("Welcome Admin");
         welcomeLabel.setHorizontalTextPosition(JLabel.CENTER);
@@ -470,11 +471,9 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
                     choice = RadioSelect.TWO;
                 } else if (radioButton3.isSelected()) {
                     choice = RadioSelect.THREE;
-                }
-                else if (radioButton4.isSelected()){
+                } else if (radioButton4.isSelected()) {
                     choice = RadioSelect.FOUR;
-                }
-                else if (radioButton5.isSelected()){
+                } else if (radioButton5.isSelected()) {
                     choice = RadioSelect.FIVE;
                 }
             }
@@ -572,17 +571,16 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         addBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                new NewBookFrame(selfReference);
             }
         });
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 containerPanel.removeAll();
-                if(searchForBooks){
+                if (searchForBooks) {
                     searchForBooks(searchBar.getText());
-                }
-                else{
+                } else {
                     searchForUsers(searchBar.getText());
                 }
                 scrollPane.revalidate();
