@@ -21,7 +21,7 @@ public class EditFrame extends JFrame {
 
         this.adminFrameReference = adminFrameReference;
 
-        setTitle("Register Form");
+        setTitle("Book Edit Form");
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
         setIconImage(icon.getImage());
 
