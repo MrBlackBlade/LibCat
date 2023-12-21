@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 public class AdminFrame extends JFrame implements FrameEnvironment{
 
+    private JScrollPane scrollPane;
+    private AdminFrame selfReference;
+    protected JButton searchButton;
+
     private enum RadioSelect {
         ONE,
         TWO,
@@ -20,7 +24,6 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         FIVE,
         RADIO_SELECT_MAX,
     }
-
     static RadioSelect choice = RadioSelect.ONE;
     static int panelHeight = 420;
     static JPanel containerPanel = new JPanel();
@@ -110,6 +113,11 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             JButton borrowStatusButton = new JButton("Change Borrow Status");
             borrowStatusButton.setBackground(C_ButtonBG);
             borrowStatusButton.setForeground(Color.WHITE);
+
+            JButton editBookButton = new JButton("Edit Book");
+            editBookButton.setBackground(C_ButtonBG);
+            editBookButton.setForeground(Color.WHITE);
+
             purchaseStatusButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
 
@@ -170,12 +178,22 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
                     }
                 }
             });
+            editBookButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                    new EditFrame(book,selfReference);
+
+                }
+            });
 
             // Add buttons to a panel
             JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new GridLayout(2, 1, 5, 5)); // Adjust layout as needed
+            buttonPanel.setLayout(new GridLayout(3, 1, 5, 15)); // Adjust layout as needed
+            buttonPanel.setPreferredSize(new Dimension(300 , 1)); // Adjust size
+            buttonPanel.setBackground(C_ListBG);
             buttonPanel.add(purchaseStatusButton);
             buttonPanel.add(borrowStatusButton);
+            buttonPanel.add(editBookButton);
 
             //GBCs
             GridBagConstraints gbcButtonPanel = new GridBagConstraints();
@@ -209,7 +227,11 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
             emptyPanel.add(emptyLabel, gbcEmptyLabel);
             containerPanel.add(emptyPanel);
         }
-
+        SwingUtilities.invokeLater(() -> {
+            setLocationRelativeTo(null);
+            setVisible(true);
+            scrollPane.getVerticalScrollBar().setValue(0);
+        });
     }
     private void searchForUsers(String searchParameter){
         boolean usersFound = false;
@@ -353,6 +375,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
     }
 
     public AdminFrame() {
+        selfReference = this;
         containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
         // Window Size, Icon and Name
         ImageIcon icon = new ImageIcon(FileSystemManager.cwd + "LibCat.png");
@@ -377,12 +400,17 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         booksSwitch.setBackground(C_ButtonBG);
         booksSwitch.setForeground(Color.WHITE);
 
+        JButton addBook = new JButton("Add Book");
+        addBook.setBackground(C_ButtonBG);
+        addBook.setForeground(Color.WHITE);
+
         JButton usersSwitch = new JButton("Users");
         usersSwitch.setBackground(C_ButtonBG);
         usersSwitch.setForeground(Color.WHITE);
 
         topPanel.add(booksSwitch);
         topPanel.add(usersSwitch);
+        topPanel.add(addBook);
 
         layeredPane.add(topPanel, JLayeredPane.PALETTE_LAYER);
 
@@ -403,7 +431,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         searchBar.setPreferredSize(new Dimension(250, 30));
         searchBar.setFont(new Font("Arial", Font.PLAIN, 25));
 
-        JButton searchButton = new JButton("Search");
+        searchButton = new JButton("Search");
         searchButton.setBackground(C_ButtonBG);
         searchButton.setForeground(Color.WHITE);
 
@@ -481,7 +509,7 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
         layeredPane.add(welcomePanel, JLayeredPane.DEFAULT_LAYER);
 
         // Book Panels
-        JScrollPane scrollPane = new JScrollPane(containerPanel);
+        scrollPane = new JScrollPane(containerPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -510,6 +538,8 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
                     setVisible(true);
                     scrollPane.getVerticalScrollBar().setValue(0);
                 });
+                scrollPane.revalidate();
+                scrollPane.repaint();
             }
         });
         booksSwitch.addActionListener(new ActionListener() {
@@ -537,6 +567,12 @@ public class AdminFrame extends JFrame implements FrameEnvironment{
                     setVisible(true);
                     scrollPane.getVerticalScrollBar().setValue(0);
                 });
+            }
+        });
+        addBook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
 
