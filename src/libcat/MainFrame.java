@@ -365,7 +365,7 @@ public class MainFrame extends JFrame implements FrameEnvironment {
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Book is not available for purchase at the moment.");
 
-                                    Object[] options = {"Yes", "No"};
+                                    Object[] options = { "Yes", "No" };
                                     int addToReservation =
                                             JOptionPane.showOptionDialog(
                                                     null,

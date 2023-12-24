@@ -6,124 +6,123 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Cart {
-    private final Customer customer;
-    private double totalPrice;
-    private double priceCalculator;
-    private ArrayList<Order> pendingOrders = new ArrayList<Order>();
-    private ArrayList<Transaction> pendingTransactions = new ArrayList<Transaction>();
+	private final Customer customer;
+	private double totalPrice;
+	private ArrayList<Order> pendingOrders = new ArrayList<Order>();
+	private ArrayList<Transaction> pendingTransactions = new ArrayList<Transaction>();
 
-    public Cart(Customer customer) {
-        this.customer = customer;
-    }
+	public Cart(Customer customer) {
+		this.customer = customer;
+	}
 
-    public double updateTotalPrice() {
-        totalPrice = 0;
-        for (Order order : pendingOrders) {
-            totalPrice += order.getTotalPrice();
-        }
-        return totalPrice;
-    }
+	public double updateTotalPrice() {
+		totalPrice = 0;
 
-    public boolean addPurchase(Book book, int quantity) {
-        if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
-            Order newOrder = new Order(customer, book, quantity, pendingOrders);
-            pendingOrders.add(newOrder);
-            updateTotalPrice();
-            return true;
-        } else {
-            return false;
-        }
-    }
+		for (Order order : pendingOrders) {
+			totalPrice += order.getTotalPrice();
+		}
 
-    public void modifyPurchase(Order order, int quantity) {
-        order.setQuantity(quantity);
-        updateTotalPrice();
-        if (quantity == 0) {
-            deletePurchase(order);
-        }
-    }
+		return totalPrice;
+	}
 
-    public boolean addBorrow(Book book) {
-        if (book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
-            pendingTransactions.add(new Transaction(customer, book, pendingTransactions));
-            return true;
-        } else {
-            return false;
-        }
-    }
+	public boolean addPurchase(Book book, int quantity) {
+		if (book.getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
+			Order newOrder = new Order(customer, book, quantity, pendingOrders);
+			pendingOrders.add(newOrder);
+			updateTotalPrice();
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    public boolean deletePurchase(Order order) {
-        boolean deleteSuccessful = false;
-        if (pendingOrders.contains(order)) {
-            pendingOrders.remove(order);
-            deleteSuccessful = true;
-        }
-        return deleteSuccessful;
-    }
+	public void modifyPurchase(Order order, int quantity) {
+		order.setQuantity(quantity);
+		updateTotalPrice();
+		if (quantity == 0) {
+			deletePurchase(order);
+		}
+	}
 
-    public boolean deleteBorrow(Transaction transaction) {
-        boolean deleteSuccessful = false;
-        if (pendingTransactions.contains(transaction)) {
-            pendingTransactions.remove(transaction);
-            deleteSuccessful = true;
-        }
-        return deleteSuccessful;
-    }
+	public boolean addBorrow(Book book) {
+		if (book.getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
+			pendingTransactions.add(new Transaction(customer, book, pendingTransactions));
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    public double getTotalPrice() {
-        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return Double.parseDouble(decimalFormat.format(totalPrice));
-    }
+	public boolean deletePurchase(Order order) {
+		boolean deleteSuccessful = false;
+		if (pendingOrders.contains(order)) {
+			pendingOrders.remove(order);
+			deleteSuccessful = true;
+		}
+		return deleteSuccessful;
+	}
 
-    public ArrayList<Order> getPendingOrders() {
-        return pendingOrders;
-    }
+	public boolean deleteBorrow(Transaction transaction) {
+		boolean deleteSuccessful = false;
+		if (pendingTransactions.contains(transaction)) {
+			pendingTransactions.remove(transaction);
+			deleteSuccessful = true;
+		}
+		return deleteSuccessful;
+	}
 
-    public ArrayList<Transaction> getPendingTransactions() {
-        return pendingTransactions;
-    }
+	public double getTotalPrice() {
+		DecimalFormat decimalFormat = new DecimalFormat("#.##");
+		return Double.parseDouble(decimalFormat.format(totalPrice));
+	}
 
-    public boolean checkout() {
-        boolean checkoutDone = false;
+	public ArrayList<Order> getPendingOrders() {
+		return pendingOrders;
+	}
 
-        if (!getPendingOrders().isEmpty()) {
-            for (Order order : getPendingOrders()) {
-                for (Reservation reservation : Library.getUserPurchaseReservations(customer)) {
-                    if (reservation.getBook().equals(order.getBook())) {
-                        Library.removeReservation(reservation);
-                    }
-                }
-                Library.createOrder(order);
+	public ArrayList<Transaction> getPendingTransactions() {
+		return pendingTransactions;
+	}
 
-                totalPrice += order.getBook().getSalePrice() * order.getQuantity();
-            }
+	public boolean checkout() {
+		if (!getPendingOrders().isEmpty()) {
+			for (Order order : getPendingOrders()) {
+				for (Reservation reservation : Library.getUserPurchaseReservations(customer)) {
+					if (reservation.getBook().equals(order.getBook())) {
+						Library.removeReservation(reservation);
+					}
+				}
+				Library.createOrder(order);
 
-            getPendingOrders().clear();
-        }
+				totalPrice += order.getBook().getSalePrice() * order.getQuantity();
+			}
 
-        if (!getPendingTransactions().isEmpty()) {
-            for (Transaction transaction : getPendingTransactions()) {
-                for (Reservation reservation : Library.getUserBorrowReservations(customer)) {
-                    if (reservation.getBook().equals(transaction.getBook())) {
-                        Library.removeReservation(reservation);
-                    }
-                }
-                Library.createTransaction(transaction);
-            }
+			getPendingOrders().clear();
+		}
 
-            getPendingTransactions().clear();
-        }
+		if (!getPendingTransactions().isEmpty()) {
+			for (Transaction transaction : getPendingTransactions()) {
+				for (Reservation reservation : Library.getUserBorrowReservations(customer)) {
+					if (reservation.getBook().equals(transaction.getBook())) {
+						Library.removeReservation(reservation);
+					}
+				}
+				Library.createTransaction(transaction);
+			}
 
-        return getPendingOrders().isEmpty() && getPendingTransactions().isEmpty();
-    }
+			getPendingTransactions().clear();
+		}
 
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "customer=" + customer +
-                ", pendingOrders=" + pendingOrders +
-                ", pendingTransactions=" + pendingTransactions +
-                '}';
-    }
+		return getPendingOrders().isEmpty() && getPendingTransactions().isEmpty();
+	}
+
+	@Override
+	public String toString() {
+		return "Cart{" +
+				"customer=" + customer +
+				", pendingOrders=" + pendingOrders +
+				", pendingTransactions=" + pendingTransactions +
+				'}';
+	}
 }
 
