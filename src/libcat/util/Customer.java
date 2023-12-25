@@ -101,11 +101,13 @@ public class Customer
 		StringBuilder notifications = new StringBuilder();
 		for (Reservation reservation : Library.getUserBorrowReservations(this)) {
 			if (reservation.getBook().getPurchaseStatus().get(Book.Availablity.BORROWABLE)) {
+				Library.removeBorrowReservation(reservation.getBook(), this);
 				notifications.append(String.format("%s is now available for borrowing!\n", reservation.getBook().getTitle()));
 			}
 		}
 		for (Reservation reservation : Library.getUserPurchaseReservations(this)) {
 			if (reservation.getBook().getPurchaseStatus().get(Book.Availablity.PURCHASABLE)) {
+				Library.removePurchaseReservation(reservation.getBook(), this);
 				notifications.append(String.format("%s is now available for purchase!\n", reservation.getBook().getTitle()));
 			}
 		}
